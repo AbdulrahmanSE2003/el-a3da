@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import { AdminShell } from "@/features/admin/components/admin-shell"
+import { requireAdminPage } from "@/features/admin/server/auth"
 
 export const metadata: Metadata = {
   title: "لوحة المطوّر — القعدة",
@@ -10,8 +11,10 @@ export const metadata: Metadata = {
   },
 }
 
-export default function AdminLayout({
+export default async function AdminLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  await requireAdminPage("/admin")
+
   return <AdminShell>{children}</AdminShell>
 }

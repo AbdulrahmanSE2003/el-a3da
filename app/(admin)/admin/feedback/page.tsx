@@ -10,7 +10,7 @@ export default function AdminFeedbackPage() {
     <BlockedView
       stamp="FEEDBACK"
       title="رسائل اللاعبين"
-      description="صندوق الرسائل موجود في قاعدة البيانات، لكنه مش هيتعرض قبل تفعيل مصادقة المسؤول."
+      description="صندوق الرسائل موجود في قاعدة البيانات، لكن عرضه في الداشبورد لسه مش متفعّل."
       table="feedback"
     />
   )

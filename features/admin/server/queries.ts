@@ -1,7 +1,8 @@
 import "server-only"
 
-import { neon } from "@neondatabase/serverless"
 import { connection } from "next/server"
+import { requireAdmin } from "./auth"
+import { getSql } from "./db"
 import { CONTENT_SETS, isContentSetId } from "../lib/content-sets"
 import type {
   CategoryCount,
@@ -21,26 +22,14 @@ import type {
  * الـ browser bundle.
  */
 
-type SqlClient = ReturnType<typeof neon>
-
-let sqlClient: SqlClient | null = null
-
-function getSql(): SqlClient {
-  const url = process.env.DATABASE_URL
-  if (!url) {
-    throw new Error(
-      "DATABASE_URL is not configured. Add the Neon dev branch connection string to .env.local."
-    )
-  }
-  sqlClient ??= neon(url)
-  return sqlClient
-}
-
 /**
  * `connection()` بتخلي الصفحة request-time. من غيرها Next ممكن يعمل prerender
  * للاستعلامات وقت البناء، والداشبورد هيفضل يعرض أرقام قديمة.
  */
 async function query<T>(text: string, params: unknown[] = []): Promise<T[]> {
+  // Defense in depth: حتى لو صفحة اتحركت خارج admin layout بالغلط، مفيش
+  // استعلام بيتنفذ قبل التحقق من الجلسة.
+  await requireAdmin()
   await connection()
   const rows = await getSql().query(text, params)
   return rows as T[]

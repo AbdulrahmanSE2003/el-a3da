@@ -1,12 +1,9 @@
 import Link from "next/link"
 import {
-  ArrowUpLeft,
   CircleQuestionMark,
-  Dices,
   Gamepad2,
   MessageCircle,
   PlantPot,
-  Sparkles,
   Zap,
 } from "lucide-react"
 import { ActivityCardItem } from "@/components/layout/ActivityCard"
@@ -31,7 +28,7 @@ export const activities: ActivityCardItem[] = [
   {
     number: "03",
     stamp: "QUESTIONS",
-    title: "شيح الحارة",
+    title: "شيخ الحارة",
     description: "جاهز للإستجواب؟",
     href: "/sheikh",
     icon: CircleQuestionMark,

@@ -27,8 +27,7 @@ const buttonVariants = cva(
 
         // زر الخطر/العقوبات
         destructive:
-          "border-2 border-ink bg-danger-brand text-paper shadow-[4px_4px_0px_0px_var(--color-ink)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_var(--color-ink)] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none",
-
+          "border-2 border-ink bg-danger-brand text-background shadow-[4px_4px_0px_0px_var(--color-ink)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_var(--color-ink)] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none",
         // رابط
         link: "text-copper underline-offset-4 hover:underline",
       },

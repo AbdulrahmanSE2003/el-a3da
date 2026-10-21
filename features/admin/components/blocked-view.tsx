@@ -11,8 +11,9 @@ interface BlockedViewProps {
 }
 
 /**
- * قسم موجود في المخطط لكنه مش هيتعرض قبل المصادقة:
- * feedback و notes ممكن يحتوا بيانات لاعبين/ملاحظات داخلية.
+ * قسم موجود في المخطط لكن عرضه لسه مش متفعّل:
+ * feedback و notes ممكن يحتوا بيانات لاعبين/ملاحظات داخلية،
+ * فمش هيتقروا لحد ما يتضاف عرض آمن ومحدود.
  */
 export function BlockedView({
   stamp,
@@ -28,7 +29,7 @@ export function BlockedView({
         description={description}
         action={
           <Tag className="border-danger-brand/40 bg-danger-brand/10 font-mono text-danger-brand">
-            AUTH REQUIRED
+            NOT ENABLED
           </Tag>
         }
       />
@@ -40,12 +41,12 @@ export function BlockedView({
           </span>
           <div>
             <h2 className="text-sm font-black text-ink">
-              القسم مش متاح من غير تسجيل دخول
+              القسم لسه مش متفعّل في الداشبورد
             </h2>
             <p className="mt-1 max-w-2xl text-xs leading-relaxed text-ink-soft">
-              الجدول موجود في Neon، لكن المحتوى ده ممكن يحتوي بيانات خاصة.
-              الداشبورد الحالي مفيهوش مصادقة، فمش هيعرض الرسائل أو الملاحظات
-              لحد ما تتضاف حماية للمسؤول.
+              الجلسة محمية الآن، لكن المحتوى ده ممكن يحتوي بيانات خاصة،
+              فمش هيتقرأ أو يتعرض لحد ما يتضاف عرض آمن ومحدود. الجدول موجود
+              في Neon ومفيش أي عمليات كتابة.
             </p>
           </div>
         </div>
@@ -67,6 +68,12 @@ export function BlockedView({
           </div>
           <div className="flex flex-wrap items-center justify-between gap-2 px-4 py-3">
             <dt className="text-xs font-bold">المصادقة</dt>
+            <dd className="font-mono text-[10px] font-bold text-copper">
+              مفعّلة
+            </dd>
+          </div>
+          <div className="flex flex-wrap items-center justify-between gap-2 px-4 py-3">
+            <dt className="text-xs font-bold">القراءة</dt>
             <dd className="font-mono text-[10px] font-bold text-danger-brand">
               غير مفعّلة
             </dd>
@@ -89,8 +96,8 @@ export function BlockedView({
         </Link>
         <span aria-hidden>·</span>
         <span>
-          المصادقة المطلوبة موصوفة في <code className="font-mono">docs/admin-auth.md</code>{" "}
-          ولسه مش منفّذة.
+          تفاصيل المصادقة في <code className="font-mono">docs/admin-auth.md</code>،
+          لكن عرض القسم لسه مش متفعّل.
         </span>
       </div>
     </div>

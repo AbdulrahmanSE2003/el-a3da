@@ -9,7 +9,7 @@ A social party game app in Arabic. Play with friends, host games, and start the 
 - **UI**: React 19, Tailwind CSS v4
 - **State**: Zustand with persistence
 - **PWA**: Serwist for offline support
-- **Database**: Neon PostgreSQL (development branch), read-only admin queries
+- **Database**: Neon PostgreSQL (development branch), authenticated admin queries with question edit and soft delete
 
 ## Features
 
@@ -21,7 +21,7 @@ A social party game app in Arabic. Play with friends, host games, and start the 
 - **Topics**: Random conversation topics with shuffle
 - **Challenges**: Quick prompts to spark discussion
 - **Guides**: Detailed rules for each game mode
-- **Admin console**: Read-only content overview, server-paginated questions, and content health checks
+- **Admin console**: Single-admin login, content overview, server-paginated questions with edit/soft-delete, and content health checks
 
 ## Running Locally
 
@@ -38,8 +38,30 @@ to `.env.local` (gitignored, server-only):
 DATABASE_URL=postgresql://...
 ```
 
-Feedback and developer notes stay hidden until admin authentication is
-implemented. See `docs/neon-schema-plan.md` and `docs/admin-auth.md`.
+Add the admin credentials and signing secret to the same file:
+
+```bash
+ADMIN_EMAIL=admin@example.com
+ADMIN_PASSWORD_HASH=scrypt:N=16384,r=8,p=1:<salt>:<hash>
+AUTH_SECRET=<openssl rand -base64 48>
+```
+
+Generate the password hash without echoing the password:
+
+```bash
+printf 'New admin password: '
+IFS= read -rs P
+printf '\n'
+printf '%s' "$P" | pnpm admin:password
+unset P
+```
+
+Then open `/login`. Question edits are limited to text, category, and the
+set-specific answer/badge fields; deletes are soft deletes. Creating questions,
+publishing workflows, feedback, and developer notes remain hidden. The public
+game pages still read from `contents/*.ts`, so admin changes affect Neon and
+the dashboard until DB-backed content is wired. See `docs/admin-questions.md`,
+`docs/neon-schema-plan.md`, and `docs/admin-auth.md`.
 
 ## PWA Install
 

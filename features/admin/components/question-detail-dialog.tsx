@@ -1,8 +1,9 @@
 "use client"
 
+import { PencilIcon, Trash2Icon } from "lucide-react"
 import { AppDialog } from "@/components/ui/AppDialog"
 import { Button } from "@/components/ui/button"
-import { Tag } from "./table"
+import { CategoryBadge } from "./category-badge"
 import { formatDateTime } from "../lib/format"
 import type { ContentSetMeta, QuestionRow } from "../lib/types"
 
@@ -10,6 +11,8 @@ interface QuestionDetailDialogProps {
   question: QuestionRow
   setMeta: ContentSetMeta
   onClose: () => void
+  onEdit?: () => void
+  onDelete?: () => void
 }
 
 function Row({
@@ -29,11 +32,13 @@ function Row({
   )
 }
 
-/** تفاصيل العنصر من قاعدة البيانات — قراءة فقط، مفيش أزرار تعديل. */
+/** تفاصيل العنصر من قاعدة البيانات مع انتقال مباشر للتعديل أو الحذف. */
 export function QuestionDetailDialog({
   question,
   setMeta,
   onClose,
+  onEdit,
+  onDelete,
 }: QuestionDetailDialogProps) {
   return (
     <AppDialog
@@ -68,9 +73,7 @@ export function QuestionDetailDialog({
 
         <Row label="الفئة">
           {question.category ? (
-            <Tag className="border-ink/20 bg-ink/5 text-ink-soft">
-              {question.category}
-            </Tag>
+            <CategoryBadge category={question.category} />
           ) : (
             <span className="text-xs text-ink-soft/70">— غير محددة —</span>
           )}
@@ -134,8 +137,25 @@ export function QuestionDetailDialog({
           </p>
         </div>
 
-        <div className="mt-4 flex justify-end">
-          <Button variant="outline" size="sm" onClick={onClose}>
+        <div className="mt-4 flex flex-wrap justify-end gap-2 border-t border-ink/10 pt-4">
+          {onDelete && (
+            <Button
+              variant="destructive"
+              size="sm"
+              onClick={onDelete}
+              className="me-auto"
+            >
+              <Trash2Icon />
+              حذف
+            </Button>
+          )}
+          {onEdit && (
+            <Button variant="outline" size="sm" onClick={onEdit}>
+              <PencilIcon />
+              تعديل
+            </Button>
+          )}
+          <Button variant="ghost" size="sm" onClick={onClose}>
             إغلاق
           </Button>
         </div>

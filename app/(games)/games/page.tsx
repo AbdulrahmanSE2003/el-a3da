@@ -14,7 +14,7 @@ export default function GamesPage() {
         <Header stamp="GAMES" />
 
         <div className="mt-8 mb-6">
-          <p className="font-mono text-[10px] font-bold tracking-[0.25em] text-copper">
+          <p className="text-xs font-bold tracking-[0.25em] text-copper">
             اختاروا اللعبة
           </p>
 

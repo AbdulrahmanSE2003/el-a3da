@@ -10,7 +10,7 @@ export default function AdminNotesPage() {
     <BlockedView
       stamp="NOTES"
       title="ملاحظات المطوّر"
-      description="الملاحظات الداخلية موجودة في قاعدة البيانات، لكنها مش هتتعرض قبل تفعيل مصادقة المسؤول."
+      description="الملاحظات الداخلية موجودة في قاعدة البيانات، لكن عرضها في الداشبورد لسه مش متفعّل."
       table="notes"
     />
   )

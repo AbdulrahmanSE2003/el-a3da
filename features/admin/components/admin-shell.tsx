@@ -7,6 +7,7 @@ import {
   AlertTriangleIcon,
   ListChecksIcon,
   LayoutDashboardIcon,
+  LogOutIcon,
   MessageSquareIcon,
   StickyNoteIcon,
 } from "lucide-react"
@@ -25,6 +26,18 @@ const isActive = (pathname: string, href: string) =>
 
 export function AdminShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
+
+  const logoutButton = (
+    <form action="/api/admin/logout" method="post">
+      <button
+        type="submit"
+        className="flex w-full items-center gap-2 border-2 border-ink/20 px-3 py-2 text-xs font-bold text-ink-soft transition-colors outline-none hover:border-ink hover:bg-paper hover:text-ink focus-visible:ring-[3px] focus-visible:ring-copper/50"
+      >
+        <LogOutIcon className="size-4 shrink-0" />
+        تسجيل الخروج
+      </button>
+    </form>
+  )
 
   const nav = (
     <nav aria-label="أقسام لوحة المطوّر" className="flex flex-col gap-1">
@@ -68,12 +81,14 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
 
           <div className="mt-auto border-2 border-ink/20 bg-paper p-3">
             <p className="font-mono text-[10px] font-bold tracking-widest text-copper">
-              READ ONLY
+              CONTENT ADMIN
             </p>
             <p className="mt-1.5 text-xs leading-relaxed text-ink-soft">
-              الأسئلة والمجموعات بتتقرأ من Neon. مفيش إضافة أو تعديل أو حذف،
-              والرسائل والملاحظات مقفولة لحد ما تتضاف المصادقة.
+              الأسئلة والمجموعات بتتقرأ من Neon. تقدر تعدّل حقول السؤال أو
+              تحذفه soft delete. الإضافة والنشر والرسائل والملاحظات لسه مش
+              متفعّلة.
             </p>
+            <div className="mt-3">{logoutButton}</div>
           </div>
         </aside>
 
@@ -86,9 +101,20 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
                 <span className="text-xl font-black">القعدة</span>
                 <span className="stamp-text ms-2">DEV</span>
               </div>
-              <span className="border-2 border-ink/20 bg-paper px-2.5 py-1.5 font-mono text-[10px] font-bold text-ink-soft">
-                READ ONLY
-              </span>
+              <div className="flex items-center gap-2">
+                <span className="border-2 border-ink/20 bg-paper px-2.5 py-1.5 font-mono text-[10px] font-bold text-ink-soft">
+                  ADMIN
+                </span>
+                <form action="/api/admin/logout" method="post">
+                  <button
+                    type="submit"
+                    aria-label="تسجيل الخروج"
+                    className="border-2 border-ink/20 bg-paper p-1.5 text-ink-soft transition-colors outline-none hover:border-ink hover:text-ink focus-visible:ring-[3px] focus-visible:ring-copper/50"
+                  >
+                    <LogOutIcon className="size-4" />
+                  </button>
+                </form>
+              </div>
             </div>
 
             <nav
@@ -121,10 +147,9 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
           <div className="flex items-start gap-2.5 border-b border-copper/30 bg-copper/10 px-4 py-2.5 text-xs leading-relaxed text-ink-soft md:px-8">
             <AlertTriangleIcon className="mt-0.5 size-4 shrink-0 text-copper" />
             <p>
-              <span className="font-bold text-ink">لوحة قراءة فقط:</span>{" "}
-              مفيش مصادقة ولا عمليات كتابة. الأسئلة والمجموعات من قاعدة
-              البيانات، أما رسائل اللاعبين والملاحظات فمتوقفة لحد ما تتضاف
-              حماية للمسؤول.
+              <span className="font-bold text-ink">لوحة محمية:</span> الدخول
+              محمي بجلسة مسؤول. تعديل وحذف الأسئلة متاح، لكن الإضافة والنشر
+              ورسائل اللاعبين والملاحظات لسه مش متفعّلة.
             </p>
           </div>
 

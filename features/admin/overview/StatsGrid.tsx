@@ -4,9 +4,9 @@ import {
   ListChecksIcon,
   Trash2Icon,
 } from "lucide-react"
-import { StatCard } from "../stat-card"
-import { formatArabicTimeAgo, formatNumber } from "../../lib/format"
-import { OverviewData } from "../../lib/types"
+import { StatCard } from "../components/stat-card"
+import { formatArabicTimeAgo, formatNumber } from "../lib/format"
+import { OverviewData } from "../lib/types"
 
 const StatsGrid = ({ data }: { data: OverviewData }) => {
   return (
