@@ -1,22 +1,19 @@
 "use client"
 
-import { useRef, useState } from "react"
+import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { RefreshCw, ArrowRight } from "lucide-react"
-import Link from "next/link"
+import { RefreshCw } from "lucide-react"
 import Qa3daCard from "@/components/ui/Qa3daCard"
 import { createContentDeck } from "@/lib/create-content-deck"
 import { challenges } from "@/contents/challenges"
 
 const ChallengesSection = () => {
-  const deckRef = useRef(createContentDeck(challenges))
+  const [deck] = useState(() => createContentDeck(challenges))
 
-  const [currentChallenge, setCurrentChallenge] = useState(() =>
-    deckRef.current.next()
-  )
+  const [currentChallenge, setCurrentChallenge] = useState(() => deck.next())
 
   const handleNext = () => {
-    setCurrentChallenge(deckRef.current.next())
+    setCurrentChallenge(deck.next())
   }
 
   return (
@@ -24,7 +21,7 @@ const ChallengesSection = () => {
       <div className="mb-6 text-center">
         <h2 className="mb-1 text-2xl font-bold text-ink-glow">أسئلة وتحديات</h2>
         <p className="text-sm font-medium text-ink-soft/80">
-          "جاهز تعمل حاجة محدش متوقعها؟"
+          &quot;جاهز تعمل حاجة محدش متوقعها؟&quot;
         </p>
       </div>
 

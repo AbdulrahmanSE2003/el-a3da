@@ -13,7 +13,7 @@ export default function AboutIntro() {
       <div className="mt-8 space-y-5 text-lg leading-9 text-ink-soft">
         <p>
           القعدة فكرة بسيطة — لمّ أصحابك من غير تخطيط، من غير ما حد يسأل
-          <span className="font-bold text-ink"> "هنعمل إيه؟"</span>
+          <span className="font-bold text-ink"> &quot;هنعمل إيه؟&quot;</span>
         </p>
 
         <p>مفيش أكاونتات. مفيش بيانات. مجرد شلة وقعدة.</p>

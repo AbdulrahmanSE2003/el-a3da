@@ -1,38 +1,15 @@
 // components/layout/MobilePlatform.tsx
 "use client"
 
-import { useEffect, useState } from "react"
+import { useMounted } from "@/hooks/use-mounted"
+import { useMediaQuery } from "@/hooks/use-media-query"
 import Platform from "./Platform"
 import LandingPage from "./LandingPage"
 import MobilePlatformLoader from "./MobilePlatformLoader"
 
 export const MobilePlatform = () => {
-  const [isMobileOrTablet, setIsMobileOrTablet] = useState(false)
-  const [isMounted, setIsMounted] = useState(false)
-
-  useEffect(() => {
-    if (typeof window === "undefined") return
-    setIsMounted(true)
-
-    const mediaQuery = window.matchMedia("(max-width: 1024px)")
-
-    const handleChange = (e: MediaQueryListEvent | MediaQueryList) => {
-      setIsMobileOrTablet(e.matches)
-    }
-
-    handleChange(mediaQuery)
-    mediaQuery.addEventListener(
-      "change",
-      handleChange as (e: MediaQueryListEvent) => void
-    )
-
-    return () => {
-      mediaQuery.removeEventListener(
-        "change",
-        handleChange as (e: MediaQueryListEvent) => void
-      )
-    }
-  }, [])
+  const isMounted = useMounted()
+  const isMobileOrTablet = useMediaQuery("(max-width: 1024px)")
 
   if (!isMounted) return <MobilePlatformLoader />
 

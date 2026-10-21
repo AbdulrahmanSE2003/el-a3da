@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { usePartyStore } from "@/store/party-store"
 import { sheikhQuestions } from "@/contents/sheikh-questions"
@@ -12,13 +12,11 @@ export function useSheikh() {
   const router = useRouter()
   const players = usePartyStore((state) => state.players)
 
-  const deckRef = useRef(createContentDeck(sheikhQuestions))
+  const [deck] = useState(() => createContentDeck(sheikhQuestions))
 
   const [phase, setPhase] = useState<SheikhPhase>("idle")
   const [sheikhId, setSheikhId] = useState<string | null>(null)
-  const [currentQuestion, setCurrentQuestion] = useState(() =>
-    deckRef.current.next()
-  )
+  const [currentQuestion, setCurrentQuestion] = useState(() => deck.next())
 
   useEffect(() => {
     if (players.length === 0) {
@@ -36,18 +34,18 @@ export function useSheikh() {
   }
 
   const startQuestions = () => {
-    setCurrentQuestion(deckRef.current.next())
+    setCurrentQuestion(deck.next())
     setPhase("questions")
   }
 
   const nextQuestion = () => {
-    setCurrentQuestion(deckRef.current.next())
+    setCurrentQuestion(deck.next())
   }
 
   const reset = () => {
     setSheikhId(null)
-    deckRef.current.reset()
-    setCurrentQuestion(deckRef.current.next())
+    deck.reset()
+    setCurrentQuestion(deck.next())
     setPhase("idle")
   }
 

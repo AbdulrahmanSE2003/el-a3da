@@ -9,6 +9,7 @@ A social party game app in Arabic. Play with friends, host games, and start the 
 - **UI**: React 19, Tailwind CSS v4
 - **State**: Zustand with persistence
 - **PWA**: Serwist for offline support
+- **Database**: Neon PostgreSQL (development branch), read-only admin queries
 
 ## Features
 
@@ -20,6 +21,7 @@ A social party game app in Arabic. Play with friends, host games, and start the 
 - **Topics**: Random conversation topics with shuffle
 - **Challenges**: Quick prompts to spark discussion
 - **Guides**: Detailed rules for each game mode
+- **Admin console**: Read-only content overview, server-paginated questions, and content health checks
 
 ## Running Locally
 
@@ -28,6 +30,16 @@ pnpm dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+The `/admin` pages read from Neon. Add the development branch connection string
+to `.env.local` (gitignored, server-only):
+
+```bash
+DATABASE_URL=postgresql://...
+```
+
+Feedback and developer notes stay hidden until admin authentication is
+implemented. See `docs/neon-schema-plan.md` and `docs/admin-auth.md`.
 
 ## PWA Install
 
@@ -41,4 +53,5 @@ The app is a Progressive Web App. Visit the site on Chrome/Android and click "In
 | **1.1.0** | Zad edition — added core features |
 | **1.2.0** | El-Qa3da V1.1.0 — more pages |
 | **1.3.0** | Finished Casino game + players system + topics + guides |
-| **1.4.0** | Current — casino al-al3ab + download modal + about & download pages |
+| **1.4.0** | Casino al-al3ab + download modal + about & download pages |
+| **1.4.1** | Content ID cleanup, Neon dev import (3,181 records), read-only admin console |

@@ -5,7 +5,7 @@ import { ArrowRight, Moon, Sun } from "lucide-react"
 import Link from "next/link"
 
 import { useTheme } from "next-themes"
-import { useEffect, useState } from "react"
+import { useMounted } from "@/hooks/use-mounted"
 
 const Header = ({
   stamp,
@@ -18,11 +18,7 @@ const Header = ({
 }) => {
   const { resolvedTheme, setTheme } = useTheme()
 
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = useMounted()
 
   const toggleTheme = () => {
     setTheme(resolvedTheme === "dark" ? "light" : "dark")
