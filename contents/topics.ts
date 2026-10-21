@@ -1,18 +1,23 @@
 // src/content/topics.ts
 
+export const TOPIC_CATEGORIES = [
+  "عميقة",
+  "مضحكة",
+  "ذكريات",
+  "خيارات",
+  "اعترافات",
+  "خيالية",
+  "علاقات",
+  "شغل وعلم",
+  "عالم موازي",
+] as const
+
+export type TopicCategory = (typeof TOPIC_CATEGORIES)[number]
+
 export interface Topic {
   id: string
   text: string
-  category:
-    | "عميقة"
-    | "مضحكة"
-    | "ذكريات"
-    | "خيارات"
-    | "اعترافات"
-    | "خيالية"
-    | "علاقات"
-    | "شغل وعلم"
-    | "عالم موازي"
+  category: TopicCategory
 }
 
 export const topics: Topic[] = [
@@ -2528,13 +2533,14 @@ export const topics: Topic[] = [
     id: "500",
     text: "لو القعدة دي متسجلة وهيتم عرضها بعد 50 سنة للناس، إيه الجملة الأخيرة اللي هتقولها للجمهور؟",
     category: "عالم موازي",
-  },{
+  },
+  {
     id: "501",
     category: "عميقة",
     text: "اختار أكتر حد ساكت في القعدة النهاردة واسأله ساكت ليه وقوله كلمة ترفع معنوياته .",
   },
   {
-    id: "81",
+    id: "502",
     category: "شغل وعلم",
     text: "نقاش للقعدة: إيه هو التعريف الحقيقي للنجاح من وجهة نظرك؟ هل هو الفلوس والشهرة.",
   },

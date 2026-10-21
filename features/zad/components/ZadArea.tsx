@@ -2,18 +2,18 @@
 import { RefreshCw } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Qa3daCard from "@/components/ui/Qa3daCard"
-import { useRef, useState } from "react"
+import { useState } from "react"
 import { createContentDeck } from "@/lib/create-content-deck"
 import { topics } from "@/contents/topics"
 import { zadTopics } from "@/contents/zad"
 
 const ZadArea = () => {
-  const deckRef = useRef(createContentDeck(zadTopics))
+  const [deck] = useState(() => createContentDeck(zadTopics))
 
-  const [currentTopic, setCurrentTopic] = useState(() => deckRef.current.next())
+  const [currentTopic, setCurrentTopic] = useState(() => deck.next())
 
   const handleNext = () => {
-    setCurrentTopic(deckRef.current.next())
+    setCurrentTopic(deck.next())
   }
   return (
     <section className="relative z-10 my-auto flex w-full max-w-md flex-col items-center pt-2">
@@ -25,7 +25,7 @@ const ZadArea = () => {
         </h2>
         <p className="text-sm font-medium text-ink-soft/80">
           {" "}
-          "زاد صغير... ممكن تنتفع بيه"
+          &quot;زاد صغير... ممكن تنتفع بيه&quot;
         </p>
       </div>
 

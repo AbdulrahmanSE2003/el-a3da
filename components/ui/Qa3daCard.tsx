@@ -1,7 +1,7 @@
 "use client"
 
 import { motion, AnimatePresence } from "framer-motion"
-import { useEffect, useState } from "react"
+import { useMounted } from "@/hooks/use-mounted"
 
 export interface Qa3daCardProps {
   id: string
@@ -16,11 +16,7 @@ export default function Qa3daCard({
   badgeLabel = "موضوع",
   category,
 }: Qa3daCardProps) {
-  const [mounted, setMounted] = useState(false)
-
-  useEffect(() => {
-    setMounted(true)
-  }, [])
+  const mounted = useMounted()
 
 
   return (

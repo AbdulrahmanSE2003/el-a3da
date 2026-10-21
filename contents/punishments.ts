@@ -1,7 +1,17 @@
+export const PUNISHMENT_CATEGORIES = [
+  "ضحك",
+  "تحدي",
+  "موبايل",
+  "قهوة",
+  "صراحة",
+] as const
+
+export type PunishmentCategory = (typeof PUNISHMENT_CATEGORIES)[number]
+
 export interface Punishment {
   id: string
   text: string
-  category: string
+  category: PunishmentCategory
 }
 
 export const punishments: Punishment[] = [
@@ -2451,5 +2461,9 @@ export const punishments: Punishment[] = [
     id: "500",
     text: "اقفل الموبايل تماماً (Power Off) وحطه في نص الترابيزة لآخر الجيم.",
     category: "موبايل",
+  },{
+    id: "501",
+    text: "اعمل إعلان (حليب الخير) زي ما كان في الفيلم بالظبط",
+    category: "تحدي",
   },
 ]

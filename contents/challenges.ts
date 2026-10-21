@@ -1,18 +1,23 @@
 // src/content/challenges.ts
 
+export const CHALLENGE_CATEGORIES = [
+  "ضحك",
+  "تقليد",
+  "جدال",
+  "جرأة",
+  "تمثيل",
+  "ذكاء",
+  "فضايح",
+  "سرعة",
+  "عقاب",
+] as const
+
+export type ChallengeCategory = (typeof CHALLENGE_CATEGORIES)[number]
+
 export interface Challenge {
   id: string
   text: string
-  category:
-    | "ضحك"
-    | "تقليد"
-    | "جدال"
-    | "جرأة"
-    | "تمثيل"
-    | "ذكاء"
-    | "فضايح"
-    | "سرعة"
-    | "عقاب"
+  category: ChallengeCategory
 }
 
 export const challenges: Challenge[] = [

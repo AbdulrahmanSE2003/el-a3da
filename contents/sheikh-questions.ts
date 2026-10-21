@@ -1,8 +1,18 @@
 
+export const SHEIKH_CATEGORIES = [
+  "جريئة",
+  "القعدة",
+  "خيارات",
+  "تجارب",
+  "شخصية",
+] as const
+
+export type SheikhCategory = (typeof SHEIKH_CATEGORIES)[number]
+
 export interface SheikhQuestion {
   id: string
   text: string
-  category: string
+  category: SheikhCategory
 }
 
 export const sheikhQuestions: SheikhQuestion[] = [
