@@ -111,9 +111,7 @@ export function QuestionCreateDialog({
         )}
 
         <div>
-          <Label htmlFor="new-question-external-id">
-            معرّف السؤال
-          </Label>
+          <Label htmlFor="new-question-external-id">السؤال ID</Label>
           <Input
             id="new-question-external-id"
             value="يتم توليده تلقائياً"

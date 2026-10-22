@@ -18,12 +18,12 @@ export default function SettingsPage() {
       <div className="relative z-10 mx-auto flex w-full max-w-md flex-col">
         <Header stamp="SETTINGS" />
         <header className="mb-8 flex flex-col gap-2">
-          <p className="text-xs font-black tracking-[0.25em] text-copper">
+          <p className="text-xs font-black tracking-[0.25em] text-copper uppercase">
             SETTINGS
           </p>
           <h1 className="text-3xl font-black tracking-tight">الإعدادات</h1>
-          <p className="text-sm leading-relaxed font-semibold text-ink-soft">
-            تخصيص مظهر التطبيق، مع الحفاظ على الوضع الليلي/الفاتح الحالي.
+          <p className="text-sm leading-relaxed font-medium text-ink-soft">
+            ظبّط حسابك وتفضلاتك في القعدة بالشكل اللي يريحك.
           </p>
         </header>
 

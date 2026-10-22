@@ -40,7 +40,7 @@ export async function updateQuestionRecord(
   draft: QuestionDraft
 ): Promise<QuestionMutationResult> {
   if (!isQuestionId(id)) {
-    return { ok: false, error: "معرّف السؤال غير صالح." }
+    return { ok: false, error: " ID السؤال  غير صالح." }
   }
 
   const rows = (await getSql().query(
@@ -103,7 +103,7 @@ export async function softDeleteQuestionRecord(
   id: string
 ): Promise<QuestionMutationResult> {
   if (!isQuestionId(id)) {
-    return { ok: false, error: "معرّف السؤال غير صالح." }
+    return { ok: false, error: " ID السؤال  غير صالح." }
   }
 
   const deleted = (await getSql().query(

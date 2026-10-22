@@ -228,7 +228,7 @@ export function validateFeedbackDraft(input: unknown): FeedbackDraftValidation {
 
   const questionExternalId = asText(record.questionExternalId)
   if (questionExternalId.length > FEEDBACK_QUESTION_ID_MAX_LENGTH) {
-    fieldErrors.questionExternalId = "معرّف السؤال طويل جدًا."
+    fieldErrors.questionExternalId = " ID السؤال  طويل جدًا."
   }
 
   const deviceInfo = asText(record.deviceInfo)

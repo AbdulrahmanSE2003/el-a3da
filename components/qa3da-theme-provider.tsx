@@ -22,13 +22,7 @@ const Qa3daThemeContext = React.createContext<Qa3daThemeContextValue | null>(
 function applyAccentTheme(theme: Qa3daAccentTheme) {
   if (typeof document === "undefined") return
 
-  const root = document.documentElement
-
-  if (theme === QA3DA_DEFAULT_ACCENT_THEME) {
-    root.removeAttribute("data-accent-theme")
-  } else {
-    root.setAttribute("data-accent-theme", theme)
-  }
+  document.documentElement.setAttribute("data-accent-theme", theme)
 }
 
 function Qa3daThemeProvider({ children }: { children: React.ReactNode }) {
@@ -43,8 +37,6 @@ function Qa3daThemeProvider({ children }: { children: React.ReactNode }) {
 
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setThemeState(storedTheme)
-    console.log(storedTheme)
-
     applyAccentTheme(storedTheme)
     setMounted(true)
   }, [])

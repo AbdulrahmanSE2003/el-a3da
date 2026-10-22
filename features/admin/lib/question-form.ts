@@ -19,7 +19,7 @@ export interface QuestionDraft {
   badgeLabel: string
 }
 
-/** مسودة الإضافة بتزود معرّف السؤال، مش موجود في التعديل. */
+/** مسودة الإضافة بتزود  ID السؤال ، مش موجود في التعديل. */
 export interface QuestionCreateDraft extends QuestionDraft {
   externalId: string
 }
@@ -122,8 +122,8 @@ export function validateQuestionDraft(
 }
 
 /**
- * نفس قواعد التحقق مع معرّف السؤال المطلوب للإضافة.
- * معرّف السؤال بيتولد تلقائياً على السيرفر من ترتيب السؤال، فمش بنحتاج
+ * نفس قواعد التحقق مع  ID السؤال  المطلوب للإضافة.
+ *  ID السؤال  بيتولد تلقائياً على السيرفر من ترتيب السؤال، فمش بنحتاج
  * يتحقق منه من طرف العميل دلوقتي.
  */
 export function validateQuestionCreateDraft(

@@ -85,7 +85,7 @@ export function FeedbackContextFields({
         </div>
 
         <div>
-          <Label htmlFor="feedback-question">معرّف السؤال (اختياري)</Label>
+          <Label htmlFor="feedback-question"> ID السؤال (اختياري)</Label>
 
           <Input
             className={`rounded-md`}

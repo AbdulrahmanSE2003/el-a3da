@@ -149,7 +149,7 @@ export function FeedbackDetailDialog({
           )}
         </MetaRow>
 
-        <MetaRow label="معرّف السؤال">
+        <MetaRow label=" ID السؤال ">
           {feedback.questionExternalId ? (
             <span className="font-mono" dir="ltr">
               {feedback.questionExternalId}
