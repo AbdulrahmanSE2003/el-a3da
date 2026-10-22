@@ -67,7 +67,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="min-h-dvh bg-paper text-ink">
-      <div className="mx-auto flex w-full max-w-[1440px]">
+      <div className="mx-auto flex w-full max-w-360">
         {/* الشريط الجانبي — ديسكتوب */}
         <aside className="sticky top-0 hidden h-dvh w-64 shrink-0 flex-col border-e-2 border-ink bg-paper-warm p-5 md:flex">
           <Link
@@ -82,17 +82,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
 
           <div className="mt-6">{nav}</div>
 
-          <div className="mt-auto border-2 border-ink/20 bg-paper p-3">
-            <p className="font-mono text-[10px] font-bold tracking-widest text-copper">
-              CONTENT ADMIN
-            </p>
-            <p className="mt-1.5 text-xs leading-relaxed text-ink-soft">
-              الأسئلة والمجموعات بتتقرأ من Neon. تقدر تضيف سؤال جديد، تعدّل حقول
-              السؤال، أو تحذفه soft delete. رسائل اللاعبين متاحة للمراجعة. النشر
-              والملاحظات الداخلية لسه مش متفعّلة.
-            </p>
-            <div className="mt-3">{logoutButton}</div>
-          </div>
+          <div className="mt-auto">{logoutButton}</div>
         </aside>
 
         {/* المحتوى */}
@@ -151,8 +141,9 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
             <AlertTriangleIcon className="mt-0.5 size-4 shrink-0 text-copper" />
             <p>
               <span className="font-bold text-ink">لوحة محمية:</span> الدخول
-              محمي بجلسة مسؤول. إضافة وتعديل وحذف الأسئلة ومعاينة رسائل اللاعبين
-              متاحين، لكن النشر والملاحظات الداخلية لسه مش متفعّلة.
+              محمي بجلسة مسؤول. إضافة وتعديل وحذف الأسئلة، ومعاينة رسائل
+              اللاعبين وتغيير حالتها متاحين، لكن النشر والملاحظات الداخلية لسه
+              مش متفعّلة.
             </p>
           </div>
 

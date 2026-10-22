@@ -6,8 +6,11 @@ import { getSql } from "./db"
 import { isContentSetId } from "../lib/content-sets"
 import type { ContentSetId } from "../lib/types"
 import {
+  isFeedbackPriority,
   isFeedbackStatus,
   isFeedbackType,
+  getFeedbackPriority,
+  type FeedbackPriority,
   type FeedbackStatus,
   type FeedbackType,
 } from "@/features/feedback/lib/feedback"
@@ -48,6 +51,16 @@ const asType = (value: unknown): FeedbackType =>
 const asStatus = (value: unknown): FeedbackStatus =>
   isFeedbackStatus(value) ? value : "open"
 
+/**
+ * الأولوية المحفوظة، ولو ناقصة (صفوف قديمة) بنشتقها من النوع عشان
+ * الواجهة تفضل متسقة مع قاعدة "الأولوية من النوع".
+ */
+const asPriority = (
+  value: unknown,
+  type: FeedbackType = "general"
+): FeedbackPriority =>
+  isFeedbackPriority(value) ? value : getFeedbackPriority(type)
+
 const asSetId = (value: unknown): ContentSetId | null => {
   const text = asNullableText(value)
   return text && isContentSetId(text) ? text : null
@@ -65,7 +78,7 @@ interface FeedbackDbRow {
   id: string
   type: string
   status: string
-  priority: number | null
+  priority: string | null
   message: string
   rating: number | null
   contact: string | null
@@ -75,6 +88,8 @@ interface FeedbackDbRow {
   device_info: string | null
   created_at: string
   updated_at: string
+  reviewed_at: string | null
+  reviewed_by: string | null
   attachment_count: string | number
 }
 
@@ -174,6 +189,8 @@ export async function getFeedbackPage({
         f.device_info,
         to_char(f.created_at at time zone 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS.MS"Z"') as created_at,
         to_char(f.updated_at at time zone 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS.MS"Z"') as updated_at,
+        to_char(f.reviewed_at at time zone 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS.MS"Z"') as reviewed_at,
+        f.reviewed_by,
         count(a.id)::int as attachment_count
       from feedback f
       left join feedback_attachments a on a.feedback_id = f.id
@@ -213,11 +230,12 @@ export async function getFeedbackPage({
   return {
     rows: rows.map((row) => {
       const id = asText(row.id)
+      const type = asType(row.type)
       return {
         id,
-        type: asType(row.type),
+        type,
         status: asStatus(row.status),
-        priority: row.priority == null ? null : asNumber(row.priority),
+        priority: asPriority(row.priority, type),
         message: asText(row.message),
         rating: row.rating == null ? null : asNumber(row.rating),
         contact: asNullableText(row.contact),
@@ -227,6 +245,8 @@ export async function getFeedbackPage({
         deviceInfo: asNullableText(row.device_info),
         createdAt: asText(row.created_at),
         updatedAt: asText(row.updated_at),
+        reviewedAt: asNullableText(row.reviewed_at),
+        reviewedBy: asNullableText(row.reviewed_by),
         attachmentCount: asNumber(row.attachment_count),
         attachments: attachmentsByFeedback.get(id) ?? [],
       }

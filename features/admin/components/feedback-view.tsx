@@ -42,15 +42,22 @@ export function FeedbackView({
 
   const hasFilters = Boolean(query.trim()) || status !== "all" || type !== "all"
 
+  // الحالة بتتغير جوه الدايلوج؛ بنحدّث نسخة العرض بحيث الشارات تفضل متسقة.
+  const handleStatusChanged = (id: string, next: FeedbackStatus) => {
+    setViewing((current) =>
+      current && current.id === id ? { ...current, status: next } : current
+    )
+  }
+
   return (
     <div className="flex flex-col gap-5">
       <PageHeader
         stamp="FEEDBACK"
         title="رسائل اللاعبين"
-        description="كل الملاحظات اللي بيبعتها اللاعبون من صفحة الملاحظات، مع الصور المرفقة. العرض للقراءة فقط — الحالة بتتحدّث من قاعدة البيانات مباشرة."
+        description="كل الملاحظات اللي بيبعتها اللاعبون من صفحة الملاحظات، مع الصور المرفقة. تقدر تغيّر حالة الرسالة: مفتوحة، مقروءة، أو تم الحل."
         action={
           <Badge className="border-copper/30 bg-copper/10 font-mono text-[10px] text-copper">
-            {formatNumber(counts.open)} جديدة
+            {formatNumber(counts.open)} مفتوحة
           </Badge>
         }
       />
@@ -99,6 +106,7 @@ export function FeedbackView({
           key={viewing.id}
           feedback={viewing}
           onClose={() => setViewing(null)}
+          onStatusChanged={handleStatusChanged}
         />
       )}
     </div>

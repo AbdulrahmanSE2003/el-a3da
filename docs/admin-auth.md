@@ -2,10 +2,10 @@
 
 **Status: implemented for the single internal administrator.** The dashboard is
 authenticated and supports creating questions, editing question fields,
-soft-deleting questions, and reviewing player feedback (read-only). Publishing
-and developer notes are still disabled. There is no `admin_users` table and no
-player accounts. See `docs/admin-questions.md` for the question mutation rules
-and `docs/feedback.md` for the feedback pipeline.
+soft-deleting questions, and managing player feedback (read + status changes).
+Publishing and developer notes are still disabled. There is no `admin_users`
+table and no player accounts. See `docs/admin-questions.md` for the question
+mutation rules and `docs/feedback.md` for the feedback pipeline.
 
 ## Routes
 
@@ -126,13 +126,15 @@ database-backed counter).
 
 ## Feedback and notes
 
-Player feedback is now readable in `/admin/feedback` through a reviewed,
-read-only query. The page lists type, message, rating, contact, set/question
-reference, device info, and attachment count, with type/status/search filters and
-20-per-page pagination. Screenshots are served through the authenticated
-`/api/admin/feedback/attachments/[id]` proxy, which signs a short-lived Neon
-Storage URL only after `requireAdmin()` passes — the private bucket is never
-exposed directly.
+Player feedback is readable and actionable in `/admin/feedback` through a
+reviewed query. The page lists type, priority, message, rating, contact,
+set/question reference, device info, and attachment count, with
+type/status/search filters and 20-per-page pagination. Each message's status can
+be set to open / reviewed / done via a protected server action, which also
+stamps `reviewed_at` / `reviewed_by`. Screenshots are served through the
+authenticated `/api/admin/feedback/attachments/[id]` proxy, which signs a
+short-lived Neon Storage URL only after `requireAdmin()` passes — the private
+bucket is never exposed directly.
 
 `notes` remains hidden and still shows a "not enabled" state. Authentication
 alone is not permission to expose internal notes; add a reviewed, read-only query

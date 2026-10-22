@@ -1,25 +1,31 @@
 "use client"
 
+import { useState } from "react"
 import { CalendarClockIcon, ImageIcon, MailIcon } from "lucide-react"
 import { AppDialog } from "@/components/ui/AppDialog"
 import { Button } from "@/components/ui/button"
 import { formatDateTime, formatNumber } from "../lib/format"
 import { getSetMeta } from "../lib/content-sets"
 import {
+  FEEDBACK_PRIORITY_LABELS,
   FEEDBACK_STATUS_LABELS,
   FEEDBACK_TYPE_LABELS,
   formatFeedbackFileSize,
+  type FeedbackStatus,
 } from "@/features/feedback/lib/feedback"
 import {
+  FEEDBACK_PRIORITY_CLASS,
   FEEDBACK_STATUS_CLASS,
   FEEDBACK_TYPE_CLASS,
 } from "../feedback/lib/style"
 import type { FeedbackRow } from "../feedback/lib/types"
+import { FeedbackStatusControl } from "./FeedbackStatusControl"
 import { cn } from "@/lib/utils"
 
 interface FeedbackDetailDialogProps {
   feedback: FeedbackRow
   onClose: () => void
+  onStatusChanged?: (id: string, status: FeedbackStatus) => void
 }
 
 function MetaRow({
@@ -42,7 +48,10 @@ function MetaRow({
 export function FeedbackDetailDialog({
   feedback,
   onClose,
+  onStatusChanged,
 }: FeedbackDetailDialogProps) {
+  const [status, setStatus] = useState<FeedbackStatus>(feedback.status)
+
   return (
     <AppDialog
       open
@@ -71,10 +80,18 @@ export function FeedbackDetailDialog({
         <span
           className={cn(
             "border px-2 py-0.5 font-mono text-[10px] font-bold",
-            FEEDBACK_STATUS_CLASS[feedback.status]
+            FEEDBACK_PRIORITY_CLASS[feedback.priority]
           )}
         >
-          {FEEDBACK_STATUS_LABELS[feedback.status]}
+          أولوية {FEEDBACK_PRIORITY_LABELS[feedback.priority]}
+        </span>
+        <span
+          className={cn(
+            "border px-2 py-0.5 font-mono text-[10px] font-bold",
+            FEEDBACK_STATUS_CLASS[status]
+          )}
+        >
+          {FEEDBACK_STATUS_LABELS[status]}
         </span>
         {feedback.rating && (
           <span className="border border-copper/40 bg-copper/10 px-2 py-0.5 font-mono text-[10px] font-bold text-copper">
@@ -82,6 +99,26 @@ export function FeedbackDetailDialog({
           </span>
         )}
       </div>
+
+      <section className="border-2 border-ink bg-paper-warm">
+        <p className="border-b border-ink/10 px-3 py-2 font-mono text-[10px] font-bold tracking-widest text-ink-soft/70">
+          حالة الرسالة
+        </p>
+        <div className="px-3 py-3">
+          <FeedbackStatusControl
+            feedbackId={feedback.id}
+            status={status}
+            onChanged={(next) => {
+              setStatus(next)
+              onStatusChanged?.(feedback.id, next)
+            }}
+          />
+          <p className="mt-2 text-[10px] leading-relaxed text-ink-soft/60">
+            مفتوحة: اتبعتت ولسه مشفتش · مقروءة: قريتها بس لسه متحلتش · تم الحل:
+            قريتها واشتغلت عليها. الرجوع مسموح في أي وقت.
+          </p>
+        </div>
+      </section>
 
       <section className="border-2 border-ink bg-paper-warm">
         <p className="border-b border-ink/10 px-3 py-2 font-mono text-[10px] font-bold tracking-widest text-ink-soft/70">
@@ -126,6 +163,26 @@ export function FeedbackDetailDialog({
           {feedback.appVersion ? (
             <span className="font-mono" dir="ltr">
               {feedback.appVersion}
+            </span>
+          ) : (
+            <span className="text-ink-soft/60">—</span>
+          )}
+        </MetaRow>
+
+        <MetaRow label="اتقرأت في">
+          {feedback.reviewedAt ? (
+            <span className="font-mono text-[11px]">
+              {formatDateTime(feedback.reviewedAt)}
+            </span>
+          ) : (
+            <span className="text-ink-soft/60">—</span>
+          )}
+        </MetaRow>
+
+        <MetaRow label="اتقرأت بواسطة">
+          {feedback.reviewedBy ? (
+            <span className="font-mono text-[11px]" dir="ltr">
+              {feedback.reviewedBy}
             </span>
           ) : (
             <span className="text-ink-soft/60">—</span>

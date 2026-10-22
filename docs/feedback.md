@@ -1,8 +1,9 @@
 # Player feedback
 
 **Status: implemented end to end.** Players submit feedback on `/feedback` with
-optional screenshots, and the single admin reviews it read-only in
-`/admin/feedback`. Screenshots live in the private Neon `feedbacks` bucket.
+optional screenshots, and the single admin reviews it in `/admin/feedback`,
+where each message's status can be set to open / reviewed / done. Screenshots
+live in the private Neon `feedbacks` bucket.
 
 ## User flow
 
@@ -28,7 +29,7 @@ to the exact object keys, content types, and byte sizes. The completion step
 therefore only accepts objects the server itself authorized, at the size and
 type it expected — an attacker can't attach arbitrary bucket objects to a row.
 
-## Admin flow (read-only)
+## Admin flow
 
 - `/admin/feedback` (`features/admin/server/feedback-queries.ts`) lists rows with
   20-per-page pagination, search, and type/status filters, plus status counts.
@@ -39,7 +40,42 @@ type it expected — an attacker can't attach arbitrary bucket objects to a row.
   the row, signs a 5-minute download URL, and redirects with
   `Cache-Control: private, no-store`. Unauthenticated requests get `401`, unknown
   ids get `404`.
-- Status is display-only right now; there is no admin write path yet.
+
+### Status workflow
+
+Every message has one of three statuses, and the admin sets all three:
+
+| Status     | Arabic  | Meaning                                                   |
+| ---------- | ------- | --------------------------------------------------------- |
+| `open`     | مفتوحة  | Submitted, not looked at yet. New feedback defaults here. |
+| `reviewed` | مقروءة  | Read, but not acted on yet.                               |
+| `done`     | تم الحل | Read and worked on.                                       |
+
+- Set from compact icon buttons in the table, or the full button row in the
+  detail dialog. Going back to a previous status is always allowed.
+- `updateFeedbackStatusAction` (`features/admin/server/feedback-actions.ts`) is a
+  protected server action: it calls `requireAdmin()`, validates the status
+  against the allowed set, and only then writes.
+- `updateFeedbackStatusRecord` (`features/admin/server/feedback-mutations.ts`)
+  writes `status` and, on the first move away from `open`, stamps `reviewed_at`
+  with `now()` and `reviewed_by` with the session subject. Returning to `open`
+  clears both. `updated_at` is bumped whenever the status actually changes.
+
+### Priority
+
+Priority is derived from the message type — it is not editable:
+
+| Type             | Priority          |
+| ---------------- | ----------------- |
+| `general`        | `low` (عادية)     |
+| `suggestion`     | `medium` (متوسطة) |
+| `question_issue` | `medium` (متوسطة) |
+| `bug`            | `high` (عالية)    |
+
+- The value is written on insert via `getFeedbackPriority()` and shown as a tag
+  in the table and a badge in the detail dialog.
+- The read model falls back to deriving priority from the type when the stored
+  value is missing, so older rows stay consistent.
 
 ## Storage configuration
 

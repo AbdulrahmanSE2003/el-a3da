@@ -1,5 +1,6 @@
 import type { ContentSetId } from "@/features/admin/lib/types"
 import type {
+  FeedbackPriority,
   FeedbackStatus,
   FeedbackType,
 } from "@/features/feedback/lib/feedback"
@@ -18,7 +19,7 @@ export interface FeedbackRow {
   id: string
   type: FeedbackType
   status: FeedbackStatus
-  priority: number | null
+  priority: FeedbackPriority
   message: string
   rating: number | null
   contact: string | null
@@ -28,6 +29,8 @@ export interface FeedbackRow {
   deviceInfo: string | null
   createdAt: string
   updatedAt: string
+  reviewedAt: string | null
+  reviewedBy: string | null
   attachmentCount: number
   attachments: FeedbackAttachmentRow[]
 }

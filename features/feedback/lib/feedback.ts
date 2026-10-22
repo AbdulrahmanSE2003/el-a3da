@@ -33,9 +33,48 @@ export const FEEDBACK_STATUSES = ["open", "reviewed", "done"] as const
 export type FeedbackStatus = (typeof FEEDBACK_STATUSES)[number]
 
 export const FEEDBACK_STATUS_LABELS: Record<FeedbackStatus, string> = {
-  open: "جديدة",
-  reviewed: "اتقرأت",
-  done: "اتظبطت",
+  open: "مفتوحة",
+  reviewed: "مقروءة",
+  done: "تم الحل",
+}
+
+export const FEEDBACK_STATUS_DESCRIPTIONS: Record<FeedbackStatus, string> = {
+  open: "اتبعتت ولسه مشفتش",
+  reviewed: "قريتها بس لسه متحلتش",
+  done: "قريتها واشتغلت عليها",
+}
+
+export const FEEDBACK_PRIORITIES = ["low", "medium", "high"] as const
+
+export type FeedbackPriority = (typeof FEEDBACK_PRIORITIES)[number]
+
+export const FEEDBACK_PRIORITY_LABELS: Record<FeedbackPriority, string> = {
+  low: "عادية",
+  medium: "متوسطة",
+  high: "عالية",
+}
+
+/**
+ * الأولوية بتتحدد تلقائيًا من نوع الرسالة:
+ * عامة → عادية، اقتراح/ملاحظة على سؤال → متوسطة، مشكلة → عالية.
+ * مش قابلة للتعديل من الواجهة عشان تفضل متسقة مع النوع.
+ */
+export const FEEDBACK_TYPE_PRIORITY: Record<FeedbackType, FeedbackPriority> = {
+  general: "low",
+  suggestion: "medium",
+  question_issue: "medium",
+  bug: "high",
+}
+
+export function getFeedbackPriority(type: FeedbackType): FeedbackPriority {
+  return FEEDBACK_TYPE_PRIORITY[type]
+}
+
+export function isFeedbackPriority(value: unknown): value is FeedbackPriority {
+  return (
+    typeof value === "string" &&
+    (FEEDBACK_PRIORITIES as readonly string[]).includes(value)
+  )
 }
 
 export const FEEDBACK_MESSAGE_MIN_LENGTH = 10

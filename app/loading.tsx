@@ -1,20 +1,44 @@
 import { Loader2Icon } from "lucide-react"
 
+import { StatePanel } from "@/components/ui/state-panel"
+
 interface LoadingProps {
   label?: string
 }
 
+/**
+ * شاشة التحميل العامة. بتستخدم نفس StatePanel عشان تاخد نفس الطابع
+ * على الموبايل، وكلها CSS خفيف (من غير JS) عشان تظهر فورًا.
+ */
 export default function Loading({
-  label = "جاري تحميل البيانات...",
+  label = "جاري تحضير القعدة...",
 }: LoadingProps) {
   return (
-    <div className={`flex h-full items-center justify-center`}>
-      <div className="flex min-h-75 w-1/2 flex-col items-center justify-center gap-3 rounded-none border-2 border-ink bg-paper-warm p-8 text-center shadow-[4px_4px_0_var(--color-ink)]">
-        <div className="flex size-12 items-center justify-center border-2 border-ink bg-copper/20 text-copper shadow-[2px_2px_0_var(--color-ink)]">
-          <Loader2Icon className="size-6 animate-spin" />
-        </div>
-        <p className="font-mono text-xs font-bold text-ink">{label}</p>
+    <StatePanel
+      variant="full"
+      tone="copper"
+      icon={Loader2Icon}
+      stamp="LOADING"
+      title={label}
+      description="استنى ثانية واحدة بس وكل حاجة هتكون جاهزة."
+    >
+      <div className="relative w-full max-w-md space-y-2.5" aria-hidden>
+        <div className="h-3 w-1/3 animate-pulse bg-ink/10" />
+        <div className="h-3 w-full animate-pulse bg-ink/10" />
+        <div className="h-3 w-4/5 animate-pulse bg-ink/10" />
       </div>
-    </div>
+
+      <div
+        className="relative grid w-full grid-cols-2 gap-2 sm:grid-cols-3"
+        aria-hidden
+      >
+        {Array.from({ length: 3 }).map((_, index) => (
+          <div
+            key={index}
+            className="h-16 animate-pulse border-2 border-ink/15 bg-paper sm:h-20"
+          />
+        ))}
+      </div>
+    </StatePanel>
   )
 }
