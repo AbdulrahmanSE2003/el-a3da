@@ -17,7 +17,7 @@ const navItems = [
   },
   {
     href: "/players",
-    label: "القعدة",
+    label: "اللعيبة",
     icon: Users,
   },
   {
