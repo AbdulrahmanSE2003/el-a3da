@@ -125,7 +125,8 @@ export function verifyUploadToken(
     return null
   }
 
-  if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) return null
+  if (!parsed || typeof parsed !== "object" || Array.isArray(parsed))
+    return null
   const payload = parsed as Record<string, unknown>
 
   if (payload.v !== TOKEN_VERSION) return null
@@ -143,7 +144,10 @@ export function verifyUploadToken(
   const draft = validateFeedbackDraft(payload.draft)
   if (!draft.ok) return null
 
-  if (!Array.isArray(payload.files) || payload.files.length > FEEDBACK_MAX_FILES) {
+  if (
+    !Array.isArray(payload.files) ||
+    payload.files.length > FEEDBACK_MAX_FILES
+  ) {
     return null
   }
   if (!payload.files.every(isValidFile)) return null

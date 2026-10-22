@@ -44,14 +44,14 @@ const Header = ({
             className="flex size-8 items-center justify-center border border-ink/10 text-ink-soft transition-colors hover:border-copper/30 hover:text-copper"
           >
             {mounted ? (
-            resolvedTheme === "dark" ? (
-              <Sun className="size-4" />
+              resolvedTheme === "dark" ? (
+                <Sun className="size-4" />
+              ) : (
+                <Moon className="size-4" />
+              )
             ) : (
-              <Moon className="size-4" />
-            )
-          ) : (
-            <span className="size-4" />
-          )}
+              <span className="size-4" />
+            )}
           </button>
 
           <span className="border border-copper/30 bg-copper/10 px-2.5 py-2 font-mono text-[10px] font-bold tracking-widest text-copper">

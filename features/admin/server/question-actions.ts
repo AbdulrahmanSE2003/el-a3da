@@ -3,10 +3,15 @@
 import { revalidatePath } from "next/cache"
 import { AdminAuthenticationError, requireAdmin } from "./auth"
 import {
+  createQuestionRecord,
   softDeleteQuestionRecord,
   updateQuestionRecord,
 } from "./question-mutations"
+import { isContentSetId } from "../lib/content-sets"
+import type { ContentSetId } from "../lib/types"
 import type {
+  QuestionCreateDraft,
+  QuestionCreateMutationResult,
   QuestionDraft,
   QuestionMutationResult,
 } from "../lib/question-form"
@@ -21,6 +26,16 @@ const GENERIC_ERROR: QuestionMutationResult = {
   error: "تعذر تنفيذ العملية. حاول تاني.",
 }
 
+const GENERIC_CREATE_ERROR: QuestionCreateMutationResult = {
+  ok: false,
+  error: "تعذر إضافة السؤال. حاول تاني.",
+}
+
+const AUTH_CREATE_ERROR: QuestionCreateMutationResult = {
+  ok: false,
+  error: "انتهت الجلسة. سجّل الدخول من جديد.",
+}
+
 function revalidateAdminContent() {
   revalidatePath("/admin/questions")
   revalidatePath("/admin")
@@ -33,6 +48,16 @@ async function authorize(): Promise<QuestionMutationResult | null> {
     return null
   } catch (error) {
     if (error instanceof AdminAuthenticationError) return AUTH_ERROR
+    throw error
+  }
+}
+
+async function authorizeCreate(): Promise<QuestionCreateMutationResult | null> {
+  try {
+    await requireAdmin()
+    return null
+  } catch (error) {
+    if (error instanceof AdminAuthenticationError) return AUTH_CREATE_ERROR
     throw error
   }
 }
@@ -67,6 +92,54 @@ function parseDeleteInput(input: unknown): { id: string } | null {
   if (typeof value.id !== "string") return null
 
   return { id: value.id }
+}
+
+function parseCreateInput(
+  input: unknown
+): { setId: ContentSetId; draft: QuestionCreateDraft } | null {
+  if (!input || typeof input !== "object") return null
+
+  const value = input as Record<string, unknown>
+  const setId = value.setId
+  if (typeof setId !== "string" || !isContentSetId(setId)) return null
+
+  return {
+    setId,
+    draft: {
+      externalId: asString(value.externalId),
+      text: asString(value.text),
+      category: asString(value.category),
+      correctAnswer: asString(value.correctAnswer),
+      badgeLabel: asString(value.badgeLabel),
+    },
+  }
+}
+
+/** إضافة سؤال جديد للمجموعة المختارة. */
+export async function createQuestionAction(
+  input: unknown
+): Promise<QuestionCreateMutationResult> {
+  const authError = await authorizeCreate()
+  if (authError) return authError
+
+  const parsed = parseCreateInput(input)
+  if (!parsed) return { ok: false, error: "طلب غير صالح." }
+
+  try {
+    const result = await createQuestionRecord(parsed.setId, parsed.draft)
+    if (result.ok) revalidateAdminContent()
+    if (!result.ok && result.fieldErrors) {
+      return {
+        ok: false,
+        error: result.error ?? GENERIC_CREATE_ERROR.error,
+        fieldErrors: result.fieldErrors,
+      }
+    }
+    return result
+  } catch (error) {
+    console.error("[admin/questions] create failed", error)
+    return GENERIC_CREATE_ERROR
+  }
 }
 
 /** تعديل حقول السؤال المسموحة فقط؛ external_id وposition مش قابلين للتعديل. */

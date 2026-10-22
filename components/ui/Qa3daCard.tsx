@@ -18,7 +18,6 @@ export default function Qa3daCard({
 }: Qa3daCardProps) {
   const mounted = useMounted()
 
-
   return (
     <div
       className="relative flex min-h-85 w-full items-center justify-center py-4"

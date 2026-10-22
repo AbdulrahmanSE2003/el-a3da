@@ -1,6 +1,8 @@
 "use client"
 
 import { useMemo, useState } from "react"
+import { PlusIcon } from "lucide-react"
+import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import type {
   CategoryCount,
@@ -17,6 +19,7 @@ import { AdminPagination } from "./pagination"
 import { QuestionDetailDialog } from "./question-detail-dialog"
 import { QuestionEditDialog } from "./question-edit-dialog"
 import { QuestionDeleteDialog } from "./question-delete-dialog"
+import { QuestionCreateDialog } from "./question-create-dialog"
 import { useQuestionFilters } from "../questions/hooks/use-question-filter"
 
 interface QuestionsViewProps {
@@ -45,6 +48,7 @@ export function QuestionsView({
   const [viewing, setViewing] = useState<QuestionRow | null>(null)
   const [editing, setEditing] = useState<QuestionRow | null>(null)
   const [deleting, setDeleting] = useState<QuestionRow | null>(null)
+  const [creating, setCreating] = useState(false)
 
   const { search, setSearch, isPending, navigate } = useQuestionFilters(query)
 
@@ -72,7 +76,13 @@ export function QuestionsView({
       <PageHeader
         stamp="الأسئلة"
         title="إدارة الأسئلة"
-        description="عرض وإدارة الأسئلة النشطة في Neon. يمكن تعديل النص والفئة والحقول الخاصة بكل مجموعة، والحذف يتم soft delete مع الاحتفاظ بالسجل. صفحات اللعبة الحالية لسه بتقرأ من ملفات المحتوى الثابتة."
+        description="عرض وإدارة الأسئلة النشطة في Neon. يمكن إضافة سؤال جديد، وتعديل النص والفئة والحقول الخاصة بكل مجموعة، والحذف يتم soft delete مع الاحتفاظ بالسجل. صفحات اللعبة الحالية لسه بتقرأ من ملفات المحتوى الثابتة."
+        action={
+          <Button size="sm" onClick={() => setCreating(true)}>
+            <PlusIcon className="size-4" />
+            سؤال جديد
+          </Button>
+        }
       />
 
       <QuestionsTabs sets={sets} setId={setId} />
@@ -136,6 +146,7 @@ export function QuestionsView({
           key={editing.id}
           question={editing}
           setMeta={setMeta}
+          categories={categories}
           onClose={() => setEditing(null)}
           onSaved={() => setEditing(null)}
         />
@@ -148,6 +159,15 @@ export function QuestionsView({
           setMeta={setMeta}
           onClose={() => setDeleting(null)}
           onDeleted={() => setDeleting(null)}
+        />
+      )}
+
+      {creating && (
+        <QuestionCreateDialog
+          setMeta={setMeta}
+          categories={categories}
+          onClose={() => setCreating(false)}
+          onCreated={() => setCreating(false)}
         />
       )}
     </div>

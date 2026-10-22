@@ -5,10 +5,7 @@ import { cn } from "@/lib/utils"
 import { Badge } from "@/components/ui/badge"
 
 /** جدول مضغوط للاستخدام الإداري — بيتحط في حاوية overflow-x-auto */
-function AdminTable({
-  className,
-  ...props
-}: React.ComponentProps<"table">) {
+function AdminTable({ className, ...props }: React.ComponentProps<"table">) {
   return (
     <div className="w-full overflow-x-auto">
       <table

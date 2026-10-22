@@ -17,7 +17,7 @@ const ChallengesSection = () => {
   }
 
   return (
-    <section className="relative z-10 my-auto flex w-full pt-2 max-w-md flex-col items-center">
+    <section className="relative z-10 my-auto flex w-full max-w-md flex-col items-center pt-2">
       <div className="mb-6 text-center">
         <h2 className="mb-1 text-2xl font-bold text-ink-glow">أسئلة وتحديات</h2>
         <p className="text-sm font-medium text-ink-soft/80">

@@ -70,11 +70,14 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
       <div className="mx-auto flex w-full max-w-[1440px]">
         {/* الشريط الجانبي — ديسكتوب */}
         <aside className="sticky top-0 hidden h-dvh w-64 shrink-0 flex-col border-e-2 border-ink bg-paper-warm p-5 md:flex">
-          <Link href="/admin" className="block outline-none focus-visible:ring-[3px] focus-visible:ring-copper/50">
+          <Link
+            href="/admin"
+            className="block outline-none focus-visible:ring-[3px] focus-visible:ring-copper/50"
+          >
             <span className="block text-2xl font-black tracking-tight">
               القعدة
             </span>
-            <span className="stamp-text mt-1 block">DEV CONSOLE</span>
+            <span className="mt-1 block stamp-text">DEV CONSOLE</span>
           </Link>
 
           <div className="mt-6">{nav}</div>
@@ -84,9 +87,9 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
               CONTENT ADMIN
             </p>
             <p className="mt-1.5 text-xs leading-relaxed text-ink-soft">
-              الأسئلة والمجموعات بتتقرأ من Neon. تقدر تعدّل حقول السؤال أو
-              تحذفه soft delete. الإضافة والنشر والرسائل والملاحظات لسه مش
-              متفعّلة.
+              الأسئلة والمجموعات بتتقرأ من Neon. تقدر تضيف سؤال جديد، تعدّل حقول
+              السؤال، أو تحذفه soft delete. رسائل اللاعبين متاحة للمراجعة. النشر
+              والملاحظات الداخلية لسه مش متفعّلة.
             </p>
             <div className="mt-3">{logoutButton}</div>
           </div>
@@ -99,7 +102,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
             <div className="flex items-center justify-between px-4 py-3">
               <div>
                 <span className="text-xl font-black">القعدة</span>
-                <span className="stamp-text ms-2">DEV</span>
+                <span className="ms-2 stamp-text">DEV</span>
               </div>
               <div className="flex items-center gap-2">
                 <span className="border-2 border-ink/20 bg-paper px-2.5 py-1.5 font-mono text-[10px] font-bold text-ink-soft">
@@ -148,8 +151,8 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
             <AlertTriangleIcon className="mt-0.5 size-4 shrink-0 text-copper" />
             <p>
               <span className="font-bold text-ink">لوحة محمية:</span> الدخول
-              محمي بجلسة مسؤول. تعديل وحذف الأسئلة متاح، لكن الإضافة والنشر
-              ورسائل اللاعبين والملاحظات لسه مش متفعّلة.
+              محمي بجلسة مسؤول. إضافة وتعديل وحذف الأسئلة ومعاينة رسائل اللاعبين
+              متاحين، لكن النشر والملاحظات الداخلية لسه مش متفعّلة.
             </p>
           </div>
 

@@ -17,7 +17,8 @@ export async function POST(request: NextRequest) {
   const contentType = request.headers.get("content-type") ?? ""
   const accept = request.headers.get("accept") ?? ""
   const wantsJson =
-    contentType.includes("application/json") || accept.includes("application/json")
+    contentType.includes("application/json") ||
+    accept.includes("application/json")
 
   if (wantsJson) {
     return NextResponse.json(

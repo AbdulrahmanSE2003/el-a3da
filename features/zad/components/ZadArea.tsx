@@ -21,7 +21,7 @@ const ZadArea = () => {
       <div className="mb-6 text-center">
         <h2 className="mb-1 text-2xl font-bold text-ink-glow">
           {" "}
-زاد القعدة 🌿
+          زاد القعدة 🌿
         </h2>
         <p className="text-sm font-medium text-ink-soft/80">
           {" "}

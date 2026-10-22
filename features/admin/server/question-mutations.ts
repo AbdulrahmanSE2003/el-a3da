@@ -1,8 +1,12 @@
 import "server-only"
 
 import { getSetMeta, isContentSetId } from "../lib/content-sets"
+import type { ContentSetId } from "../lib/types"
 import {
+  validateQuestionCreateDraft,
   validateQuestionDraft,
+  type QuestionCreateDraft,
+  type QuestionCreateMutationResult,
   type QuestionDraft,
   type QuestionMutationResult,
 } from "../lib/question-form"
@@ -18,6 +22,18 @@ const UUID_PATTERN =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 
 const isQuestionId = (value: string) => UUID_PATTERN.test(value)
+
+/** خطأ قيد unique في Postgres (23505) — بنستخدمه لرسالة معرّف مكرر. */
+function isUniqueViolation(error: unknown, constraint: string): boolean {
+  const value = error as {
+    code?: string
+    constraint?: string
+    cause?: { code?: string; constraint?: string }
+  }
+  const code = value?.code ?? value?.cause?.code
+  const name = value?.constraint ?? value?.cause?.constraint
+  return code === "23505" && name === constraint
+}
 
 export async function updateQuestionRecord(
   id: string,
@@ -103,6 +119,78 @@ export async function softDeleteQuestionRecord(
 
   if (deleted.length === 0) {
     return { ok: false, error: "السؤال غير موجود أو تم حذفه بالفعل." }
+  }
+
+  return { ok: true }
+}
+
+/**
+ * إضافة سؤال جديد.
+ *
+ * الخصائص المهمة:
+ * - بنرفض أي external_id مستخدم بالفعل حتى لو السؤال القديم متحذوف ناعمًا،
+ *   لأن قيد unique مش بيستثني deleted_at.
+ * - الترتيب الجديد بيبقى أكبر position مستخدم في المجموعة (حتى المحذوف
+ *   ناعمًا) عشان قيد unique على (set_id, position) ميخالفش.
+ * - كل ده في معاملة واحدة مع الـ trigger اللي بيزود نسخة المحتوى.
+ */
+export async function createQuestionRecord(
+  setId: ContentSetId,
+  draft: QuestionCreateDraft
+): Promise<QuestionCreateMutationResult> {
+  const setMeta = getSetMeta(setId)
+  const validation = validateQuestionCreateDraft(draft, setMeta)
+  if (!validation.ok) {
+    return {
+      ok: false,
+      error: "راجع الحقول المعلّمة وحاول تاني.",
+      fieldErrors: validation.fieldErrors,
+    }
+  }
+
+  const externalId = draft.externalId.trim()
+
+  const sql = getSql()
+
+  try {
+    const created = (await sql.query(
+      `
+        with next_position as (
+          select coalesce(max(position), -1) + 1 as position
+          from questions
+          where set_id = $1
+        )
+        insert into questions (
+          set_id, external_id, position, text, category, correct_answer, badge_label
+        )
+        select $1, $2, next_position.position, $3, $4, $5, $6
+        from next_position
+        returning id
+      `,
+      [
+        setId,
+        externalId,
+        validation.value.text,
+        validation.value.category,
+        validation.value.correctAnswer,
+        validation.value.badgeLabel,
+      ]
+    )) as Array<{ id: string }>
+
+    if (created.length === 0) {
+      return { ok: false, error: "تعذر إضافة السؤال. حاول تاني." }
+    }
+  } catch (error) {
+    if (isUniqueViolation(error, "questions_set_external_id_key")) {
+      return {
+        ok: false,
+        error: "راجع الحقول المعلّمة وحاول تاني.",
+        fieldErrors: {
+          externalId: "المعرّف ده مستخدم بالفعل في المجموعة.",
+        },
+      }
+    }
+    throw error
   }
 
   return { ok: true }

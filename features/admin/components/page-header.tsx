@@ -6,7 +6,12 @@ interface PageHeaderProps {
 }
 
 /** ترويسة الصفحة — بنفس نمط صفحات التطبيق (stamp + عنوان أسود) */
-export function PageHeader({ stamp, title, description, action }: PageHeaderProps) {
+export function PageHeader({
+  stamp,
+  title,
+  description,
+  action,
+}: PageHeaderProps) {
   return (
     <header className="flex flex-wrap items-end justify-between gap-4 border-b-2 border-ink pb-5">
       <div>

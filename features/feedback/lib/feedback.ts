@@ -136,9 +136,7 @@ function asText(value: unknown): string {
   return typeof value === "string" ? value.trim() : ""
 }
 
-export function validateFeedbackDraft(
-  input: unknown
-): FeedbackDraftValidation {
+export function validateFeedbackDraft(input: unknown): FeedbackDraftValidation {
   const record = asRecord(input)
   const fieldErrors: FeedbackFieldErrors = {}
 
@@ -161,7 +159,11 @@ export function validateFeedbackDraft(
   }
 
   let rating: number | null = null
-  if (record.rating !== undefined && record.rating !== null && record.rating !== "") {
+  if (
+    record.rating !== undefined &&
+    record.rating !== null &&
+    record.rating !== ""
+  ) {
     const parsed = Number(record.rating)
     if (!Number.isInteger(parsed) || parsed < 1 || parsed > 5) {
       fieldErrors.rating = "التقييم من 1 لـ 5."
@@ -224,12 +226,9 @@ export interface FeedbackFileDescriptor {
 }
 
 export type FeedbackFilesValidation =
-  | { ok: true; value: FeedbackFileDescriptor[] }
-  | { ok: false; error: string }
+  { ok: true; value: FeedbackFileDescriptor[] } | { ok: false; error: string }
 
-export function validateFeedbackFiles(
-  input: unknown
-): FeedbackFilesValidation {
+export function validateFeedbackFiles(input: unknown): FeedbackFilesValidation {
   if (input === undefined || input === null) return { ok: true, value: [] }
   if (!Array.isArray(input)) {
     return { ok: false, error: "قائمة الصور غير صالحة." }

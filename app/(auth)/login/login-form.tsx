@@ -32,9 +32,11 @@ export function LoginForm({ next }: { next: string }) {
         credentials: "same-origin",
       })
 
-      const data = (await response.json().catch(() => null)) as
-        | { ok?: boolean; redirectTo?: unknown; error?: unknown }
-        | null
+      const data = (await response.json().catch(() => null)) as {
+        ok?: boolean
+        redirectTo?: unknown
+        error?: unknown
+      } | null
 
       if (!response.ok || !data?.ok) {
         setError(
@@ -105,7 +107,7 @@ export function LoginForm({ next }: { next: string }) {
         <p
           role="alert"
           aria-live="polite"
-          className="border-2 border-danger-brand/40 bg-danger-brand/5 px-3 py-2 text-xs font-bold leading-relaxed text-danger-brand"
+          className="border-2 border-danger-brand/40 bg-danger-brand/5 px-3 py-2 text-xs leading-relaxed font-bold text-danger-brand"
         >
           {error}
         </p>

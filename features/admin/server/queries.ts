@@ -169,7 +169,10 @@ export async function getQuestionsPage({
   page: requestedPage = 1,
   pageSize: requestedPageSize = 20,
 }: QuestionsPageArgs): Promise<QuestionsPageData> {
-  const pageSize = Math.min(Math.max(Math.trunc(requestedPageSize) || 20, 1), 100)
+  const pageSize = Math.min(
+    Math.max(Math.trunc(requestedPageSize) || 20, 1),
+    100
+  )
   const conditions = ["set_id = $1", "deleted_at is null"]
   const params: unknown[] = [setId]
 
@@ -310,18 +313,19 @@ export async function getHealthReport(): Promise<HealthReport> {
   ])
 
   const healthById = new Map(healthRows.map((row) => [row.id, row]))
-  const duplicatesById = new Map(
-    duplicateRows.map((row) => [row.set_id, row])
-  )
+  const duplicatesById = new Map(duplicateRows.map((row) => [row.set_id, row]))
 
   const sets: HealthSetRow[] = CONTENT_SETS.map((meta) => {
     const row = healthById.get(meta.id)
     const duplicates = duplicatesById.get(meta.id)
     const live = row ? asNumber(row.live) : 0
-    const maxPosition = row?.max_position == null ? null : asNumber(row.max_position)
+    const maxPosition =
+      row?.max_position == null ? null : asNumber(row.max_position)
     // لو كل العناصر الحية بترتيب 0..live-1 يبقى مفيش فراغات.
     const positionGaps =
-      live === 0 || maxPosition === null ? 0 : Math.max(0, maxPosition - live + 1)
+      live === 0 || maxPosition === null
+        ? 0
+        : Math.max(0, maxPosition - live + 1)
 
     return {
       id: meta.id,

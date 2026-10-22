@@ -25,7 +25,8 @@ export default async function AdminQuestionsPage({
   const rawSet = first(params.set)
   const setId = isContentSetId(rawSet) ? rawSet : "casino"
   const query = (first(params.q) ?? "").trim().slice(0, 100)
-  const category = (first(params.category) ?? "all").trim().slice(0, 100) || "all"
+  const category =
+    (first(params.category) ?? "all").trim().slice(0, 100) || "all"
   const requestedPage = Number.parseInt(first(params.page) ?? "1", 10)
 
   const [sets, data] = await Promise.all([

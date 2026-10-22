@@ -52,7 +52,12 @@ const GameFinished = ({ game }: GameFinishedProps) => {
           >
             <span className="font-bold text-ink">{player.name}</span>
 
-            <span className={cn("text-xs font-bold ", player.role === "mafia" ? " text-ink-glow" : " text-ink ")}>
+            <span
+              className={cn(
+                "text-xs font-bold",
+                player.role === "mafia" ? "text-ink-glow" : "text-ink"
+              )}
+            >
               {getRoleLabel(player.role)}
             </span>
           </div>
@@ -60,11 +65,7 @@ const GameFinished = ({ game }: GameFinishedProps) => {
       </div>
 
       <Button variant={"outline"} asChild>
-        <Link
-          href="/games"
-        >
-          رجوع للألعاب
-        </Link>
+        <Link href="/games">رجوع للألعاب</Link>
       </Button>
     </section>
   )

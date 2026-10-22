@@ -73,7 +73,9 @@ export const CONTENT_SETS: readonly ContentSetMeta[] = [
 
 export const CONTENT_SET_IDS = CONTENT_SETS.map((set) => set.id)
 
-export function isContentSetId(value: string | null | undefined): value is ContentSetId {
+export function isContentSetId(
+  value: string | null | undefined
+): value is ContentSetId {
   return Boolean(value) && CONTENT_SET_IDS.includes(value as ContentSetId)
 }
 

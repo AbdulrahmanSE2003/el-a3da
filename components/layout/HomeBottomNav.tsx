@@ -1,6 +1,6 @@
 "use client"
 
-import { Gamepad2, Home, Menu, Users } from "lucide-react"
+import { Gamepad2, Home, MessageSquare, Users } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 
@@ -20,11 +20,11 @@ const navItems = [
     label: "القعدة",
     icon: Users,
   },
-  // {
-  //   href: "/more",
-  //   label: "المزيد",
-  //   icon: Menu,
-  // },
+  {
+    href: "/feedback",
+    label: "الملاحظات",
+    icon: MessageSquare,
+  },
 ]
 
 const HomeBottomNav = () => {

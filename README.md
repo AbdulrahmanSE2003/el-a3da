@@ -57,10 +57,13 @@ unset P
 ```
 
 Then open `/login`. Question edits are limited to text, category, and the
-set-specific answer/badge fields; deletes are soft deletes. Creating questions,
-publishing workflows, feedback, and developer notes remain hidden. The public
-game pages still read from `contents/*.ts`, so admin changes affect Neon and
-the dashboard until DB-backed content is wired. See `docs/admin-questions.md`,
+set-specific answer/badge fields; deletes are soft deletes. Question creation
+takes an external ID and appends at the end of the set. Player feedback is
+collected on `/feedback` and reviewed read-only in `/admin/feedback`, with
+screenshots stored in the private Neon `feedbacks` bucket. Publishing workflows
+and developer notes remain hidden. The public game pages still read from
+`contents/*.ts`, so admin changes affect Neon and the dashboard until DB-backed
+content is wired. See `docs/admin-questions.md`, `docs/feedback.md`,
 `docs/neon-schema-plan.md`, and `docs/admin-auth.md`.
 
 ## PWA Install

@@ -197,8 +197,8 @@ export function HealthView({ report }: { report: HealthReport }) {
       </div>
 
       <p className="border-2 border-dashed border-ink/20 px-3 py-2 text-[11px] leading-relaxed text-ink-soft/80">
-        ملاحظة: تكرار النصوص في بعض المجموعات جزء من المصدر الأصلي واتحفظ زي
-        ما هو. الفحص بيظهره كمعلومة، مش كخطأ، ومش بيعمل أي تعديل أو دمج.
+        ملاحظة: تكرار النصوص في بعض المجموعات جزء من المصدر الأصلي واتحفظ زي ما
+        هو. الفحص بيظهره كمعلومة، مش كخطأ، ومش بيعمل أي تعديل أو دمج.
       </p>
     </div>
   )

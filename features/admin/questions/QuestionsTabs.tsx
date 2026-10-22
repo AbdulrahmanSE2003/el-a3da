@@ -38,7 +38,7 @@ export default function QuestionsTabs({ sets, setId }: QuestionsTabsProps) {
       role="tablist"
       aria-label="مجموعات المحتوى"
       className={cn(
-        "flex w-full flex-wrap gap-1.5 border-b-2 border-ink pb-3 transition-opacity duration-150",
+        "flex w-full flex-wrap gap-1.5 border-b-2 border-ink pb-5 transition-opacity duration-150",
         isPending && "pointer-events-none opacity-60"
       )}
     >

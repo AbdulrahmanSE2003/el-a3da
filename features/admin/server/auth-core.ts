@@ -115,7 +115,12 @@ function parsePasswordHash(value: string): PasswordHash {
     throw new AuthConfigurationError()
   }
 
-  if (salt.length < 8 || salt.length > 64 || hash.length < 16 || hash.length > 128) {
+  if (
+    salt.length < 8 ||
+    salt.length > 64 ||
+    hash.length < 16 ||
+    hash.length > 128
+  ) {
     throw new AuthConfigurationError()
   }
 
@@ -129,7 +134,10 @@ function safeEqualString(left: string, right: string): boolean {
   return timingSafeEqual(leftDigest, rightDigest)
 }
 
-async function verifyPassword(password: string, hash: PasswordHash): Promise<boolean> {
+async function verifyPassword(
+  password: string,
+  hash: PasswordHash
+): Promise<boolean> {
   const derived = await scryptAsync(password, hash.salt, hash.hash.length, {
     N: hash.N,
     r: hash.r,
@@ -217,9 +225,7 @@ export function verifySessionToken(
 
   let payload: unknown
   try {
-    payload = JSON.parse(
-      Buffer.from(payloadPart, "base64url").toString("utf8")
-    )
+    payload = JSON.parse(Buffer.from(payloadPart, "base64url").toString("utf8"))
   } catch {
     return null
   }

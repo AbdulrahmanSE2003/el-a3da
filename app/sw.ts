@@ -1,10 +1,10 @@
-import { defaultCache } from "@serwist/next/worker";
-import type { PrecacheEntry } from "serwist";
-import { Serwist } from "serwist";
+import { defaultCache } from "@serwist/next/worker"
+import type { PrecacheEntry } from "serwist"
+import { Serwist } from "serwist"
 
 declare const self: ServiceWorkerGlobalScope & {
-  __SW_MANIFEST: (string | PrecacheEntry)[] | undefined;
-};
+  __SW_MANIFEST: (string | PrecacheEntry)[] | undefined
+}
 
 const serwist = new Serwist({
   precacheEntries: self.__SW_MANIFEST,
@@ -12,6 +12,6 @@ const serwist = new Serwist({
   clientsClaim: true,
   navigationPreload: true,
   runtimeCaching: defaultCache,
-});
+})
 
-serwist.addEventListeners();
+serwist.addEventListeners()

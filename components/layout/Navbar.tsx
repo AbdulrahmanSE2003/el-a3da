@@ -19,6 +19,10 @@ const Navbar = () => {
         <Link href="/download" className="transition-opacity hover:opacity-60">
           التحميل
         </Link>
+
+        <Link href="/feedback" className="transition-opacity hover:opacity-60">
+          الملاحظات
+        </Link>
       </nav>
 
       <Link

@@ -76,6 +76,8 @@ Expected `dev` totals after the initial import:
 | `punishments` | 499 | 0 | 500 |
 | **Total** | **3,181** | **0** | — |
 
-`feedback`, `feedback_attachments`, and `notes` exist but currently contain
-**0 rows**. The dashboard does not expose feedback/notes until admin
-authentication is implemented — see `docs/admin-auth.md`.
+`feedback` and `feedback_attachments` are now written by the public `/feedback`
+page and read (read-only) in `/admin/feedback`; screenshots live in the private
+Neon `feedbacks` bucket. `notes` exists but still contains **0 rows** and is not
+exposed until its own reviewed query is added — see `docs/feedback.md` and
+`docs/admin-auth.md`.
