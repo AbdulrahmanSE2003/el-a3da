@@ -23,7 +23,7 @@ const Players = ({ redirect }: { redirect: string }) => {
   }
   return (
     <div>
-      <section className="mt-7 border-2 border-ink bg-paper-warm p-4 shadow-[4px_4px_0_var(--color-ink)]">
+      <section className="mt-7 rounded-md border-2 border-ink bg-paper-warm p-4 shadow-[4px_4px_0_var(--color-ink)]">
         <div className="mb-3 flex items-center justify-between">
           <span className="text-sm font-bold tracking-widest text-copper">
             إضافة لاعب
@@ -40,7 +40,7 @@ const Players = ({ redirect }: { redirect: string }) => {
               if (event.key === "Enter") handleSubmit()
             }}
             placeholder="اكتب الاسم..."
-            className="min-w-0 flex-1 border-2 border-ink bg-paper px-3 py-3 text-sm font-bold outline-none placeholder:text-ink-soft/40 focus:border-copper"
+            className="min-w-0 flex-1 rounded-md border-2 border-ink bg-paper px-3 py-3 text-sm font-bold outline-none placeholder:text-ink-soft/40 focus:border-copper"
             autoComplete="off"
           />
 
@@ -48,7 +48,7 @@ const Players = ({ redirect }: { redirect: string }) => {
             type="button"
             onClick={handleSubmit}
             disabled={!name.trim()}
-            className="flex size-12 shrink-0 items-center justify-center border-2 border-ink bg-copper text-paper shadow-[3px_3px_0_var(--color-ink)] transition-all hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[4px_4px_0_var(--color-ink)] disabled:pointer-events-none disabled:opacity-40 disabled:shadow-none"
+            className="flex size-12 shrink-0 items-center justify-center rounded-md border-2 border-ink bg-copper text-paper shadow-[3px_3px_0_var(--color-ink)] transition-all hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[4px_4px_0_var(--color-ink)] disabled:pointer-events-none disabled:opacity-40 disabled:shadow-none"
           >
             <Plus className="size-5" />
           </button>

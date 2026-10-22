@@ -70,7 +70,7 @@ const MafiaPhase = ({ game, onChange }: MafiaPhaseProps) => {
         </p>
       </div>
 
-      <div className="bg-warm-paper border border-ink/20 p-5">
+      <div className="bg-warm-paper rounded-md border border-ink/20 p-5">
         <div className="flex items-center gap-3">
           <div>
             <p className="font-bold text-ink">المافيا الموجودة</p>
@@ -81,11 +81,11 @@ const MafiaPhase = ({ game, onChange }: MafiaPhaseProps) => {
           </div>
         </div>
 
-        <div className="mt-4 flex flex-wrap gap-2">
+        <div className="mt-4 flex flex-wrap gap-2 rounded-md">
           {mafiaPlayers.map((player) => (
             <span
               key={player.id}
-              className="border border-danger-brand/20 bg-danger-brand/5 px-3 py-1 text-sm font-bold text-danger-brand"
+              className="rounded-md border border-danger-brand/20 bg-danger-brand/5 px-3 py-1 text-sm font-bold text-danger-brand"
             >
               {player.name}
             </span>
@@ -138,7 +138,7 @@ const TargetSection = ({
   const Icon = icon
 
   return (
-    <div className="bg-warm-paper border border-ink/20 p-5">
+    <div className="bg-warm-paper rounded-md border border-ink/20 p-5">
       <div className="flex items-center gap-3">
         <div className="mt-0.5 text-copper">
           <Icon className="size-7" />
@@ -160,7 +160,7 @@ const TargetSection = ({
               key={player.id}
               type="button"
               onClick={() => onSelect(player.id)}
-              className={`border px-4 py-3 text-right text-sm font-bold transition-colors ${
+              className={`rounded-md border px-4 py-3 text-right text-sm font-bold transition-colors ${
                 selected
                   ? "border-copper bg-copper/10 text-copper"
                   : "border-ink/20 bg-paper text-ink hover:border-copper/40"

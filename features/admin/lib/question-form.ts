@@ -122,8 +122,9 @@ export function validateQuestionDraft(
 }
 
 /**
- * نفس قواعد التحقق مع معرّف السؤال المطلوب للإضافة. بنستخدم دالة منفصلة
- * عشان التعديل مبيغيّرش external_id أصلًا.
+ * نفس قواعد التحقق مع معرّف السؤال المطلوب للإضافة.
+ * معرّف السؤال بيتولد تلقائياً على السيرفر من ترتيب السؤال، فمش بنحتاج
+ * يتحقق منه من طرف العميل دلوقتي.
  */
 export function validateQuestionCreateDraft(
   draft: QuestionCreateDraft,
@@ -133,13 +134,6 @@ export function validateQuestionCreateDraft(
   const fieldErrors: QuestionCreateFieldErrors = base.ok
     ? {}
     : { ...base.fieldErrors }
-
-  const externalId = draft.externalId.trim()
-  if (!externalId) {
-    fieldErrors.externalId = "معرّف السؤال مطلوب."
-  } else if (externalId.length > QUESTION_EXTERNAL_ID_MAX_LENGTH) {
-    fieldErrors.externalId = `المعرّف أطول من ${QUESTION_EXTERNAL_ID_MAX_LENGTH} حرف.`
-  }
 
   if (!base.ok || Object.keys(fieldErrors).length > 0) {
     return { ok: false, fieldErrors }

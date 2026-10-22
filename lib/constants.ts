@@ -1,4 +1,3 @@
-import Link from "next/link"
 import {
   CircleQuestionMark,
   Gamepad2,
@@ -54,6 +53,22 @@ export const activities: ActivityCardItem[] = [
 ]
 
 export const updates = [
+  {
+    version: "2.0.0",
+    date: "2026",
+    label: "feat",
+    title: "القعدة v2",
+    description:
+      "نظام ثيمات جديد بثلاثة خيارات: كافيه (افتراضي)، أخضر أصلي، وليلي أزرق. صفحة إعدادات للمظهر، تحسينات أداء التحميل مع skeletons، ومزامنة المحتوى من Neon مع عمل أوفلاين.",
+  },
+  {
+    version: "1.4.1",
+    date: "أكتوبر 2025",
+    label: "chore",
+    title: "تنظيف معرفات المحتوى ومزامنة Neon",
+    description:
+      "تنظيف معرفات المحتوى، استيراد محتوى Neon للتطوير، وكونسول أدمن للقراءة فقط مع فحص الصحة.",
+  },
   {
     version: "1.4.0",
     date: "25 سبتمبر 2025",

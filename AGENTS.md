@@ -7,3 +7,11 @@ This version has breaking changes — APIs, conventions, and file structure may 
 This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
 
 <!-- END:nextjs-agent-rules -->
+
+## ثيمات v2 (2026)
+- **الثيمات المتاحة**: `cafe` (افتراضي)، `original-green`، `night-blue`
+- **التطبيق**: `data-theme` على `html` مع متغيرات CSS في `app/globals.css`
+- **الحفظ**: `localStorage` مفتاح `qa3da-theme` مع التحقق من القيم
+- **الإعدادات**: `/settings` مع معاينة فورية دون إعادة تحميل
+- **منع الوميض**: سكريبت inline في `app/layout.tsx` يطبق الثيم قبل Hydration
+- **التصميم**: استخدام متغيرات مشتركة، الحفاظ على ألوان حالة اللعب الدلالية

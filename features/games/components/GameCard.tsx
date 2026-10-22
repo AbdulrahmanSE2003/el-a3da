@@ -14,7 +14,7 @@ export function GameCard({ game }: GameCardProps) {
 
   const CardContent = (
     <div
-      className={`group relative flex flex-col justify-between overflow-hidden border-2 p-5 transition-all duration-200 ${t.card} ${
+      className={`group relative flex flex-col justify-between overflow-hidden rounded-md border-2 p-5 transition-all duration-200 ${t.card} ${
         isAvailable
           ? `cursor-pointer hover:-translate-x-1 hover:-translate-y-1 ${t.hoverShadow}`
           : "cursor-not-allowed opacity-80"

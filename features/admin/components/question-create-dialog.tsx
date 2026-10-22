@@ -17,6 +17,13 @@ import {
   type QuestionCreateFieldErrors,
 } from "../lib/question-form"
 import type { CategoryCount, ContentSetMeta } from "../lib/types"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
 interface QuestionCreateDialogProps {
   setMeta: ContentSetMeta
@@ -105,36 +112,19 @@ export function QuestionCreateDialog({
 
         <div>
           <Label htmlFor="new-question-external-id">
-            معرّف السؤال <span className="text-danger-brand">*</span>
+            معرّف السؤال
           </Label>
           <Input
             id="new-question-external-id"
-            value={draft.externalId}
-            onChange={(event) => setField("externalId", event.target.value)}
-            maxLength={QUESTION_EXTERNAL_ID_MAX_LENGTH}
-            placeholder="مثال: 42 أو 3-4"
+            value="يتم توليده تلقائياً"
+            disabled
             dir="ltr"
             autoFocus
-            aria-invalid={fieldErrors.externalId ? true : undefined}
-            aria-describedby={
-              fieldErrors.externalId
-                ? "new-question-external-id-error"
-                : undefined
-            }
+            readOnly
           />
-          {fieldErrors.externalId ? (
-            <p
-              id="new-question-external-id-error"
-              className="mt-1.5 text-[11px] font-bold text-danger-brand"
-            >
-              {fieldErrors.externalId}
-            </p>
-          ) : (
-            <p className="mt-1.5 text-[10px] text-ink-soft/70">
-              المعرّف لازم يكون فريد داخل المجموعة. الترتيب بيتحسب تلقائيًا في
-              الآخر.
-            </p>
-          )}
+          <p className="mt-1.5 text-[10px] text-ink-soft/70">
+            بيتحدد تلقائياً بناءً على أعلى ترتيب في المجموعة، ومش قابل للتعديل.
+          </p>
         </div>
 
         <div>
@@ -173,32 +163,21 @@ export function QuestionCreateDialog({
                 <span className="text-danger-brand">*</span>
               )}
             </Label>
-            <Input
-              id="new-question-category"
-              value={draft.category}
-              onChange={(event) => setField("category", event.target.value)}
-              maxLength={200}
-              list="new-question-category-options"
-              aria-invalid={fieldErrors.category ? true : undefined}
-              aria-describedby={
-                fieldErrors.category ? "new-question-category-error" : undefined
-              }
-            />
-            {categories.length > 0 && (
-              <datalist id="new-question-category-options">
-                {categories.map((item) => (
-                  <option key={item.category} value={item.category} />
+            <Select
+              value={categories[0].category}
+              onValueChange={(value) => setField("category", value)}
+            >
+              <SelectTrigger className={`w-full`}>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent position="popper">
+                {categories.map((cat) => (
+                  <SelectItem key={cat.category} value={cat.category}>
+                    {cat.category}
+                  </SelectItem>
                 ))}
-              </datalist>
-            )}
-            {fieldErrors.category && (
-              <p
-                id="new-question-category-error"
-                className="mt-1.5 text-[11px] font-bold text-danger-brand"
-              >
-                {fieldErrors.category}
-              </p>
-            )}
+              </SelectContent>
+            </Select>
           </div>
 
           {setMeta.hasCorrectAnswer && (

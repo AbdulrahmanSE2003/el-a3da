@@ -128,6 +128,8 @@ export async function softDeleteQuestionRecord(
  * إضافة سؤال جديد.
  *
  * الخصائص المهمة:
+ * - `external_id` بيتولد تلقائياً على السيرفر من أعلى position + 1 عشان
+ *   المستخدم ميقدرش يكتب معرّف يدويًا ويضاربه مع حد تاني.
  * - بنرفض أي external_id مستخدم بالفعل حتى لو السؤال القديم متحذوف ناعمًا،
  *   لأن قيد unique مش بيستثني deleted_at.
  * - الترتيب الجديد بيبقى أكبر position مستخدم في المجموعة (حتى المحذوف
@@ -148,8 +150,6 @@ export async function createQuestionRecord(
     }
   }
 
-  const externalId = draft.externalId.trim()
-
   const sql = getSql()
 
   try {
@@ -163,13 +163,12 @@ export async function createQuestionRecord(
         insert into questions (
           set_id, external_id, position, text, category, correct_answer, badge_label
         )
-        select $1, $2, next_position.position, $3, $4, $5, $6
+        select $1, (next_position.position)::text, next_position.position, $2, $3, $4, $5
         from next_position
         returning id
       `,
       [
         setId,
-        externalId,
         validation.value.text,
         validation.value.category,
         validation.value.correctAnswer,

@@ -28,7 +28,7 @@ const GameFinished = ({ game }: GameFinishedProps) => {
         </p>
       </div>
 
-      <div className="bg-warm-paper border border-copper/30 p-8 text-center">
+      <div className="bg-warm-paper rounded-md border border-copper/30 p-8 text-center">
         {mafiaWon ? (
           <Skull className="mx-auto size-10 text-danger-brand" />
         ) : (
@@ -48,7 +48,7 @@ const GameFinished = ({ game }: GameFinishedProps) => {
         {game.players.map((player) => (
           <div
             key={player.id}
-            className="bg-warm-paper flex items-center justify-between border border-ink/20 px-4 py-3"
+            className="bg-warm-paper flex items-center justify-between rounded-md border border-ink/20 px-4 py-3"
           >
             <span className="font-bold text-ink">{player.name}</span>
 

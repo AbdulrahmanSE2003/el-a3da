@@ -17,7 +17,7 @@ export function RevealedPhase({
         النهارده الحكم على...
       </p>
 
-      <div className="mt-6 border-2 border-ink bg-paper-warm p-6 shadow-[5px_5px_0_var(--color-ink)]">
+      <div className="mt-6 rounded-md border-2 border-ink bg-paper-warm p-6 shadow-[5px_5px_0_var(--color-ink)]">
         <div className="flex aspect-square items-center justify-center border-2 border-copper bg-paper">
           <div className="text-center">
             <p className="mb-2 text-xs font-bold text-copper">شيخ الحارة</p>

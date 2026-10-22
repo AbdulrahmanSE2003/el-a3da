@@ -136,17 +136,6 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
             </nav>
           </div>
 
-          {/* تنبيه الوصول */}
-          <div className="flex items-start gap-2.5 border-b border-copper/30 bg-copper/10 px-4 py-2.5 text-xs leading-relaxed text-ink-soft md:px-8">
-            <AlertTriangleIcon className="mt-0.5 size-4 shrink-0 text-copper" />
-            <p>
-              <span className="font-bold text-ink">لوحة محمية:</span> الدخول
-              محمي بجلسة مسؤول. إضافة وتعديل وحذف الأسئلة، ومعاينة رسائل
-              اللاعبين وتغيير حالتها متاحين، لكن النشر والملاحظات الداخلية لسه
-              مش متفعّلة.
-            </p>
-          </div>
-
           <main className="flex-1 px-4 py-6 md:px-8 md:py-8">{children}</main>
         </div>
       </div>

@@ -47,7 +47,7 @@ const Hero = () => {
           <span>•</span>
           <span>مش محتاج حساب</span>
           <span>•</span>
-          <span>PWA</span>
+          <span>جمّع صحابك والعب</span>
         </div>
       </div>
 

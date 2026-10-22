@@ -4,6 +4,7 @@ import BackgroundAtmosphere from "@/components/atmosphere/BackgroundAtmosphere"
 import Header from "@/components/layout/Header"
 import HomeBottomNav from "@/components/layout/HomeBottomNav"
 import { FeedbackForm } from "@/features/feedback/components/feedback-form"
+import { Suspense } from "react"
 
 export const metadata: Metadata = {
   title: "الملاحظات — القعدة",
@@ -35,7 +36,9 @@ export default function FeedbackPage() {
           </p>
         </div>
 
-        <FeedbackForm />
+        <Suspense fallback={<div className={``}>ss</div>}>
+          <FeedbackForm />
+        </Suspense>
 
         <HomeBottomNav />
       </div>

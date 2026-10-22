@@ -1,6 +1,6 @@
 {
   "name": "el-2a3da",
-  "version": "1.4.1",
+  "version": "2.0.0",
   "type": "module",
   "private": true,
   "scripts": {
@@ -11,6 +11,8 @@
     "format": "prettier --write \"**/*.{ts,tsx}\"",
     "typecheck": "tsc --noEmit",
     "content:ids": "tsx scripts/content-ids.ts",
+    "content:verify": "node --env-file=.env.local --import tsx scripts/verify-content-sync.ts",
+    "content:test": "node --import tsx scripts/test-content-sync.ts",
     "admin:password": "tsx scripts/admin-password.ts"
   },
   "dependencies": {

@@ -52,7 +52,7 @@ const RoleReveal = ({ game, onChange }: RoleRevealProps) => {
         </div>
       </div>
 
-      <div className="bg-warm-paper border border-ink/15 p-8 text-center">
+      <div className="bg-warm-paper rounded-md border border-ink/15 p-8 text-center">
         {!revealed ? (
           <>
             <Eye className="mx-auto size-10 text-copper" />

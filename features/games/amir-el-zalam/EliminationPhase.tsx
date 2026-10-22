@@ -39,7 +39,7 @@ const EliminationPhase = ({ game, onChange }: EliminationPhaseProps) => {
         </p>
       </div>
 
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2 rounded-md">
         {players.map((player) => {
           const selected = selectedId === player.id
 
@@ -48,7 +48,7 @@ const EliminationPhase = ({ game, onChange }: EliminationPhaseProps) => {
               key={player.id}
               type="button"
               onClick={() => setSelectedId(player.id)}
-              className={`flex items-center gap-3 border p-4 text-right transition-colors ${
+              className={`flex items-center gap-3 rounded-md border p-4 text-right transition-colors ${
                 selected
                   ? "border-danger-brand bg-danger-brand/5"
                   : "bg-warm-paper border-ink/20 hover:border-copper/40"

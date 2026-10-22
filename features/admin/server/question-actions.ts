@@ -103,6 +103,8 @@ function parseCreateInput(
   const setId = value.setId
   if (typeof setId !== "string" || !isContentSetId(setId)) return null
 
+  // externalId بيتولد تلقائياً على السيرفر، وبنسمح بتمريره أو ما نمررشهوش
+  // عشان يتوافق مع الاستدعاء القديم لكن دايمًا بنرجع للقيمة اللي السيرفر بيختارها
   return {
     setId,
     draft: {

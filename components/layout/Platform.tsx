@@ -29,12 +29,13 @@ const Platform = () => {
           <div className={`flex items-center gap-3`}>
             <DownloadModal />
             <ChangelogModal />
-            <GenericGuide
+            {/* NOTE Commented now untill we finish update platform provide better guide */}
+            {/* <GenericGuide
               title="القعدة"
               subtitle="كل حاجة محتاج تعرفها قبل ما تبدأ — في دقيقتين"
             >
               <PlatformGuide />
-            </GenericGuide>
+            </GenericGuide> */}
           </div>
         </div>
 
