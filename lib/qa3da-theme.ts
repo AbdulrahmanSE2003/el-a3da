@@ -11,7 +11,7 @@ export const QA3DA_ACCENT_THEMES: Qa3daAccentTheme[] = [
 
 export const QA3DA_ACCENT_THEME_STORAGE_KEY = "qa3da-accent-theme"
 
-export const QA3DA_DEFAULT_ACCENT_THEME: Qa3daAccentTheme = "original-green"
+export const QA3DA_DEFAULT_ACCENT_THEME: Qa3daAccentTheme = "cafe"
 
 export const QA3DA_ACCENT_THEME_META: Record<
   Qa3daAccentTheme,

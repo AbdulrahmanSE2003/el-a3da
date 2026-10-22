@@ -63,17 +63,29 @@ export default function RootLayout({
         <script
           dangerouslySetInnerHTML={{
             __html: `
-              (function() {
-                try {
-                  var theme = localStorage.getItem('qa3da-accent-theme');
-                  if (theme === 'original-green' || theme === 'night-blue') {
-                    document.documentElement.setAttribute('data-accent-theme', theme);
-                  } else {
-                    document.documentElement.removeAttribute('data-accent-theme');
-                  }
-                } catch (e) {}
-              })();
-            `,
+      (function () {
+        try {
+          var key = "qa3da-accent-theme";
+          var theme = localStorage.getItem(key);
+          var validThemes = [
+            "cafe",
+            "original-green",
+            "night-blue",
+            "ember-red",
+            "velvet-purple"
+          ];
+
+          if (!validThemes.includes(theme)) {
+            theme = "cafe";
+          }
+
+          document.documentElement.setAttribute(
+            "data-accent-theme",
+            theme
+          );
+        } catch (e) {}
+      })();
+    `,
           }}
         />
       </head>
