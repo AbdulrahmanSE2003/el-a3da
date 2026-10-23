@@ -1,21 +1,11 @@
-// components/layout/Platform.tsx
-"use client"
-
-import dynamic from "next/dynamic"
 import GridPattern from "@/components/atmosphere/GridPattern"
 import Hero from "@/features/home/components/Hero"
 import { ActivityCard } from "@/components/layout/ActivityCard"
 import HomeBottomNav from "@/components/layout/HomeBottomNav"
 import { activities } from "@/lib/constants"
-import GenericGuide from "@/components/ui/GenericGuide"
-import { PlatformGuide } from "@/lib/Guides"
 import { ChangelogModal } from "@/features/home/components/ChangeLogModal"
 import { DownloadModal } from "../ui/DownloadModal"
-
-const BackgroundAtmosphere = dynamic(
-  () => import("@/components/atmosphere/BackgroundAtmosphere"),
-  { ssr: false }
-)
+import BackgroundAtmosphere from "../atmosphere/BackgroundAtmosphere"
 
 const Platform = () => {
   return (
