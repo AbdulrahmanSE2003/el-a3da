@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { updateQuestionAction } from "../server/question-actions"
 import {
   QUESTION_BADGE_LABEL_MAX_LENGTH,
+  QUESTION_CATEGORY_MAX_LENGTH,
   QUESTION_CORRECT_ANSWER_MAX_LENGTH,
   QUESTION_TEXT_MAX_LENGTH,
   validateQuestionDraft,
@@ -17,13 +18,6 @@ import {
   type QuestionFieldErrors,
 } from "../lib/question-form"
 import type { CategoryCount, ContentSetMeta, QuestionRow } from "../lib/types"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
 
 interface QuestionEditDialogProps {
   question: QuestionRow
@@ -40,6 +34,9 @@ export function QuestionEditDialog({
   onClose,
   onSaved,
 }: QuestionEditDialogProps) {
+  const categoryOptions =
+    setMeta.categoryOptions ?? categories.map((cat) => cat.category)
+
   const [draft, setDraft] = useState<QuestionDraft>({
     text: question.text,
     category: question.category ?? "",
@@ -176,21 +173,35 @@ export function QuestionEditDialog({
                 <span className="text-danger-brand">*</span>
               )}
             </Label>
-            <Select
+            <Input
+              id="question-category"
               value={draft.category}
-              onValueChange={(value) => setField("category", value)}
-            >
-              <SelectTrigger aria-label="تصفية بالفئة" className="w-full">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent side="bottom" position="popper">
-                {categories.map((item) => (
-                  <SelectItem key={item.category} value={item.category}>
-                    {item.category}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+              onChange={(event) => setField("category", event.target.value)}
+              list="question-category-options"
+              placeholder={
+                setMeta.categoryOptions
+                  ? "اختر فئة من القائمة"
+                  : "اكتب فئة جديدة أو اختر فئة موجودة"
+              }
+              maxLength={QUESTION_CATEGORY_MAX_LENGTH}
+              aria-invalid={fieldErrors.category ? true : undefined}
+              aria-describedby={
+                fieldErrors.category ? "question-category-error" : undefined
+              }
+            />
+            <datalist id="question-category-options">
+              {categoryOptions.map((category) => (
+                <option key={category} value={category} />
+              ))}
+            </datalist>
+            {fieldErrors.category && (
+              <p
+                id="question-category-error"
+                className="mt-1.5 text-[11px] font-bold text-danger-brand"
+              >
+                {fieldErrors.category}
+              </p>
+            )}
           </div>
 
           {setMeta.hasCorrectAnswer && (

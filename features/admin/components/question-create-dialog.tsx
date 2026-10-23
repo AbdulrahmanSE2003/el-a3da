@@ -9,21 +9,14 @@ import { Textarea } from "@/components/ui/textarea"
 import { createQuestionAction } from "../server/question-actions"
 import {
   QUESTION_BADGE_LABEL_MAX_LENGTH,
+  QUESTION_CATEGORY_MAX_LENGTH,
   QUESTION_CORRECT_ANSWER_MAX_LENGTH,
-  QUESTION_EXTERNAL_ID_MAX_LENGTH,
   QUESTION_TEXT_MAX_LENGTH,
   validateQuestionCreateDraft,
   type QuestionCreateDraft,
   type QuestionCreateFieldErrors,
 } from "../lib/question-form"
 import type { CategoryCount, ContentSetMeta } from "../lib/types"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
 
 interface QuestionCreateDialogProps {
   setMeta: ContentSetMeta
@@ -38,10 +31,15 @@ export function QuestionCreateDialog({
   onClose,
   onCreated,
 }: QuestionCreateDialogProps) {
+  const defaultCategory =
+    setMeta.categoryOptions?.[0] ?? categories[0]?.category ?? ""
+  const categoryOptions =
+    setMeta.categoryOptions ?? categories.map((cat) => cat.category)
+
   const [draft, setDraft] = useState<QuestionCreateDraft>({
     externalId: "",
     text: "",
-    category: "",
+    category: defaultCategory,
     correctAnswer: "",
     badgeLabel: "",
   })
@@ -117,7 +115,6 @@ export function QuestionCreateDialog({
             value="يتم توليده تلقائياً"
             disabled
             dir="ltr"
-            autoFocus
             readOnly
           />
           <p className="mt-1.5 text-[10px] text-ink-soft/70">
@@ -161,21 +158,35 @@ export function QuestionCreateDialog({
                 <span className="text-danger-brand">*</span>
               )}
             </Label>
-            <Select
-              defaultValue={categories[0].category}
-              onValueChange={(value) => setField("category", value)}
-            >
-              <SelectTrigger className={`w-full`}>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent position="popper">
-                {categories.map((cat) => (
-                  <SelectItem key={cat.category} value={cat.category}>
-                    {cat.category}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <Input
+              id="new-question-category"
+              value={draft.category}
+              onChange={(event) => setField("category", event.target.value)}
+              list="new-question-category-options"
+              placeholder={
+                setMeta.categoryOptions
+                  ? "اختر فئة من القائمة"
+                  : "اكتب فئة جديدة أو اختر فئة موجودة"
+              }
+              maxLength={QUESTION_CATEGORY_MAX_LENGTH}
+              aria-invalid={fieldErrors.category ? true : undefined}
+              aria-describedby={
+                fieldErrors.category ? "new-question-category-error" : undefined
+              }
+            />
+            <datalist id="new-question-category-options">
+              {categoryOptions.map((category) => (
+                <option key={category} value={category} />
+              ))}
+            </datalist>
+            {fieldErrors.category && (
+              <p
+                id="new-question-category-error"
+                className="mt-1.5 text-[11px] font-bold text-danger-brand"
+              >
+                {fieldErrors.category}
+              </p>
+            )}
           </div>
 
           {setMeta.hasCorrectAnswer && (
@@ -239,8 +250,9 @@ export function QuestionCreateDialog({
         </div>
 
         <p className="text-[10px] leading-relaxed text-ink-soft/70">
-          الإضافة بتكتب في Neon مباشرة. صفحات اللعبة الحالية لسه بتقرأ من ملفات
-          المحتوى الثابتة، فمش هتتأثر بالسؤال الجديد لحد ما يتم تحديث الملفات.
+          الإضافة بتكتب في Neon مباشرة وبتزوّد إصدار المجموعة. الأجهزة هتزامن
+          المحتوى الجديد في الجلسات اللي تبدأ بعد كده؛ الجلسات الشغالة دلوقتي مش
+          هتتأثر.
         </p>
 
         <div className="flex flex-wrap justify-end gap-2 border-t border-ink/10 pt-4">

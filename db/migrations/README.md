@@ -4,10 +4,10 @@ Forward-only SQL migrations for the Qa3da Neon (PostgreSQL) database.
 
 ## Applied state
 
-| Migration | Purpose | `dev` | `production` |
-| --- | --- | --- | --- |
-| `0001_init_schema.sql` | Tables, constraints, indexes, `updated_at` and content-version triggers | Applied 2026-10-21 | **Not applied** |
-| `0002_seed_content_sets.sql` | Six content-set ids/names. Metadata only — no questions | Applied 2026-10-21 | **Not applied** |
+| Migration                    | Purpose                                                                 | `dev`              | `production`    |
+| ---------------------------- | ----------------------------------------------------------------------- | ------------------ | --------------- |
+| `0001_init_schema.sql`       | Tables, constraints, indexes, `updated_at` and content-version triggers | Applied 2026-10-21 | **Not applied** |
+| `0002_seed_content_sets.sql` | Six initial content-set ids/names. Metadata only — no questions         | Applied 2026-10-21 | **Not applied** |
 
 `production` currently has **0 tables** and must remain untouched until a
 separate, explicitly authorized release step exists.
@@ -21,6 +21,11 @@ Those 3,181 rows are a historical import baseline, not a guarantee of current
 live counts. Admin additions, edits, and soft deletes may change the live data.
 `pnpm content:verify` reports that drift and fails only on integrity errors;
 `pnpm content:verify -- --strict` fails on any drift.
+
+On 2026-10-23 the `bomb` set was added to `dev` only with 67 questions, live
+version 68, using `pnpm content:bomb -- --apply`. It is not part of the 2026-10-21
+import and does not require a new migration. The bundled baseline is now 3,248
+questions.
 
 ## Rules
 
@@ -71,21 +76,21 @@ having count(*) > 1;
 
 Historical `dev` baseline from the 2026-10-21 initial import:
 
-| Set | Live | Deleted | Version |
-| --- | ---: | ---: | ---: |
-| `casino` | 1,094 | 0 | 1,095 |
-| `topics` | 502 | 0 | 503 |
-| `challenges` | 500 | 0 | 501 |
-| `sheikh` | 500 | 0 | 501 |
-| `zad` | 86 | 0 | 87 |
-| `punishments` | 499 | 0 | 500 |
-| **Total** | **3,181** | **0** | — |
+| Set           |      Live | Deleted | Version |
+| ------------- | --------: | ------: | ------: |
+| `casino`      |     1,094 |       0 |   1,095 |
+| `topics`      |       502 |       0 |     503 |
+| `challenges`  |       500 |       0 |     501 |
+| `sheikh`      |       500 |       0 |     501 |
+| `zad`         |        86 |       0 |      87 |
+| `punishments` |       499 |       0 |     500 |
+| **Total**     | **3,181** |   **0** |       — |
 
 These are import-time values, not current live counts. Admin additions, edits,
 and soft deletes can change them without any schema/migration change.
 
-`feedback` and `feedback_attachments` are now written by the public `/feedback`
-page and read (read-only) in `/admin/feedback`; screenshots live in the private
-Neon `feedbacks` bucket. `notes` exists but still contains **0 rows** and is not
-exposed until its own reviewed query is added — see `docs/feedback.md` and
-`docs/admin-auth.md`.
+`feedback` and `feedback_attachments` are written by the public `/feedback`
+page and read/status-managed in `/admin/feedback`; screenshots live in the
+private Neon `feedbacks` bucket. `notes` exists but is not exposed until its own
+reviewed query is added; the dashboard only shows its row count — see
+`docs/feedback.md` and `docs/admin-auth.md`.

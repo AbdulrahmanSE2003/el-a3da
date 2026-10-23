@@ -37,8 +37,9 @@ const asText = (value: unknown): string =>
   typeof value === "string" ? value : String(value ?? "")
 
 /**
- * نسخ كل مجموعات المحتوى. مفيش أي محتوى بيتحمّل هنا — استعلام واحد
- * صغير بس على `content_sets`.
+ * نسخ كل مجموعات المحتوى المسجّلة في Neon. مفيش أي محتوى بيتحمّل هنا —
+ * استعلام واحد صغير بس على `content_sets`. أي مجموعة عادية جديدة بتظهر
+ * تلقائيًا من غير قائمة ثابتة في الكود.
  */
 export async function getContentVersions(): Promise<ContentVersionsResponse> {
   const rows = (await getSql().query(

@@ -40,13 +40,39 @@ const StateAndShortcuts = ({ data }: { data: OverviewData }) => {
             </dd>
           </div>
 
+          <div className="flex items-center justify-between gap-3 px-5 py-3">
+            <dt className="flex items-center gap-2 text-xs font-bold text-foreground">
+              <MessageSquareIcon className="size-4 text-copper" />
+              رسائل اللاعبين المفتوحة
+            </dt>
+            <dd className="font-mono text-[11px] font-bold text-copper">
+              <Link
+                href="/admin/feedback"
+                className="underline-offset-4 hover:underline"
+              >
+                {formatNumber(data.openFeedback)} · عرض
+              </Link>
+            </dd>
+          </div>
+
+          <div className="flex items-center justify-between gap-3 px-5 py-3">
+            <dt className="flex items-center gap-2 text-xs font-bold text-foreground">
+              <StickyNoteIcon className="size-4 text-ink-soft" />
+              ملاحظات المطوّر المسجّلة
+            </dt>
+            <dd className="font-mono text-[11px] font-bold text-ink-soft">
+              {formatNumber(data.notesCount)} · غير مفعّل
+            </dd>
+          </div>
+
           <div className="bg-paper-warm/30 px-5 py-3">
             <dt className="text-xs font-bold text-foreground">
               صلاحيات التعديل
             </dt>
             <dd className="mt-1 text-xs leading-relaxed text-ink-soft">
-              تعديل الأسئلة وحذفها (soft delete) متاح من قسم الأسئلة على بيانات
-              Neon. الإضافة والنشر وإدارة الرسائل والملاحظات لسه غير متاحة.
+              إضافة الأسئلة وتعديلها وحذفها soft delete متاح من قسم الأسئلة على
+              بيانات Neon، وإدارة حالة رسائل اللاعبين متاحة من قسم الرسائل.
+              ملاحظات المطوّر لسه غير مفعّلة.
             </dd>
           </div>
         </dl>
@@ -80,32 +106,35 @@ const StateAndShortcuts = ({ data }: { data: OverviewData }) => {
               <ArrowUpRightIcon className="size-3.5 text-ink-soft transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
             </Link>
 
-            <div className="flex cursor-not-allowed items-center justify-between gap-2 bg-paper-warm/50 px-3.5 py-3 text-xs font-bold text-ink-soft/60">
-              <span className="flex items-center gap-2">
-                <MessageSquareIcon className="size-4 text-ink-soft/40" />
+            <Link
+              href="/admin/feedback"
+              className="group flex items-center justify-between gap-2 bg-paper-warm px-3.5 py-3 text-xs font-bold transition-colors hover:bg-copper/10"
+            >
+              <span className="flex items-center gap-2 text-foreground">
+                <MessageSquareIcon className="size-4 text-copper" />
                 الرسائل
               </span>
-              <Badge variant="outline" className="text-[10px] opacity-70">
-                غير متاح
-              </Badge>
-            </div>
+              <span className="font-mono text-[11px] text-ink-soft">
+                {formatNumber(data.openFeedback)}
+              </span>
+            </Link>
 
             <div className="flex cursor-not-allowed items-center justify-between gap-2 bg-paper-warm/50 px-3.5 py-3 text-xs font-bold text-ink-soft/60">
               <span className="flex items-center gap-2">
                 <StickyNoteIcon className="size-4 text-ink-soft/40" />
                 الملاحظات
               </span>
-              <Badge variant={"outline"} className="text-[10px] opacity-70">
-                غير متاح
+              <Badge variant="outline" className="text-[10px] opacity-70">
+                {formatNumber(data.notesCount)} سجل
               </Badge>
             </div>
           </div>
         </Panel>
 
         <p className="rounded-xs border-2 border-dashed border-ink/20 bg-paper-warm/20 px-3.5 py-2.5 text-xs leading-relaxed text-ink-soft">
-          <strong className="font-bold text-foreground">ملاحظة:</strong> يتم عرض
-          بيانات المحتوى العامة فقط. الرسائل والملاحظات مخفية لحماية الخصوصية
-          رغم تفعيل المصادقة.
+          <strong className="font-bold text-foreground">ملاحظة:</strong> الأرقام
+          المعروضة من جداول Neon الفعلية، ومفيش بيانات وهمية. صفحة الملاحظات غير
+          مفعّلة، لكن السجلات موجودة ومحصورة.
         </p>
       </div>
     </div>

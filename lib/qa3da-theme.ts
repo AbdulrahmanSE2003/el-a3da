@@ -49,7 +49,7 @@ export const QA3DA_ACCENT_THEME_META: Record<
     accentBg: "color-mix(in srgb, var(--accent-theme) 12%, transparent)",
   },
   "ember-red": {
-    label: "كركديه",
+    label: "عنّاب ساقع",
     description: "أحمر عنابي دافئ بلمسة خشبية وقعدة رايقة",
     surface: "var(--paper-warm)",
     border: "color-mix(in srgb, var(--accent-theme) 40%, var(--ink))",

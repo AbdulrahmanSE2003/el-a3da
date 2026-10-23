@@ -12,12 +12,11 @@ import {
 } from "../components/table"
 import { CategoryBadge } from "../components/category-badge"
 import { formatNumber } from "../lib/format"
-import { getSetMeta } from "../lib/content-sets"
-import type { ContentSetId, QuestionRow } from "../lib/types"
+import type { ContentSetMeta, QuestionRow } from "../lib/types"
 import { cn } from "@/lib/utils"
 
 interface QuestionsTableProps {
-  setId: ContentSetId
+  setMeta: ContentSetMeta
   rows: QuestionRow[]
   total: number
   isPending: boolean
@@ -28,7 +27,7 @@ interface QuestionsTableProps {
 }
 
 export function QuestionsTable({
-  setId,
+  setMeta,
   rows,
   total,
   isPending,
@@ -37,8 +36,6 @@ export function QuestionsTable({
   onEditQuestion,
   onDeleteQuestion,
 }: QuestionsTableProps) {
-  const setMeta = getSetMeta(setId)
-
   const emptyTitle = hasFilters ? "لا توجد نتائج مطابقة" : "المجموعة فارغة"
   const emptyDescription = hasFilters
     ? "جرب تغيير معايير التصفية أو كلمة البحث."

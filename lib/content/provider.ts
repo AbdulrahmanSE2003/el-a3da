@@ -8,6 +8,7 @@
  * بتظهر للجلسات اللي بتتبني بعد كده.
  */
 
+import { bombQuestions } from "@/contents/bomb"
 import { casinoQuestions } from "@/contents/casino"
 import { challenges } from "@/contents/challenges"
 import { punishments } from "@/contents/punishments"
@@ -22,7 +23,8 @@ import type { ContentQuestion, ContentSetId } from "./types"
  * مصدر الحقيقة الثابت (fallback). نفس الملفات اللي اللعبة كانت بتستوردها
  * قبل المزامنة، وبنفس الحقول بالظبط.
  */
-const BUNDLED: Record<ContentSetId, readonly ContentQuestion[]> = {
+const BUNDLED: Partial<Record<ContentSetId, readonly ContentQuestion[]>> = {
+  bomb: bombQuestions,
   casino: casinoQuestions,
   challenges,
   sheikh: sheikhQuestions,
@@ -66,7 +68,9 @@ function bundledSnapshot(id: ContentSetId): ContentSnapshot {
     id,
     source: "bundled",
     version: null,
-    questions: frozenQuestions(BUNDLED[id]),
+    // A DB-only set may have no bundled file yet. It is still a valid
+    // snapshot; games that need it must provide cached content or a bundle.
+    questions: frozenQuestions(BUNDLED[id] ?? []),
   }
   snapshotPool.set(key, snapshot)
   return snapshot
@@ -78,8 +82,8 @@ function bundledSnapshot(id: ContentSetId): ContentSnapshot {
  * - لو فيه كاش محلي سليم → بنستخدمه.
  * - غير كده → بنرجع للملفات المدمجة على طول، من غير ما ننتظر الشبكة.
  *
- * بيرجّع دايمًا نتيجة صالحة (البندل موجود دايمًا)، فمفيش أي احتمال إن
- * اللعبة تتوقف بسبب المزامنة.
+ * بيرجّع دايمًا نتيجة صالحة؛ المجموعات المدمجة عندها fallback فوري،
+ * والمجموعات الجديدة اللي في Neon بس بتعتمد على الكاش المحلي.
  */
 export async function loadContentSnapshot(
   id: ContentSetId

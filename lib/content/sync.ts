@@ -41,7 +41,8 @@ export interface SyncResult {
 }
 
 const VERSIONS_URL = "/api/content/versions"
-const SET_URL = (id: ContentSetId) => `/api/content/sets/${id}`
+const SET_URL = (id: ContentSetId) =>
+  `/api/content/sets/${encodeURIComponent(id)}`
 
 /** مهلة الطلب — من غيرها ممكن الطلب يعلّق على شبكة سيئة. */
 const REQUEST_TIMEOUT_MS = 10_000

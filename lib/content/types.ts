@@ -10,22 +10,19 @@
 /* Content sets                                                        */
 /* ------------------------------------------------------------------ */
 
-export const CONTENT_SET_IDS = [
-  "casino",
-  "topics",
-  "challenges",
-  "sheikh",
-  "zad",
-  "punishments",
-] as const
+/**
+ * Content sets are DB-driven. The API, cache and sync must accept any
+ * ordinary set identifier that Neon exposes, not only the bundled ones.
+ *
+ * The identifier format is intentionally conservative: lower-case ASCII,
+ * digits, underscores and hyphens, starting with a letter or digit.
+ */
+export type ContentSetId = string
 
-export type ContentSetId = (typeof CONTENT_SET_IDS)[number]
+const CONTENT_SET_ID_PATTERN = /^[a-z0-9][a-z0-9_-]{0,62}$/
 
 export function isContentSetId(value: unknown): value is ContentSetId {
-  return (
-    typeof value === "string" &&
-    (CONTENT_SET_IDS as readonly string[]).includes(value)
-  )
+  return typeof value === "string" && CONTENT_SET_ID_PATTERN.test(value)
 }
 
 /* ------------------------------------------------------------------ */
@@ -95,7 +92,7 @@ function isNonEmptyString(value: unknown): value is string {
 export function parseContentQuestion(value: unknown): ContentQuestion | null {
   if (!isPlainObject(value)) return null
   if (!isNonEmptyString(value.id)) return null
-  if (typeof value.text !== "string" || value.text === "") return null
+  if (typeof value.text !== "string" || value.text.trim() === "") return null
 
   const question: ContentQuestion = {
     id: value.id,

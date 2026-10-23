@@ -110,4 +110,4 @@ browser presigned `PUT`s.
   MIME type nor size until `HEAD` confirms them.
 - All SQL is parameterized. Admin reads call `requireAdmin()` inside the query
   layer, not just the page, so moving a page can't leak data.
-- The public game pages still read `contents/*.ts`; feedback does not touch them.
+- Public game pages read the content snapshot from `useContentSet(setId)`. Feedback does not modify game content or content caches.

@@ -32,13 +32,14 @@
 
 import { neon } from "@neondatabase/serverless"
 
+import { bombQuestions } from "../contents/bomb"
 import { casinoQuestions } from "../contents/casino"
 import { challenges } from "../contents/challenges"
 import { punishments } from "../contents/punishments"
 import { sheikhQuestions } from "../contents/sheikh-questions"
 import { topics } from "../contents/topics"
 import { zadTopics } from "../contents/zad"
-import { CONTENT_SET_IDS, type ContentSetId } from "../lib/content/types"
+
 import {
   verifySet,
   type BaselineQuestion,
@@ -53,14 +54,17 @@ interface ContentSetRow {
   version: string | number
 }
 
-const SOURCES: Record<ContentSetId, readonly BaselineQuestion[]> = {
+const SOURCES: Record<string, readonly BaselineQuestion[]> = {
   casino: casinoQuestions,
+  bomb: bombQuestions,
   topics,
   challenges,
   sheikh: sheikhQuestions,
   zad: zadTopics,
   punishments,
 }
+
+const BASELINE_SET_IDS = Object.keys(SOURCES)
 
 const LIVE_QUERY = `
   select external_id, position, text, category, correct_answer, badge_label
@@ -86,7 +90,10 @@ function formatList<T>(values: readonly T[], limit = 20): string {
     : shown
 }
 
-function formatChanged(changed: readonly ChangedQuestion[], limit = 20): string {
+function formatChanged(
+  changed: readonly ChangedQuestion[],
+  limit = 20
+): string {
   if (changed.length === 0) return "—"
   const shown = changed
     .slice(0, limit)
@@ -130,13 +137,13 @@ async function main() {
   }
 
   const globalErrors: string[] = []
-  const missingSetIds = CONTENT_SET_IDS.filter((id) => !versionById.has(id))
+  const missingSetIds = BASELINE_SET_IDS.filter((id) => !versionById.has(id))
   if (missingSetIds.length > 0) {
     globalErrors.push(
       `content_sets is missing required set(s): ${missingSetIds.join(", ")}`
     )
   }
-  for (const id of CONTENT_SET_IDS) {
+  for (const id of BASELINE_SET_IDS) {
     const version = versionById.get(id)
     if (version !== undefined && version.trim() === "") {
       globalErrors.push(`${id}: content set has an empty version token`)
@@ -144,12 +151,10 @@ async function main() {
   }
 
   const results: SetVerification[] = []
-  for (const id of CONTENT_SET_IDS) {
+  for (const id of BASELINE_SET_IDS) {
     if (!versionById.has(id)) continue
 
-    const liveRows = (await sql.query(LIVE_QUERY, [
-      id,
-    ])) as RawLiveQuestion[]
+    const liveRows = (await sql.query(LIVE_QUERY, [id])) as RawLiveQuestion[]
     const deletedRows = (await sql.query(DELETED_QUERY, [
       id,
     ])) as RawDeletedQuestion[]
@@ -157,11 +162,14 @@ async function main() {
     results.push(verifySet(id, SOURCES[id], liveRows, deletedRows))
   }
 
-  const baselineTotal = CONTENT_SET_IDS.reduce(
+  const baselineTotal = BASELINE_SET_IDS.reduce(
     (total, id) => total + SOURCES[id].length,
     0
   )
-  const liveTotal = results.reduce((total, result) => total + result.liveCount, 0)
+  const liveTotal = results.reduce(
+    (total, result) => total + result.liveCount,
+    0
+  )
   const deletedTotal = results.reduce(
     (total, result) => total + result.deletedCount,
     0
@@ -191,7 +199,7 @@ async function main() {
   console.log("Live:     Neon (authoritative)")
 
   console.log("\n1) Content sets")
-  for (const id of CONTENT_SET_IDS) {
+  for (const id of BASELINE_SET_IDS) {
     const result = results.find((row) => row.id === id)
     if (!result) {
       console.log(`  ✗ ${id}: missing from content_sets`)
@@ -252,7 +260,9 @@ async function main() {
       console.log(`      explained gaps: ${formatList(result.explainedGaps)}`)
     }
     if (result.unexplainedGaps.length > 0) {
-      console.log(`      unexplained gaps: ${formatList(result.unexplainedGaps)}`)
+      console.log(
+        `      unexplained gaps: ${formatList(result.unexplainedGaps)}`
+      )
     }
   }
 
