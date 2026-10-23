@@ -26,7 +26,7 @@ const Players = ({ redirect }: { redirect: string }) => {
       <section className="mt-7 rounded-md border-2 border-ink bg-paper-warm p-4 shadow-[4px_4px_0_var(--color-ink)]">
         <div className="mb-3 flex items-center justify-between">
           <span className="text-sm font-bold tracking-widest text-copper">
-            زود لعيب جديد ➕{" "}
+            زود لعيب جديد
           </span>
 
           <Users className="size-4 text-ink-soft/50" />

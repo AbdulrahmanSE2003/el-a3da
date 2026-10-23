@@ -183,27 +183,27 @@ export const bombQuestions: BombQuestion[] = [
   },
   {
     id: "37",
-    category: "RANDOM",
+    category: "GENERAL",
     text: "حاجة مينفعش تلمسها",
   },
   {
     id: "38",
-    category: "RANDOM",
+    category: "GENERAL",
     text: "حاجة لونها أخضر",
   },
   {
     id: "39",
-    category: "RANDOM",
+    category: "GENERAL",
     text: "حاجة بتعمل صوت مزعج",
   },
   {
     id: "40",
-    category: "RANDOM",
+    category: "GENERAL",
     text: "حاجة ممكن تلاقيها في جيب بنطلون قديم",
   },
   {
     id: "41",
-    category: "RANDOM",
+    category: "GENERAL",
     text: "حاجة بتعملها أول ما تصحى من النوم",
   },
   {
@@ -318,17 +318,17 @@ export const bombQuestions: BombQuestion[] = [
   },
   {
     id: "64",
-    category: "RANDOM",
+    category: "GENERAL",
     text: "حاجة ريحتها وحشة بس بنستعملها عادي",
   },
   {
     id: "65",
-    category: "RANDOM",
+    category: "GENERAL",
     text: "حاجة بتعملها وأنت واقف في الإشارة",
   },
   {
     id: "66",
-    category: "RANDOM",
+    category: "GENERAL",
     text: "حاجة بتنسى دايماً حطيتها فين",
   },
   {

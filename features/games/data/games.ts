@@ -10,6 +10,7 @@ export interface GameItem {
   href?: string
   theme: GameTheme
   isRecommended?: boolean
+  isNew?: boolean
 }
 
 export const GAMES_LIST: GameItem[] = [
@@ -33,19 +34,22 @@ export const GAMES_LIST: GameItem[] = [
     theme: "nordic",
   },
   {
+    id: "bomb",
+    title: "قنبلة",
+    description:
+      "جاوب بسرعة وسلّم الموبايل للي بعدك قبل ما القنبلة تفرقع في وشك! 💣🔥",
+    status: "متاحة",
+    icon: Bomb,
+    href: "/games/bomb",
+    theme: "sunset",
+    isNew: true,
+  },
+  {
     id: "bekasa",
     title: "بكاسة",
     description: "لعبة جديدة بتستوي ونازلة تظبط الكلام قريب! 🎯",
     status: "لسه عالرمالة⏳",
     icon: Glasses,
     theme: "copper",
-  },
-  {
-    id: "bomb",
-    title: "قنبلة",
-    description: "لعبة جديدة بتستوي ونازلة تظبط الكلام قريب! 🎯",
-    status: "لسه عالرمالة⏳",
-    icon: Bomb,
-    theme: "cyberpunk",
   },
 ]

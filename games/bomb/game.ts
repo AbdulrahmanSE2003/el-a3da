@@ -26,5 +26,5 @@ export const setCategory = (selectedCategory: keyof BombGameCategories) => {
 
   if (!question) return null
 
-  createBombGame(question, category)
+  return createBombGame(question, category)
 }

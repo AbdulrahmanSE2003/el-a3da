@@ -15,6 +15,7 @@
     "content:verify:test": "node --import tsx scripts/test-content-verify.ts",
     "content:test": "node --import tsx scripts/test-content-sync.ts",
     "test:casino": "node --import tsx scripts/test-casino-game.ts",
+    "test:bomb": "node --import tsx scripts/test-bomb-sounds.ts",
     "admin:password": "tsx scripts/admin-password.ts"
   },
   "dependencies": {

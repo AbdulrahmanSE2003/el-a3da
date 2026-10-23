@@ -80,6 +80,53 @@ export const gameThemes = {
     actionBtn:
       "bg-sky-600 text-slate-950 font-bold border-sky-400 group-hover:bg-sky-500",
   },
+  sunset: {
+    card: "bg-orange-950 border-orange-800 shadow-[4px_4px_0_#7c2d12]",
+    hoverShadow: "hover:shadow-[7px_7px_0_#7c2d12]",
+    title: "text-orange-100 group-hover:text-amber-400",
+    description: "text-orange-300/70",
+    accent: "text-amber-400",
+    badge: "bg-orange-800 text-amber-200 border border-amber-500/40",
+    iconBox: "bg-orange-900/80 border-orange-700 text-amber-400",
+    iconBg: "text-orange-950",
+    actionBtn:
+      "bg-orange-600 text-white font-bold border-orange-400 group-hover:bg-orange-500",
+  },
+  midnight: {
+    card: "bg-indigo-950 border-indigo-900 shadow-[4px_4px_0_#1e1b4b]",
+    hoverShadow: "hover:shadow-[7px_7px_0_#1e1b4b]",
+    title: "text-indigo-100 group-hover:text-indigo-300",
+    description: "text-indigo-300/70",
+    accent: "text-indigo-400",
+    badge: "bg-indigo-900 text-indigo-200 border border-indigo-700/50",
+    iconBox: "bg-indigo-900/60 border-indigo-800 text-indigo-400",
+    iconBg: "text-indigo-950",
+    actionBtn:
+      "bg-indigo-600 text-white border-indigo-400 group-hover:bg-indigo-500",
+  },
+  toxic: {
+    card: "bg-zinc-950 border-lime-500/50 shadow-[4px_4px_0_#84cc16]",
+    hoverShadow: "hover:shadow-[7px_7px_0_#84cc16]",
+    title: "text-zinc-100 group-hover:text-lime-400",
+    description: "text-zinc-400",
+    accent: "text-lime-400",
+    badge: "bg-lime-500 text-zinc-950 font-bold border border-lime-300",
+    iconBox: "bg-zinc-900 border-lime-500 text-lime-400",
+    iconBg: "text-zinc-900",
+    actionBtn:
+      "bg-lime-500 text-zinc-950 font-bold border-lime-400 group-hover:bg-lime-400",
+  },
+  crimson: {
+    card: "bg-red-950 border-red-800 shadow-[4px_4px_0_#7f1d1d]",
+    hoverShadow: "hover:shadow-[7px_7px_0_#7f1d1d]",
+    title: "text-red-100 group-hover:text-red-400",
+    description: "text-red-300/70",
+    accent: "text-red-500",
+    badge: "bg-red-800 text-red-100 border border-red-600/50",
+    iconBox: "bg-red-900/60 border-red-700 text-red-400",
+    iconBg: "text-red-950",
+    actionBtn: "bg-red-700 text-white border-red-500 group-hover:bg-red-600",
+  },
 } as const
 
 export type GameTheme = keyof typeof gameThemes

@@ -5,7 +5,7 @@ import { BombGameCategories } from "./types"
 export const generateBombTimer = () => {
   const randomSeconds =
     Math.floor(Math.random() * (maxSeconds - minSeconds + 1)) + minSeconds
-
+  
   return randomSeconds
 }
 
