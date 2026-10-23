@@ -31,7 +31,9 @@ const LandingPage = () => {
             <p className="text-lg leading-9 text-ink-soft">
               هي المكان اللي تلم فيه صحابك وتبدأ القعدة من غير ما حد يقول:
               <br />
-              <span className="font-bold text-ink">&quot;نعمل إيه بقى؟&quot;</span>
+              <span className="font-bold text-ink">
+                &quot;نعمل إيه بقى؟&quot;
+              </span>
             </p>
 
             <div className="mt-8 flex items-center gap-3 text-sm font-bold">
@@ -123,6 +125,7 @@ const LandingPage = () => {
             <Link href="/about">عن القعدة</Link>
             <Link href="/download">التحميل</Link>
             <Link href="/changelog">التحديثات</Link>
+            <Link href="/feedback">الملاحظات</Link>
           </div>
         </div>
       </footer>

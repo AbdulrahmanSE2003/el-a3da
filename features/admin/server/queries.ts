@@ -162,6 +162,20 @@ const mapQuestion = (row: QuestionDbRow): QuestionRow => ({
   deletedAt: asNullableText(row.deleted_at),
 })
 
+export async function getNextQuestionExternalId(
+  setId: ContentSetId
+): Promise<string> {
+  await requireAdmin()
+  await connection()
+  const rows = (await getSql().query(
+    `select coalesce(max(position), -1) + 1 as next_pos from questions where set_id = $1`,
+    [setId]
+  )) as Array<{ next_pos: number | string }>
+
+  const nextPos = Number(rows[0]?.next_pos ?? 0)
+  return String(Math.max(0, nextPos))
+}
+
 export async function getQuestionsPage({
   setId,
   query: search,
@@ -169,7 +183,10 @@ export async function getQuestionsPage({
   page: requestedPage = 1,
   pageSize: requestedPageSize = 20,
 }: QuestionsPageArgs): Promise<QuestionsPageData> {
-  const pageSize = Math.min(Math.max(Math.trunc(requestedPageSize) || 20, 1), 100)
+  const pageSize = Math.min(
+    Math.max(Math.trunc(requestedPageSize) || 20, 1),
+    100
+  )
   const conditions = ["set_id = $1", "deleted_at is null"]
   const params: unknown[] = [setId]
 
@@ -193,10 +210,29 @@ export async function getQuestionsPage({
 
   const where = conditions.join(" and ")
 
-  const countRows = await query<{ total: string | number }>(
-    `select count(*)::int as total from questions where ${where}`,
-    params
-  )
+  // قائمة الفئات مستقلة تمامًا عن العدّ والترقيم (بتعتمد على `setId` بس)،
+  // فبنشغّلها مع العدّ في نفس الوقت بدل ما نستنى العدّ الأول. الصفوف نفسها
+  // لسه بعدهم لأنها محتاجة `offset` المحسوب من `total`.
+  const [countRows, categories] = await Promise.all([
+    query<{ total: string | number }>(
+      `select count(*)::int as total from questions where ${where}`,
+      params
+    ),
+    query<{ category: string; count: string | number }>(
+      `
+        select category, count(*)::int as count
+        from questions
+        where set_id = $1
+          and deleted_at is null
+          and category is not null
+          and btrim(category) <> ''
+        group by category
+        order by count desc, category asc
+      `,
+      [setId]
+    ),
+  ])
+
   const total = asNumber(countRows[0]?.total)
   const pageCount = Math.max(1, Math.ceil(total / pageSize))
   const page = Math.min(Math.max(Math.trunc(requestedPage) || 1, 1), pageCount)
@@ -222,20 +258,6 @@ export async function getQuestionsPage({
       limit $${params.length + 1} offset $${params.length + 2}
     `,
     [...params, pageSize, offset]
-  )
-
-  const categories = await query<{ category: string; count: string | number }>(
-    `
-      select category, count(*)::int as count
-      from questions
-      where set_id = $1
-        and deleted_at is null
-        and category is not null
-        and btrim(category) <> ''
-      group by category
-      order by count desc, category asc
-    `,
-    [setId]
   )
 
   return {
@@ -310,18 +332,19 @@ export async function getHealthReport(): Promise<HealthReport> {
   ])
 
   const healthById = new Map(healthRows.map((row) => [row.id, row]))
-  const duplicatesById = new Map(
-    duplicateRows.map((row) => [row.set_id, row])
-  )
+  const duplicatesById = new Map(duplicateRows.map((row) => [row.set_id, row]))
 
   const sets: HealthSetRow[] = CONTENT_SETS.map((meta) => {
     const row = healthById.get(meta.id)
     const duplicates = duplicatesById.get(meta.id)
     const live = row ? asNumber(row.live) : 0
-    const maxPosition = row?.max_position == null ? null : asNumber(row.max_position)
+    const maxPosition =
+      row?.max_position == null ? null : asNumber(row.max_position)
     // لو كل العناصر الحية بترتيب 0..live-1 يبقى مفيش فراغات.
     const positionGaps =
-      live === 0 || maxPosition === null ? 0 : Math.max(0, maxPosition - live + 1)
+      live === 0 || maxPosition === null
+        ? 0
+        : Math.max(0, maxPosition - live + 1)
 
     return {
       id: meta.id,

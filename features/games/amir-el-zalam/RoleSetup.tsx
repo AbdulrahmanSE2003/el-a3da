@@ -55,7 +55,7 @@ const RoleSetup = ({ onStart }: RoleSetupProps) => {
         </p>
       </div>
 
-      <div className="bg-warm-paper border border-ink/10 p-5">
+      <div className="bg-warm-paper rounded-md border border-ink/10 p-5">
         <div className="flex items-center justify-between">
           <div>
             <p className="text-lg font-bold text-ink">عدد اللاعبين</p>
@@ -67,7 +67,7 @@ const RoleSetup = ({ onStart }: RoleSetupProps) => {
         </div>
       </div>
 
-      <div className="bg-warm-paper border border-ink/10 p-5">
+      <div className="bg-warm-paper rounded-md border border-ink/10 p-5">
         <div className="flex items-center justify-between">
           <div>
             <p className="text-lg font-bold text-ink">المافيا</p>
@@ -129,7 +129,7 @@ interface RoleCountProps {
 
 const RoleCount = ({ label, count }: RoleCountProps) => {
   return (
-    <div className="border border-ink/10 bg-paper p-3 text-center">
+    <div className="rounded-md border border-ink/10 bg-paper p-3 text-center">
       <p className="font-mono text-lg font-bold text-ink">{count}</p>
 
       <p className="mt-1 text-xs text-ink-soft">{label}</p>

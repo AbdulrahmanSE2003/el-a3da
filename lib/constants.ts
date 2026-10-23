@@ -1,4 +1,3 @@
-import Link from "next/link"
 import {
   CircleQuestionMark,
   Gamepad2,
@@ -13,7 +12,7 @@ export const activities: ActivityCardItem[] = [
     number: "01",
     stamp: "TOPICS",
     title: "مواضيع وحوارات",
-    description: "سؤال يفتح الكلام... والباقي على القعدة.",
+    description: "سؤال يرمي الخيط... وسيب الباقي على الشلة❕",
     href: "/topics",
     icon: MessageCircle,
   },
@@ -21,7 +20,7 @@ export const activities: ActivityCardItem[] = [
     number: "02",
     stamp: "CHALLENGE",
     title: "تحديات",
-    description: "الدور على مين؟",
+    description: "الدور على مين النهاردة؟ ⚡",
     href: "/challenges",
     icon: Zap,
   },
@@ -29,7 +28,7 @@ export const activities: ActivityCardItem[] = [
     number: "03",
     stamp: "QUESTIONS",
     title: "شيخ الحارة",
-    description: "جاهز للإستجواب؟",
+    description: "أسرار واعترافات.. جاهز للسين وجيم؟ 🕵️‍♂️",
     href: "/sheikh",
     icon: CircleQuestionMark,
   },
@@ -37,7 +36,7 @@ export const activities: ActivityCardItem[] = [
     number: "04",
     stamp: "ZAD",
     title: "زاد القعدة",
-    description: "خواطر إيمانية، أذكار، ونقاط تُصلِح القلوب وتجمعنا على خير.",
+    description: "مش لازم كل الوقت لعب ، خلينا نستفاد بشوية من وقتنا ✨",
     href: "/zad",
     icon: PlantPot,
     className: "col-span-2 border-2 border-copper/40 shadow-copper/40",
@@ -46,7 +45,7 @@ export const activities: ActivityCardItem[] = [
     number: "05",
     stamp: "GAMES",
     title: "ألعاب",
-    description: "هنا القعدة هتبدأ بجد.",
+    description: "من هنا اللعب والضحك الجد بيبدأ! 🎮",
     href: "/games",
     icon: Gamepad2,
     className: "col-span-2",
@@ -54,6 +53,22 @@ export const activities: ActivityCardItem[] = [
 ]
 
 export const updates = [
+  {
+    version: "2.0.0",
+    date: "2026",
+    label: "feat",
+    title: "القعدة v2 — ألوان وتجربة جديدة",
+    description:
+      "إطلاق نظام الثيمات الجديد مع خيارات متعددة وأجواء مختلفة. إضافة صفحة إعدادات المظهر، تحسين أداء التحميل ، ومزامنة البيانات مع Neon لدعم التشغيل أوفلاين.",
+  },
+  {
+    version: "1.4.1",
+    date: "أكتوبر 2025",
+    label: "chore",
+    title: "تحسين استقرار البيانات ولوحة التحكم",
+    description:
+      "تنظيف معرفات المحتوى (Content IDs)، مزامنة قاعدة البيانات للتطوير، وإضافة لوحة تحكم للقراءة فقط لفحص حالة النظام.",
+  },
   {
     version: "1.4.0",
     date: "25 سبتمبر 2025",

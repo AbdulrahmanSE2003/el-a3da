@@ -12,10 +12,15 @@ Forward-only SQL migrations for the Qa3da Neon (PostgreSQL) database.
 `production` currently has **0 tables** and must remain untouched until a
 separate, explicitly authorized release step exists.
 
-The 3,181 content rows on `dev` were imported by a one-off operational script
-outside this repository, in a single transaction. They are **not** part of a
-migration file. Do not re-run the import or add content rows to a migration
-without a separate review.
+The initial import on 2026-10-21 inserted 3,181 content rows on `dev` using a
+one-off operational script outside this repository, in a single transaction.
+They are **not** part of a migration file. Do not re-run the import or add
+content rows to a migration without a separate review.
+
+Those 3,181 rows are a historical import baseline, not a guarantee of current
+live counts. Admin additions, edits, and soft deletes may change the live data.
+`pnpm content:verify` reports that drift and fails only on integrity errors;
+`pnpm content:verify -- --strict` fails on any drift.
 
 ## Rules
 
@@ -64,7 +69,7 @@ group by set_id, external_id
 having count(*) > 1;
 ```
 
-Expected `dev` totals after the initial import:
+Historical `dev` baseline from the 2026-10-21 initial import:
 
 | Set | Live | Deleted | Version |
 | --- | ---: | ---: | ---: |
@@ -76,6 +81,11 @@ Expected `dev` totals after the initial import:
 | `punishments` | 499 | 0 | 500 |
 | **Total** | **3,181** | **0** | — |
 
-`feedback`, `feedback_attachments`, and `notes` exist but currently contain
-**0 rows**. The dashboard does not expose feedback/notes until admin
-authentication is implemented — see `docs/admin-auth.md`.
+These are import-time values, not current live counts. Admin additions, edits,
+and soft deletes can change them without any schema/migration change.
+
+`feedback` and `feedback_attachments` are now written by the public `/feedback`
+page and read (read-only) in `/admin/feedback`; screenshots live in the private
+Neon `feedbacks` bucket. `notes` exists but still contains **0 rows** and is not
+exposed until its own reviewed query is added — see `docs/feedback.md` and
+`docs/admin-auth.md`.

@@ -8,7 +8,11 @@ interface EmptyStateProps {
 }
 
 /** حالة فاضية — موحدة لكل الصفحات */
-export function EmptyState({ icon: Icon = InboxIcon, title, description }: EmptyStateProps) {
+export function EmptyState({
+  icon: Icon = InboxIcon,
+  title,
+  description,
+}: EmptyStateProps) {
   return (
     <div className="flex flex-col items-center justify-center gap-3 border-2 border-dashed border-ink/20 bg-paper-warm/50 px-6 py-14 text-center">
       <span className="icon-box text-ink-soft/60">

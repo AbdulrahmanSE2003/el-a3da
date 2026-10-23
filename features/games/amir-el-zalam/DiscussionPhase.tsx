@@ -34,7 +34,7 @@ const DiscussionPhase = ({ game, onChange }: DiscussionPhaseProps) => {
         </p>
       </div>
 
-      <div className="bg-warm-paper border border-ink/20 p-5">
+      <div className="bg-warm-paper rounded-md border border-ink/20 p-5">
         <div className="flex items-center gap-3">
           <MessageCircle className="size-5 text-copper" />
 
@@ -47,11 +47,11 @@ const DiscussionPhase = ({ game, onChange }: DiscussionPhaseProps) => {
           </div>
         </div>
 
-        <div className="mt-4 flex flex-wrap gap-2">
+        <div className="mt-4 flex flex-wrap gap-2 rounded-md">
           {alivePlayers.map((player) => (
             <span
               key={player.id}
-              className={`border px-3 py-1 text-sm font-bold ${
+              className={`rounded-md border px-3 py-1 text-sm font-bold ${
                 player.silenced
                   ? "border-danger-brand/20 bg-danger-brand/5 text-danger-brand"
                   : "border-ink/20 bg-paper text-ink"
@@ -64,7 +64,7 @@ const DiscussionPhase = ({ game, onChange }: DiscussionPhaseProps) => {
       </div>
 
       {silencedPlayers.length > 0 && (
-        <p className="border border-danger-brand/20 bg-danger-brand/5 p-3 text-center text-sm font-bold text-danger-brand">
+        <p className="rounded-md border border-danger-brand/20 bg-danger-brand/5 p-3 text-center text-sm font-bold text-danger-brand">
           {silencedPlayers.map((player) => player.name).join("، ")} مش هيشارك في
           الكلام.
         </p>

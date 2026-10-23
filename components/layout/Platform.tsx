@@ -29,12 +29,13 @@ const Platform = () => {
           <div className={`flex items-center gap-3`}>
             <DownloadModal />
             <ChangelogModal />
-            <GenericGuide
+            {/* NOTE Commented now untill we finish update platform provide better guide */}
+            {/* <GenericGuide
               title="القعدة"
               subtitle="كل حاجة محتاج تعرفها قبل ما تبدأ — في دقيقتين"
             >
               <PlatformGuide />
-            </GenericGuide>
+            </GenericGuide> */}
           </div>
         </div>
 
@@ -43,7 +44,7 @@ const Platform = () => {
             النهاردة هنعمل إيه؟
           </h2>
           <p className="mt-1 text-sm font-medium text-ink-soft/70">
-            اختار حاجة تفتح الكلام... أو تقلب القعدة.
+            اختار حاجة تفتح الكلام... أو تولّع القعدة.
           </p>
         </section>
 

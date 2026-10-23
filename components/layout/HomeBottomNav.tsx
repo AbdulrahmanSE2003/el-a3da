@@ -1,6 +1,7 @@
 "use client"
 
-import { Gamepad2, Home, Menu, Users } from "lucide-react"
+import { cn } from "cn"
+import { Gamepad2, Home, MessageSquare, Settings, Users } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 
@@ -17,14 +18,19 @@ const navItems = [
   },
   {
     href: "/players",
-    label: "القعدة",
+    label: "اللعيبة",
     icon: Users,
   },
-  // {
-  //   href: "/more",
-  //   label: "المزيد",
-  //   icon: Menu,
-  // },
+  {
+    href: "/feedback",
+    label: "الملاحظات",
+    icon: MessageSquare,
+  },
+  {
+    href: "/settings",
+    label: "الإعدادات",
+    icon: Settings,
+  },
 ]
 
 const HomeBottomNav = () => {
@@ -45,8 +51,15 @@ const HomeBottomNav = () => {
                 isActive ? "text-copper" : "text-ink-soft hover:text-ink"
               }`}
             >
-              <Icon className="size-5" />
-              <span className="text-[10px] font-bold">{item.label}</span>
+              <Icon className={cn("size-5", isActive ? "fill-primary" : "")} />
+              <span
+                className={cn(
+                  "text-[10px] font-semibold",
+                  isActive ? "font-black" : ""
+                )}
+              >
+                {item.label}
+              </span>
             </Link>
           )
         })}

@@ -41,12 +41,18 @@ function json(
 
 export async function POST(request: Request) {
   if (!isSameOrigin(request)) {
-    return json({ ok: false, error: "الطلب مش من نفس الموقع." }, { status: 403 })
+    return json(
+      { ok: false, error: "الطلب مش من نفس الموقع." },
+      { status: 403 }
+    )
   }
 
   const contentLength = Number(request.headers.get("content-length") ?? 0)
   if (Number.isFinite(contentLength) && contentLength > MAX_JSON_BYTES) {
-    return json({ ok: false, error: "حجم البيانات كبير جدًا." }, { status: 413 })
+    return json(
+      { ok: false, error: "حجم البيانات كبير جدًا." },
+      { status: 413 }
+    )
   }
 
   const rate = checkRateLimit(
@@ -72,11 +78,17 @@ export async function POST(request: Request) {
   try {
     body = await request.json()
   } catch {
-    return json({ ok: false, error: "البيانات المرسلة غير صالحة." }, { status: 400 })
+    return json(
+      { ok: false, error: "البيانات المرسلة غير صالحة." },
+      { status: 400 }
+    )
   }
 
   if (!body || typeof body !== "object" || Array.isArray(body)) {
-    return json({ ok: false, error: "البيانات المرسلة غير صالحة." }, { status: 400 })
+    return json(
+      { ok: false, error: "البيانات المرسلة غير صالحة." },
+      { status: 400 }
+    )
   }
 
   const record = body as Record<string, unknown>

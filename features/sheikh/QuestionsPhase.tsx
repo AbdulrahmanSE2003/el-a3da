@@ -26,7 +26,7 @@ export function QuestionsPhase({
           </div>
         </div>
 
-        <div className="mt-4 border-2 border-ink bg-paper-warm p-6 shadow-[5px_5px_0_var(--color-ink)]">
+        <div className="mt-4 rounded-md border-2 border-ink bg-paper-warm p-6 shadow-[5px_5px_0_var(--color-ink)]">
           <div className="flex items-center justify-between border-b border-ink/10 pb-4">
             <span className="text-sm font-bold text-copper">سؤال</span>
           </div>

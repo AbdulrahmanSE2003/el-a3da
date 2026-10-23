@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils"
 import { ThemeProvider } from "@/components/theme-provider"
 import { Metadata, Viewport } from "next"
 import UpdatePrompt from "@/components/ui/UpdatePropmt"
+import { ContentSyncBootstrap } from "@/lib/content/sync-bootstrap"
 
 const cairo = Cairo({
   subsets: ["arabic"],
@@ -39,6 +40,7 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
+  userScalable: false,
 }
 
 export default function RootLayout({
@@ -57,8 +59,39 @@ export default function RootLayout({
         ibmPlexMono.variable
       )}
     >
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+      (function () {
+        try {
+          var key = "qa3da-accent-theme";
+          var theme = localStorage.getItem(key);
+          var validThemes = [
+            "cafe",
+            "original-green",
+            "night-blue",
+            "ember-red",
+            "velvet-purple"
+          ];
+
+          if (!validThemes.includes(theme)) {
+            theme = "cafe";
+          }
+
+          document.documentElement.setAttribute(
+            "data-accent-theme",
+            theme
+          );
+        } catch (e) {}
+      })();
+    `,
+          }}
+        />
+      </head>
       <body className="min-h-screen bg-paper font-sans text-foreground">
         <ThemeProvider>
+          <ContentSyncBootstrap />
           <UpdatePrompt />
           {children}
         </ThemeProvider>

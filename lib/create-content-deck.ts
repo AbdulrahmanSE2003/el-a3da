@@ -1,11 +1,20 @@
-export interface ContentItem {
+import { ContentItem as BaseContentItem } from "@/lib/content/types"
+
+export interface ContentItem extends BaseContentItem {
   id: string
   text: string
-  category?: string
-  correct_answer?: string
 }
 
-export const createContentDeck = <T extends ContentItem>(items: T[]) => {
+export type ContentDeck<T extends ContentItem> = {
+  next: () => T
+  reset: (nextItems?: T[]) => void
+  remaining: () => number
+}
+
+export const createContentDeck = <T extends ContentItem>(
+  items: T[]
+): ContentDeck<T> => {
+  let source: T[] = items
   let deck: T[] = []
   let index = 0
 
@@ -22,7 +31,7 @@ export const createContentDeck = <T extends ContentItem>(items: T[]) => {
   }
 
   const refill = () => {
-    deck = shuffle(items)
+    deck = shuffle(source)
     index = 0
   }
 
@@ -37,7 +46,12 @@ export const createContentDeck = <T extends ContentItem>(items: T[]) => {
       return deck[index++]
     },
 
-    reset: () => {
+    /**
+     * إعادة البناء. بتمرير `nextItems` بتبدّل مصدر المحتوى — بتُستخدم
+     * لما كاش المحلي يوفّر نسخة أحدث من البندل قبل بداية جلسة اللعب.
+     */
+    reset: (nextItems?: T[]) => {
+      if (nextItems) source = nextItems
       refill()
     },
 

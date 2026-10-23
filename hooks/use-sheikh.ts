@@ -1,10 +1,10 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
 import { usePartyStore } from "@/store/party-store"
-import { sheikhQuestions } from "@/contents/sheikh-questions"
 import { createContentDeck } from "@/lib/create-content-deck"
+import { useContentSet } from "@/lib/content/use-content-set"
 
 export type SheikhPhase = "idle" | "revealed" | "questions"
 
@@ -12,11 +12,27 @@ export function useSheikh() {
   const router = useRouter()
   const players = usePartyStore((state) => state.players)
 
-  const [deck] = useState(() => createContentDeck(sheikhQuestions))
+  // محتوى الجلسة: بنحلّه مرة واحدة ونفضل عليه طول الجلسة. أي مزامنة في
+  // الخلفية بتحصل بعد كده مش بتلمسه.
+  const { snapshot, ready } = useContentSet("sheikh")
+
+  const [deck] = useState(() => createContentDeck([...snapshot.questions]))
+  const activatedRef = useRef(snapshot.version)
 
   const [phase, setPhase] = useState<SheikhPhase>("idle")
   const [sheikhId, setSheikhId] = useState<string | null>(null)
   const [currentQuestion, setCurrentQuestion] = useState(() => deck.next())
+
+  // لو كاش المحلي إدّانا نسخة مختلفة عن البندل، بنبدّل الم deck مرة واحدة
+  // بس قبل ما الجلسة تبدأ فعليًا.
+  useEffect(() => {
+    if (!ready) return
+    if (activatedRef.current === snapshot.version) return
+
+    activatedRef.current = snapshot.version
+    deck.reset([...snapshot.questions])
+    setCurrentQuestion(deck.next())
+  }, [ready, snapshot, deck])
 
   useEffect(() => {
     if (players.length === 0) {

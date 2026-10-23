@@ -33,7 +33,7 @@ const EliminationResult = ({ game, onChange }: EliminationResultProps) => {
 
   return (
     <section className="flex w-full flex-col gap-6">
-      <div className="border-b border-ink/20 pb-5">
+      <div className="rounded-md border-b border-ink/20 pb-5">
         <p className="font-mono text-[10px] font-bold tracking-[0.25em] text-copper">
           VOTE / RESULT
         </p>
@@ -41,7 +41,7 @@ const EliminationResult = ({ game, onChange }: EliminationResultProps) => {
         <h1 className="mt-2 text-4xl font-black text-ink">القرار طلع</h1>
       </div>
 
-      <div className="bg-warm-paper border border-ink/20 p-8 text-center">
+      <div className="bg-warm-paper rounded-md border border-ink/20 p-8 text-center">
         <Skull className="mx-auto size-10 text-danger-brand" />
 
         <p className="mt-5 text-2xl font-black text-ink">{player.name}</p>

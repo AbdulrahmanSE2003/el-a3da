@@ -13,7 +13,7 @@ const PlayersList = ({
       {players.map((player, index) => (
         <div
           key={player.id}
-          className="group flex items-center gap-3 border-2 border-ink bg-paper-warm px-4 py-3"
+          className="group flex items-center gap-3 rounded-md border-2 border-ink bg-paper-warm px-4 py-3"
         >
           <span className="font-mono text-[10px] font-bold text-copper">
             {(index + 1).toString().padStart(2, "0")}

@@ -83,16 +83,10 @@ export async function POST(request: NextRequest) {
   }
 
   const email = typeof payload.email === "string" ? payload.email.trim() : ""
-  const password =
-    typeof payload.password === "string" ? payload.password : ""
+  const password = typeof payload.password === "string" ? payload.password : ""
   const next = typeof payload.next === "string" ? payload.next : null
 
-  if (
-    !email ||
-    !password ||
-    email.length > 254 ||
-    password.length > 1024
-  ) {
+  if (!email || !password || email.length > 254 || password.length > 1024) {
     return jsonError(INVALID_CREDENTIALS, 401)
   }
 

@@ -14,7 +14,7 @@ export function GameCard({ game }: GameCardProps) {
 
   const CardContent = (
     <div
-      className={`group relative flex flex-col justify-between overflow-hidden border-2 p-5 transition-all duration-200 ${t.card} ${
+      className={`group relative flex flex-col justify-between overflow-hidden rounded-md border-2 p-5 transition-all duration-200 ${t.card} ${
         isAvailable
           ? `cursor-pointer hover:-translate-x-1 hover:-translate-y-1 ${t.hoverShadow}`
           : "cursor-not-allowed opacity-80"
@@ -51,7 +51,7 @@ export function GameCard({ game }: GameCardProps) {
 
         {/* Icon Container */}
         <div
-          className={`flex size-11 items-center justify-center border-2 p-2 shadow-[2px_2px_0_rgba(0,0,0,0.4)] transition-transform group-hover:rotate-6 ${t.iconBox}`}
+          className={`flex size-11 items-center justify-center rounded-md border-2 p-2 shadow-[2px_2px_0_rgba(0,0,0,0.4)] transition-transform group-hover:rotate-6 ${t.iconBox}`}
         >
           <Icon className="size-6" strokeWidth={2} />
         </div>
@@ -74,7 +74,7 @@ export function GameCard({ game }: GameCardProps) {
         {/* Action Button */}
         <div className="mt-6 flex items-center justify-end">
           <div
-            className={`flex size-9 items-center justify-center rounded-none border transition-all ${
+            className={`flex size-9 items-center justify-center rounded-md border transition-all ${
               isAvailable
                 ? `${t.actionBtn} group-hover:-translate-x-0.5 group-hover:-translate-y-0.5`
                 : "border-zinc-800 bg-zinc-900 text-zinc-600"

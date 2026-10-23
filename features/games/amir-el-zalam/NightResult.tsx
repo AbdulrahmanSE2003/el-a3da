@@ -42,7 +42,7 @@ const NightResult = ({ game, onChange }: NightResultProps) => {
           شوفوا إيه اللي حصل بالليل.
         </p>
       </div>
-      <div className="bg-warm-paper border border-ink/20 p-6">
+      <div className="bg-warm-paper rounded-md border border-ink/20 p-6">
         {killedPlayer && (
           <div className="flex items-start gap-4">
             <Skull className="mt-1 size-5 shrink-0 text-danger-brand" />

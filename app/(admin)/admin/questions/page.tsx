@@ -1,4 +1,3 @@
-import { Suspense } from "react"
 import type { Metadata } from "next"
 import { QuestionsView } from "@/features/admin/components/questions-view"
 import { isContentSetId } from "@/features/admin/lib/content-sets"
@@ -25,7 +24,8 @@ export default async function AdminQuestionsPage({
   const rawSet = first(params.set)
   const setId = isContentSetId(rawSet) ? rawSet : "casino"
   const query = (first(params.q) ?? "").trim().slice(0, 100)
-  const category = (first(params.category) ?? "all").trim().slice(0, 100) || "all"
+  const category =
+    (first(params.category) ?? "all").trim().slice(0, 100) || "all"
   const requestedPage = Number.parseInt(first(params.page) ?? "1", 10)
 
   const [sets, data] = await Promise.all([
@@ -39,25 +39,20 @@ export default async function AdminQuestionsPage({
     }),
   ])
 
+  // مفيش Suspense هنا: البيانات بتتقرأ فوق بالفعل، فحدود Suspense كانت
+  // هتكون شكلية ومستحيل يعرض الـ fallback. حالة التحميل الحقيقية بتتغطّى
+  // بـ `admin/loading.tsx` على مستوى المسار.
   return (
-    <Suspense
-      fallback={
-        <p className="py-16 text-center text-sm font-bold text-ink-soft">
-          بيتم تحميل المحتوى...
-        </p>
-      }
-    >
-      <QuestionsView
-        sets={sets}
-        setId={setId}
-        query={query}
-        category={category}
-        rows={data.rows}
-        total={data.total}
-        page={data.page}
-        pageCount={data.pageCount}
-        categories={data.categories}
-      />
-    </Suspense>
+    <QuestionsView
+      sets={sets}
+      setId={setId}
+      query={query}
+      category={category}
+      rows={data.rows}
+      total={data.total}
+      page={data.page}
+      pageCount={data.pageCount}
+      categories={data.categories}
+    />
   )
 }

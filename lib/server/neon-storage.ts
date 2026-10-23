@@ -44,9 +44,9 @@ export function getFeedbackBucket(): string {
 export function isFeedbackStorageConfigured(): boolean {
   return Boolean(
     env("AWS_ENDPOINT_URL_S3") &&
-      env("AWS_REGION") &&
-      env("AWS_ACCESS_KEY_ID") &&
-      env("AWS_SECRET_ACCESS_KEY")
+    env("AWS_REGION") &&
+    env("AWS_ACCESS_KEY_ID") &&
+    env("AWS_SECRET_ACCESS_KEY")
   )
 }
 

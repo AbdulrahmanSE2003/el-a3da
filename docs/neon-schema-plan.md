@@ -6,16 +6,16 @@
 
 ## 1. الحالة الحالية
 
-| البند | الحالة |
-| --- | --- |
-| Neon project | `el-a3da` |
-| الفرع المستخدم للتطوير | `dev` |
-| الفرع الافتراضي/الإنتاج | `production` — **فاضي، 0 جداول** |
-| المخطط | مُطبّق على `dev` |
-| بيانات المحتوى | **3,181 عنصرًا** مستوردًا على `dev` |
-| عناصر محذوفة | **0** (`deleted_at is null` للكل) |
-| feedback / notes | الجدولان موجودان، وفيهما **0 صفوف** حاليًا |
-| الداشبورد | مصادقة مفعّلة؛ تعديل وحذف ناعم للأسئلة، وقراءة فقط لبقية المحتوى |
+| البند                   | الحالة                                                                  |
+| ----------------------- | ----------------------------------------------------------------------- |
+| Neon project            | `el-a3da`                                                               |
+| الفرع المستخدم للتطوير  | `dev`                                                                   |
+| الفرع الافتراضي/الإنتاج | `production` — **فاضي، 0 جداول**                                        |
+| المخطط                  | مُطبّق على `dev`                                                        |
+| بيانات المحتوى          | **3,181 عنصرًا** كـ baseline استيراد 2026-10-21 (الأرقام الحالية قد تختلف) |
+| عناصر محذوفة            | **0 عند الاستيراد**؛ الحذف الناعم اللاحق ممكن                          |
+| feedback / notes        | `feedback` بيُكتب من `/feedback`، و`notes` فاضي ولسه مش معروض           |
+| الداشبورد               | مصادقة مفعّلة؛ إضافة/تعديل/حذف ناعم للأسئلة، وتغيير حالة رسائل اللاعبين |
 
 **مهم:** فرع `production` لم يُلمس. أي migration أو import مستقبلي لازم يتعمل
 على `dev` أولًا، وبعد مراجعة منفصلة ومصرّح بها فقط يمكن التخطيط للإنتاج.
@@ -41,33 +41,33 @@
 
 ### 3.1 `content_sets` — 6 صفوف
 
-| العمود | النوع | ملاحظات |
-| --- | --- | --- |
-| `id` | `text` PK | `casino`, `topics`, `challenges`, `sheikh`, `zad`, `punishments` |
-| `name` | `text` NOT NULL | الاسم العربي المعروض |
-| `version` | `bigint` NOT NULL | توكن محتوى monotonic، مش عدد نشر |
-| `created_at` | `timestamptz` NOT NULL | |
-| `updated_at` | `timestamptz` NOT NULL | |
+| العمود       | النوع                  | ملاحظات                                                          |
+| ------------ | ---------------------- | ---------------------------------------------------------------- |
+| `id`         | `text` PK              | `casino`, `topics`, `challenges`, `sheikh`, `zad`, `punishments` |
+| `name`       | `text` NOT NULL        | الاسم العربي المعروض                                             |
+| `version`    | `bigint` NOT NULL      | توكن محتوى monotonic، مش عدد نشر                                 |
+| `created_at` | `timestamptz` NOT NULL |                                                                  |
+| `updated_at` | `timestamptz` NOT NULL |                                                                  |
 
 `version` بيتحرّك بواسطة trigger `questions_bump_content_version` في نفس
 الـ transaction اللي بتكتب تغيير محتوى حقيقي. العملاء بيقارنوا **التساوي**،
 مش الترتيب؛ الـ bulk import ممكن ينقّل الرقم أكتر من واحد.
 
-### 3.2 `questions` — 3,181 صفًا
+### 3.2 `questions` — 3,181 صفًا عند الاستيراد
 
-| العمود | النوع | ملاحظات |
-| --- | --- | --- |
-| `id` | `uuid` PK | `gen_random_uuid()` |
-| `set_id` | `text` FK → `content_sets.id` | `on delete restrict` |
-| `external_id` | `text` NOT NULL | المعرّف الأصلي من `contents/*`؛ TEXT دائمًا |
-| `position` | `integer` NOT NULL | ترتيب المصدر من **0**؛ هو المرجع للعرض |
-| `text` | `text` NOT NULL | |
-| `category` | `text` | اختياري في `zad`، مطلوب فعليًا في باقي المجموعات |
-| `correct_answer` | `text` | `casino` فقط |
-| `badge_label` | `text` | `zad` فقط |
-| `created_at` | `timestamptz` NOT NULL | |
-| `updated_at` | `timestamptz` NOT NULL | |
-| `deleted_at` | `timestamptz` | soft delete فقط |
+| العمود           | النوع                         | ملاحظات                                          |
+| ---------------- | ----------------------------- | ------------------------------------------------ |
+| `id`             | `uuid` PK                     | `gen_random_uuid()`                              |
+| `set_id`         | `text` FK → `content_sets.id` | `on delete restrict`                             |
+| `external_id`    | `text` NOT NULL               | المعرّف الأصلي من `contents/*`؛ TEXT دائمًا      |
+| `position`       | `integer` NOT NULL            | ترتيب المصدر من **0**؛ هو المرجع للعرض           |
+| `text`           | `text` NOT NULL               |                                                  |
+| `category`       | `text`                        | اختياري في `zad`، مطلوب فعليًا في باقي المجموعات |
+| `correct_answer` | `text`                        | `casino` فقط                                     |
+| `badge_label`    | `text`                        | `zad` فقط                                        |
+| `created_at`     | `timestamptz` NOT NULL        |                                                  |
+| `updated_at`     | `timestamptz` NOT NULL        |                                                  |
+| `deleted_at`     | `timestamptz`                 | soft delete فقط                                  |
 
 قيود مهمة:
 
@@ -78,54 +78,54 @@
 - مفيش عمود `status` أو `is_active` أو `is_used`. العنصر إما حي أو
   `deleted_at` مش null.
 
-### 3.3 `feedback` — 0 صفوف
+### 3.3 `feedback`
 
-| العمود | النوع | ملاحظات |
-| --- | --- | --- |
-| `id` | `uuid` PK | |
-| `type` | `text` | `bug` / `suggestion` / `question_issue` / `general` |
-| `status` | `text` | `open` / `reviewed` / `done` |
-| `priority` | `text` | `low` / `medium` / `high` أو null |
-| `message` | `text` NOT NULL | |
-| `rating` | `smallint` | 1–5 أو null |
-| `contact` | `text` | اختياري |
-| `set_id` | `text` FK → `content_sets.id` | `on delete set null` |
-| `question_external_id` | `text` | مرجع loose، مش FK |
-| `app_version` | `text` | |
-| `device_info` | `text` | |
-| `created_at` / `updated_at` | `timestamptz` | |
-| `reviewed_at` | `timestamptz` | |
-| `reviewed_by` | `text` | مش FK — مفيش جدول `admin_users` |
+| العمود                      | النوع                         | ملاحظات                                               |
+| --------------------------- | ----------------------------- | ----------------------------------------------------- |
+| `id`                        | `uuid` PK                     |                                                       |
+| `type`                      | `text`                        | `bug` / `suggestion` / `question_issue` / `general`   |
+| `status`                    | `text`                        | `open` / `reviewed` / `done` — بيتحدد من الداشبورد    |
+| `priority`                  | `text`                        | `low` / `medium` / `high` — مشتق من النوع عند الإرسال |
+| `message`                   | `text` NOT NULL               |                                                       |
+| `rating`                    | `smallint`                    | 1–5 أو null                                           |
+| `contact`                   | `text`                        | اختياري                                               |
+| `set_id`                    | `text` FK → `content_sets.id` | `on delete set null`                                  |
+| `question_external_id`      | `text`                        | مرجع loose، مش FK                                     |
+| `app_version`               | `text`                        |                                                       |
+| `device_info`               | `text`                        |                                                       |
+| `created_at` / `updated_at` | `timestamptz`                 |                                                       |
+| `reviewed_at`               | `timestamptz`                 | بيتسجل أول ما الحالة تخرج من `open`                   |
+| `reviewed_by`               | `text`                        | مش FK — مفيش جدول `admin_users`                       |
 
-### 3.4 `feedback_attachments` — 0 صفوف
+### 3.4 `feedback_attachments`
 
-| العمود | النوع | ملاحظات |
-| --- | --- | --- |
-| `id` | `uuid` PK | |
-| `feedback_id` | `uuid` FK → `feedback.id` | `on delete cascade` |
-| `storage_key` | `text` UNIQUE NOT NULL | مفتاح الكائن، مش URL |
-| `mime_type` | `text` | `image/png` / `image/jpeg` / `image/webp` |
-| `size_bytes` | `bigint` | ≤ 5 MB |
-| `width` / `height` | `integer` | اختياري |
-| `created_at` | `timestamptz` | |
+| العمود             | النوع                     | ملاحظات                                   |
+| ------------------ | ------------------------- | ----------------------------------------- |
+| `id`               | `uuid` PK                 |                                           |
+| `feedback_id`      | `uuid` FK → `feedback.id` | `on delete cascade`                       |
+| `storage_key`      | `text` UNIQUE NOT NULL    | مفتاح الكائن، مش URL                      |
+| `mime_type`        | `text`                    | `image/png` / `image/jpeg` / `image/webp` |
+| `size_bytes`       | `bigint`                  | ≤ 5 MB                                    |
+| `width` / `height` | `integer`                 | اختياري                                   |
+| `created_at`       | `timestamptz`             |                                           |
 
-الملفات نفسها مش في Neon. الحاوية المقترحة private (R2/S3) ولسه مش متنفّذة؛
-مفيش رفع ملفات في التطبيق حاليًا.
+ملفات الصور مش في Neon نفسها، هي في bucket `feedbacks` الخاص (Neon Object
+Storage)، والكتابة بتحصل من `/api/feedback` بروابط موقّعة قصيرة العمر.
 
 ### 3.5 `notes` — 0 صفوف
 
-| العمود | النوع | ملاحظات |
-| --- | --- | --- |
-| `id` | `uuid` PK | |
-| `title` | `text` NOT NULL | |
-| `body` | `text` | default `''` |
-| `type` | `text` | `task` / `bug` / `improvement` / `reminder` |
-| `priority` | `text` | `low` / `medium` / `high` |
-| `status` | `text` | `todo` / `in_progress` / `done` |
-| `set_id` | `text` FK → `content_sets.id` | `on delete set null` |
-| `due_date` | `date` | اختياري |
-| `pinned` | `boolean` | default `false` |
-| `created_at` / `updated_at` | `timestamptz` | |
+| العمود                      | النوع                         | ملاحظات                                     |
+| --------------------------- | ----------------------------- | ------------------------------------------- |
+| `id`                        | `uuid` PK                     |                                             |
+| `title`                     | `text` NOT NULL               |                                             |
+| `body`                      | `text`                        | default `''`                                |
+| `type`                      | `text`                        | `task` / `bug` / `improvement` / `reminder` |
+| `priority`                  | `text`                        | `low` / `medium` / `high`                   |
+| `status`                    | `text`                        | `todo` / `in_progress` / `done`             |
+| `set_id`                    | `text` FK → `content_sets.id` | `on delete set null`                        |
+| `due_date`                  | `date`                        | اختياري                                     |
+| `pinned`                    | `boolean`                     | default `false`                             |
+| `created_at` / `updated_at` | `timestamptz`                 |                                             |
 
 ### 3.6 جداول غير موجودة
 
@@ -147,21 +147,25 @@
 - `bump_content_set_version()` + trigger
   `questions_bump_content_version` على `questions` (insert/update/delete).
 
-## 5. بيانات `dev` الحالية
+## 5. بيانات `dev` عند الاستيراد الأول (2026-10-21)
 
-| المجموعة | العناصر الحية | المحذوفة | `version` | نطاق `position` |
-| --- | ---: | ---: | ---: | --- |
-| `casino` / كافيه الألعاب | 1,094 | 0 | 1,095 | 0–1,093 |
-| `topics` / مواضيع | 502 | 0 | 503 | 0–501 |
-| `challenges` / تحديات | 500 | 0 | 501 | 0–499 |
-| `sheikh` / شيخ الحارة | 500 | 0 | 501 | 0–499 |
-| `zad` / زاد القعدة | 86 | 0 | 87 | 0–85 |
-| `punishments` / عقوبات | 499 | 0 | 500 | 0–498 |
-| **الإجمالي** | **3,181** | **0** | — | — |
+> الأرقام دي هي baseline الاستيراد الأول، مش أرقام live مضمونة. إضافات/تعديلات/حذف
+> ناعم من الداشبورد بتغيّرها. `pnpm content:verify` بيطبع الـ drift ويفشل على مشاكل
+> السلامة فقط؛ `pnpm content:verify -- --strict` بيفشل على أي drift.
+
+| المجموعة                 | العناصر الحية | المحذوفة | `version` | نطاق `position` |
+| ------------------------ | ------------: | -------: | --------: | --------------- |
+| `casino` / كافيه الألعاب |         1,094 |        0 |     1,095 | 0–1,093         |
+| `topics` / مواضيع        |           502 |        0 |       503 | 0–501           |
+| `challenges` / تحديات    |           500 |        0 |       501 | 0–499           |
+| `sheikh` / شيخ الحارة    |           500 |        0 |       501 | 0–499           |
+| `zad` / زاد القعدة       |            86 |        0 |        87 | 0–85            |
+| `punishments` / عقوبات   |           499 |        0 |       500 | 0–498           |
+| **الإجمالي**             |     **3,181** |    **0** |         — | —               |
 
 ملاحظات على البيانات:
 
-- كل الـ 3,181 صف ليهم UUID فريد، و`position` متسلسل من 0 داخل كل مجموعة.
+- كل صفوف الاستيراد الـ 3,181 ليهم UUID فريد، و`position` متسلسل من 0 داخل كل مجموعة عند الاستيراد.
 - مفيش صفوف يتيمة أو `set_id` غير معروف.
 - معرّفات الكازينو: **598** معرّف رقمي و**496** معرّف فيه suffix زي `1-2`.
   خريطة التغيير الكاملة محفوظة في
@@ -179,36 +183,36 @@
 - تمت مقارنة كل مصدر بـ DB على مستوى العدّ والحقول، وكل الـ manifests طابقت.
 - مفيش truncate أو حذف جماعي أو إعادة ترقيم للمعرّفات أو تغيير للنصوص/الترتيب.
 - سكربت الـ import كان أداة تشغيلية لمرة واحدة خارج المستودع؛ ملفات
-  `db/migrations/` ما زالت schema/metadata فقط ومش بتضمّن الـ 3,181 صفًا.
+  `db/migrations/` ما زالت schema/metadata فقط ومش بتضمّن الـ 3,181 صفًا عند الاستيراد.
 - لو احتجت إعادة استيراد مستقبلًا: لازم يكون على فرع `dev`، وبمراجعة صريحة،
   ومن غير المساس بـ `production`.
 
 ## 7. ربط الداشبورد الحالي
 
-| الصفحة | المصدر | الحالة |
-| --- | --- | --- |
-| `/admin` | `content_sets` + `questions` | أرقام ونسخ حقيقية |
-| `/admin/questions` | `questions` | Server-side filtering + pagination (20/صفحة) + تعديل/حذف ناعم |
-| `/admin/health` | `questions` + `content_sets` | فحص حقيقي (نصوص/فئات/ترتيب/تكرار) |
-| `/admin/feedback` | — | **العرض غير مفعّل** (ممكن يحتوي بيانات خاصة) |
-| `/admin/notes` | — | **العرض غير مفعّل** (ملاحظات داخلية) |
+| الصفحة             | المصدر                              | الحالة                                                                               |
+| ------------------ | ----------------------------------- | ------------------------------------------------------------------------------------ |
+| `/admin`           | `content_sets` + `questions`        | أرقام ونسخ حقيقية                                                                    |
+| `/admin/questions` | `questions`                         | Server-side filtering + pagination (20/صفحة) + إضافة/تعديل/حذف ناعم                  |
+| `/admin/health`    | `questions` + `content_sets`        | فحص حقيقي (نصوص/فئات/ترتيب/تكرار)                                                    |
+| `/admin/feedback`  | `feedback` + `feedback_attachments` | فلترة بالنوع/الحالة/البحث + تغيير الحالة (مفتوحة/مقروءة/تم الحل) + صور موقّعة مؤقتًا |
+| `/admin/notes`     | —                                   | **العرض غير مفعّل** (ملاحظات داخلية)                                                 |
 
 - الترتيب دايمًا `position asc`، مش `external_id`.
 - الفلترة والبحث والـ pagination بيتعملوا في SQL، والصفحة بتقرأ
   `searchParams` على السيرفر.
 - مفيش mock data ولا حالة محلية بتُحفظ. الصفحات بتعرض loading/error/empty
   states حقيقية.
-- الدخول محمي بجلسة مسؤول. تعديل حقول السؤال وحذفه soft delete متاحين من
-  الواجهة؛ الإضافة، الحذف النهائي، الاستعادة، وأي publish workflow خارج
-  النطاق الحالي.
-- صفحات اللعبة العامة لسه بتقرأ من `contents/*.ts`، وتعديلات الداشبورد على
-  Neon مش بتظهر فيها؛ ربط المحتوى بقاعدة البيانات خارج النطاق الحالي.
+- الدخول محمي بجلسة مسؤول. إضافة سؤال جديد، تعديل حقوله، وحذفه soft delete
+  متاحين من الواجهة، ورسائل اللاعبين متاحة مع تغيير حالتها؛ الحذف النهائي،
+  الاستعادة، وأي publish workflow خارج النطاق الحالي.
+- صفحات اللعب العامة بتقرأ من snapshot المحتوى (IndexedDB مع fallback إلى
+  `contents/*.ts`)، وتعديلات الداشبورد على Neon بتظهر للجلسات الجديدة بعد المزامنة.
 
 ## 8. خارج النطاق حاليًا
 
 - توسيع المصادقة لأكثر من مسؤول أو إدارة جلسات في قاعدة البيانات.
-- إضافة سؤال جديد، حذف نهائي، أو استعادة سؤال محذوف من الواجهة.
-- أي كتابة على `feedback`/`notes` من الواجهة.
-- رفع screenshots أو ربط R2/S3.
-- مزامنة العملاء مع `content_sets.version` أو publish workflow.
+- حذف نهائي أو استعادة سؤال محذوف من الواجهة.
+- أي كتابة على `notes` من الواجهة (feedback بيُكتب من صفحة اللاعبين).
+- الرد على `feedback` من الداشبورد (تغيير الحالة متاح، لكن مفيش رد أو تعليق).
+- أي publish workflow أو نشر تلقائي للإصدارات.
 - تطبيق المخطط أو استيراد البيانات على `production`.

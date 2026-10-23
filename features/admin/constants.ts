@@ -1,4 +1,4 @@
-import { ContentSetId } from "./lib/types";
+import { ContentSetId } from "./lib/types"
 
 export const SET_COLORS: Record<ContentSetId, string> = {
   casino: "var(--color-copper)",

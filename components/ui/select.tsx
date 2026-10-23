@@ -50,14 +50,14 @@ function SelectTrigger({
       data-size={size}
       className={cn(
         // نفس لغة الـ inputs: حدود سميكة وظل صلب
-        "flex w-fit items-center justify-between gap-2 rounded-sm border-2 border-ink bg-paper text-sm font-bold whitespace-nowrap text-ink shadow-[4px_4px_0px_0px_var(--color-ink)] outline-none transition-all duration-200 select-none",
+        "flex w-fit items-center justify-between gap-2 rounded-sm border-2 border-ink bg-paper text-sm font-bold whitespace-nowrap text-ink shadow-[4px_4px_0px_0px_var(--color-ink)] transition-all duration-200 outline-none select-none",
         "data-[size=default]:h-12 data-[size=default]:px-4 data-[size=default]:py-2 data-[size=default]:text-base md:data-[size=default]:text-sm",
         "data-[size=sm]:h-9 data-[size=sm]:px-3 data-[size=sm]:text-sm",
         "hover:bg-paper-warm focus-visible:bg-paper focus-visible:shadow-[2px_2px_0px_0px_var(--color-ink)] focus-visible:ring-[3px] focus-visible:ring-copper/50",
-        "data-[state=open]:bg-paper focus-visible:translate-x-0.5 focus-visible:translate-y-0.5 focus-visible:data-[state=open]:shadow-[2px_2px_0px_0px_var(--color-ink)] data-[state=open]:translate-x-0.5 data-[state=open]:translate-y-0.5 data-[state=open]:shadow-[2px_2px_0px_0px_var(--color-ink)]",
+        "focus-visible:translate-x-0.5 focus-visible:translate-y-0.5 data-[state=open]:translate-x-0.5 data-[state=open]:translate-y-0.5 data-[state=open]:bg-paper data-[state=open]:shadow-[2px_2px_0px_0px_var(--color-ink)] focus-visible:data-[state=open]:shadow-[2px_2px_0px_0px_var(--color-ink)]",
         "aria-invalid:border-danger-brand aria-invalid:shadow-[4px_4px_0px_0px_var(--color-danger-brand)]",
         "disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50",
-        "[&>span]:line-clamp-1 [&_svg]:pointer-events-none [&_svg]:shrink-0",
+        "[&_svg]:pointer-events-none [&_svg]:shrink-0 [&>span]:line-clamp-1",
         className
       )}
       {...props}
@@ -114,7 +114,10 @@ function SelectLabel({
   return (
     <SelectPrimitive.Label
       data-slot="select-label"
-      className={cn("px-2 py-1.5 font-mono text-[10px] font-bold tracking-widest text-ink-soft", className)}
+      className={cn(
+        "px-2 py-1.5 font-mono text-[10px] font-bold tracking-widest text-ink-soft",
+        className
+      )}
       {...props}
     />
   )
@@ -129,7 +132,7 @@ function SelectItem({
     <SelectPrimitive.Item
       data-slot="select-item"
       className={cn(
-        "relative flex w-full cursor-default items-center gap-2 rounded-sm py-2 pe-8 ps-2 text-sm font-bold outline-none select-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+        "relative flex w-full cursor-default items-center gap-2 rounded-sm py-2 ps-2 pe-8 text-sm font-bold outline-none select-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
         "focus:bg-copper/15 focus:text-ink",
         "data-[state=checked]:bg-copper/10 data-[state=checked]:text-copper",
         className
@@ -154,7 +157,10 @@ function SelectSeparator({
   return (
     <SelectPrimitive.Separator
       data-slot="select-separator"
-      className={cn("-mx-1 my-1 h-px border-t border-ink/10 pointer-events-none", className)}
+      className={cn(
+        "pointer-events-none -mx-1 my-1 h-px border-t border-ink/10",
+        className
+      )}
       {...props}
     />
   )
@@ -167,7 +173,10 @@ function SelectScrollUpButton({
   return (
     <SelectPrimitive.ScrollUpButton
       data-slot="select-scroll-up-button"
-      className={cn("flex cursor-default items-center justify-center py-1", className)}
+      className={cn(
+        "flex cursor-default items-center justify-center py-1",
+        className
+      )}
       {...props}
     >
       <ChevronUpIcon className="size-4" />
@@ -182,7 +191,10 @@ function SelectScrollDownButton({
   return (
     <SelectPrimitive.ScrollDownButton
       data-slot="select-scroll-down-button"
-      className={cn("flex cursor-default items-center justify-center py-1", className)}
+      className={cn(
+        "flex cursor-default items-center justify-center py-1",
+        className
+      )}
       {...props}
     >
       <ChevronDownIcon className="size-4" />

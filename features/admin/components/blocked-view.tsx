@@ -44,9 +44,9 @@ export function BlockedView({
               القسم لسه مش متفعّل في الداشبورد
             </h2>
             <p className="mt-1 max-w-2xl text-xs leading-relaxed text-ink-soft">
-              الجلسة محمية الآن، لكن المحتوى ده ممكن يحتوي بيانات خاصة،
-              فمش هيتقرأ أو يتعرض لحد ما يتضاف عرض آمن ومحدود. الجدول موجود
-              في Neon ومفيش أي عمليات كتابة.
+              الجلسة محمية الآن، لكن المحتوى ده ممكن يحتوي بيانات خاصة، فمش
+              هيتقرأ أو يتعرض لحد ما يتضاف عرض آمن ومحدود. الجدول موجود في Neon
+              ومفيش أي عمليات كتابة.
             </p>
           </div>
         </div>
@@ -96,8 +96,9 @@ export function BlockedView({
         </Link>
         <span aria-hidden>·</span>
         <span>
-          تفاصيل المصادقة في <code className="font-mono">docs/admin-auth.md</code>،
-          لكن عرض القسم لسه مش متفعّل.
+          تفاصيل المصادقة في{" "}
+          <code className="font-mono">docs/admin-auth.md</code>، لكن عرض القسم
+          لسه مش متفعّل.
         </span>
       </div>
     </div>

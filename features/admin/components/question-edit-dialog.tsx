@@ -9,7 +9,6 @@ import { Textarea } from "@/components/ui/textarea"
 import { updateQuestionAction } from "../server/question-actions"
 import {
   QUESTION_BADGE_LABEL_MAX_LENGTH,
-  QUESTION_CATEGORY_MAX_LENGTH,
   QUESTION_CORRECT_ANSWER_MAX_LENGTH,
   QUESTION_TEXT_MAX_LENGTH,
   validateQuestionDraft,
@@ -17,11 +16,19 @@ import {
   type QuestionField,
   type QuestionFieldErrors,
 } from "../lib/question-form"
-import type { ContentSetMeta, QuestionRow } from "../lib/types"
+import type { CategoryCount, ContentSetMeta, QuestionRow } from "../lib/types"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
 interface QuestionEditDialogProps {
   question: QuestionRow
   setMeta: ContentSetMeta
+  categories: CategoryCount[]
   onClose: () => void
   onSaved: () => void
 }
@@ -29,6 +36,7 @@ interface QuestionEditDialogProps {
 export function QuestionEditDialog({
   question,
   setMeta,
+  categories,
   onClose,
   onSaved,
 }: QuestionEditDialogProps) {
@@ -88,30 +96,36 @@ export function QuestionEditDialog({
       title="تعديل السؤال"
       subtitle={`${setMeta.title} · ${question.externalId}`}
     >
-      <div className="grid gap-2 border-2 border-ink/10 bg-paper-warm/50 p-3 text-[11px] sm:grid-cols-3">
-        <div>
-          <p className="font-mono text-[10px] font-bold tracking-widest text-ink-soft">
-            المعرف
-          </p>
-          <p className="mt-1 font-mono" dir="ltr">
-            {question.externalId}
-          </p>
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-xs border border-ink/10 bg-paper-warm/50 p-3 text-[11px]">
+        <div className="flex flex-col gap-0.5">
+          <span className="font-mono text-[10px] font-bold tracking-widest text-ink-soft uppercase">
+            المعرف الخارجي
+          </span>
+          <span className="font-mono font-bold text-foreground" dir="ltr">
+            {question.externalId.trim() || "—"}
+          </span>
         </div>
-        <div>
-          <p className="font-mono text-[10px] font-bold tracking-widest text-ink-soft">
+
+        <div className="flex flex-col gap-0.5">
+          <span className="font-mono text-[10px] font-bold tracking-widest text-ink-soft uppercase">
             الترتيب
-          </p>
-          <p className="mt-1 font-mono" dir="ltr">
+          </span>
+          <span className="font-mono font-bold text-foreground" dir="ltr">
             {question.position}
-          </p>
+          </span>
         </div>
-        <div className="min-w-0">
-          <p className="font-mono text-[10px] font-bold tracking-widest text-ink-soft">
+
+        <div className="flex max-w-45 min-w-0 flex-col gap-0.5">
+          <span className="font-mono text-[10px] font-bold tracking-widest text-ink-soft uppercase">
             UUID
-          </p>
-          <p className="mt-1 truncate font-mono text-[10px]" dir="ltr">
+          </span>
+          <span
+            className="truncate font-mono text-[10px] text-ink-soft"
+            dir="ltr"
+            title={question.id}
+          >
             {question.id}
-          </p>
+          </span>
         </div>
       </div>
 
@@ -162,24 +176,21 @@ export function QuestionEditDialog({
                 <span className="text-danger-brand">*</span>
               )}
             </Label>
-            <Input
-              id="question-category"
+            <Select
               value={draft.category}
-              onChange={(event) => setField("category", event.target.value)}
-              maxLength={QUESTION_CATEGORY_MAX_LENGTH}
-              aria-invalid={fieldErrors.category ? true : undefined}
-              aria-describedby={
-                fieldErrors.category ? "question-category-error" : undefined
-              }
-            />
-            {fieldErrors.category && (
-              <p
-                id="question-category-error"
-                className="mt-1.5 text-[11px] font-bold text-danger-brand"
-              >
-                {fieldErrors.category}
-              </p>
-            )}
+              onValueChange={(value) => setField("category", value)}
+            >
+              <SelectTrigger aria-label="تصفية بالفئة" className="w-full">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent side="bottom" position="popper">
+                {categories.map((item) => (
+                  <SelectItem key={item.category} value={item.category}>
+                    {item.category}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           {setMeta.hasCorrectAnswer && (

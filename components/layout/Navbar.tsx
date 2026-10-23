@@ -1,3 +1,5 @@
+"use client"
+
 import Link from "next/link"
 
 const Navbar = () => {
@@ -19,14 +21,20 @@ const Navbar = () => {
         <Link href="/download" className="transition-opacity hover:opacity-60">
           التحميل
         </Link>
+
+        <Link href="/settings" className="transition-opacity hover:opacity-60">
+          الإعدادات
+        </Link>
       </nav>
 
-      <Link
-        href="/download"
-        className="rounded-full bg-ink px-5 py-3 text-sm font-bold text-paper transition-transform hover:-translate-y-0.5"
-      >
-        ابدأ قعدة
-      </Link>
+      <div className="flex items-center gap-2">
+        <Link
+          href="/download"
+          className="rounded-full bg-ink px-5 py-3 text-sm font-bold text-paper transition-transform hover:-translate-y-0.5"
+        >
+          ابدأ قعدة
+        </Link>
+      </div>
     </header>
   )
 }

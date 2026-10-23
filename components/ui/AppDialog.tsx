@@ -48,7 +48,7 @@ export function AppDialog({
           )}
         </DialogHeader>
 
-        <div className="flex flex-col gap-6 p-6 pt-0 text-ink">{children}</div>
+        <div className="flex flex-col gap-4 p-4 pt-0 text-ink">{children}</div>
       </DialogContent>
     </Dialog>
   )

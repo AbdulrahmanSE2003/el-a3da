@@ -1,19 +1,11 @@
-import {
-  Bomb,
-  Dices,
-  Ghost,
-  Glasses,
-  LucideIcon,
-  Skull,
-  Swords,
-} from "lucide-react"
+import { Bomb, Dices, Ghost, Glasses, LucideIcon } from "lucide-react"
 import { GameTheme } from "../lib/gameTheme"
 
 export interface GameItem {
   id: string
   title: string
   description: string
-  status: "متاحة" | "قريبًا"
+  status: "متاحة" | "لسه عالرمالة⏳"
   icon: LucideIcon
   href?: string
   theme: GameTheme
@@ -24,7 +16,7 @@ export const GAMES_LIST: GameItem[] = [
   {
     id: "amir-el-zalam",
     title: "أمير الظلام",
-    description: "مين هيعرف يكتشف المافيا قبل ما القعدة تقع؟",
+    description: "مين الذكي اللي هيقفش المافيا قبل ما يدوّخوا القعدة؟ 🕵️‍♂️",
     status: "متاحة",
     icon: Ghost,
     href: "/games/amir-el-zalam",
@@ -34,7 +26,7 @@ export const GAMES_LIST: GameItem[] = [
   {
     id: "casino",
     title: "كافيه الألعاب",
-    description: "لعبة أسألة عامة جماعية تنافسية.",
+    description: "تحدي معلومات وعصر دماغ.. مين فيكم هيقفل اللعبة؟ 💡",
     status: "متاحة",
     icon: Dices,
     href: "/games/casino",
@@ -43,16 +35,16 @@ export const GAMES_LIST: GameItem[] = [
   {
     id: "bekasa",
     title: "بكاسة",
-    description: "لعبة جديدة للقعدة ولسه بنجهزها.",
-    status: "قريبًا",
+    description: "لعبة جديدة بتستوي ونازلة تظبط الكلام قريب! 🎯",
+    status: "لسه عالرمالة⏳",
     icon: Glasses,
     theme: "copper",
   },
   {
     id: "bomb",
     title: "قنبلة",
-    description: "لعبة جديدة للقعدة ولسه بنجهزها.",
-    status: "قريبًا",
+    description: "لعبة جديدة بتستوي ونازلة تظبط الكلام قريب! 🎯",
+    status: "لسه عالرمالة⏳",
     icon: Bomb,
     theme: "cyberpunk",
   },

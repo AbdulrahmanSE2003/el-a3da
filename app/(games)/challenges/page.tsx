@@ -15,11 +15,6 @@ export default function ChallengesPage() {
 
       {/* Main Experience Section */}
       <ChallengesSection />
-
-      {/* Footer */}
-      <footer className="relative z-10 w-full max-w-md border-t border-ink/10 pt-4 text-center opacity-80">
-        <p className="text-xs font-bold text-ink">الدور على مين؟ 👀</p>
-      </footer>
     </main>
   )
 }

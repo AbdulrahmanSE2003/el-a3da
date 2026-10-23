@@ -46,7 +46,7 @@ export function ActivityCard({
 
       <div className="relative flex items-start justify-between">
         <div
-          className={`icon-box ${
+          className={`icon-box rounded-md ${
             isDark ? "border-paper/20 bg-ink-soft text-paper" : ""
           }`}
         >

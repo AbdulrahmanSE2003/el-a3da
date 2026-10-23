@@ -15,7 +15,7 @@ export default function GamesPage() {
 
         <div className="mt-8 mb-6">
           <p className="text-xs font-bold tracking-[0.25em] text-copper">
-            اختاروا اللعبة
+            اختاروا لعبتكم 🎲{" "}
           </p>
 
           <h1 className="mt-1 text-4xl font-black tracking-tight text-ink">
@@ -23,7 +23,8 @@ export default function GamesPage() {
           </h1>
 
           <p className="mt-2 text-xs leading-6 font-semibold text-ink-soft/70">
-            كل لعبة ليها طابعها وقواعدها. اختاروا اللي يناسب مود القعدة الليلة.
+            كل لعبة ليها جوها وقوانينها.. اختاروا اللي يظبط مود قعدتكم الليلة!
+            🔥{" "}
           </p>
         </div>
 

@@ -1050,7 +1050,7 @@ export const casinoQuestions: CasinoQuestion[] = [
     id: "172",
     category: "أعلام",
     text: "علم أي دولة إفريقية يتكون من شريطين أخضر وأحمر مع نجمة خماسية صفراء؟",
-    correct_answer: "الغال السنغال",
+    correct_answer: "السنغال",
   },
   {
     id: "173",

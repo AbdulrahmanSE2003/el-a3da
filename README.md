@@ -1,53 +1,49 @@
-# el-Qa3da
+# القعدة
 
-A social party game app in Arabic. Play with friends, host games, and start the fun — no accounts, no setup.
+تطبيق ويب مصري اجتماعي للشلة على القهوة أو في أي قعدة. العبوا مع بعض من غير حسابات أو إعداد معقد.
 
-## Tech Stack
+## الإصدار
+- **الإصدار الحالي**: `2.0.0`
+- **الفرع**: `dev`
 
+## التقنيات المستخدمة
 - **Framework**: Next.js 16.3.4
-- **Language**: TypeScript
-- **UI**: React 19, Tailwind CSS v4
-- **State**: Zustand with persistence
-- **PWA**: Serwist for offline support
-- **Database**: Neon PostgreSQL (development branch), authenticated admin queries with question edit and soft delete
+- **اللغة**: TypeScript
+- **واجهة المستخدم**: React 19, Tailwind CSS v4
+- **إدارة الحالة**: Zustand مع الحفظ المحلي
+- **PWA**: Serwist لدعم العمل بدون إنترنت
+- **قاعدة البيانات**: Neon PostgreSQL (فرع التطوير) مع استعلامات أدمن محمية
+- **الثيمات**: نظام ثيمات مخصص بثلاثة خيارات مع حفظ محلي
 
-## Features
+## المزايا
+- **اللاعبين**: إضافة/إزالة اللاعبين مع حفظ تلقائي
+- **الألعاب**:
+  - *أمير الظلام* — لعبة استنتاج بالأدوار
+  - *كازينو الألعاب* — أسئلة وتحديات جماعية، أول من يصل لـ١٠ نقاط يفوز
+- **مواضيع**: مواضيع حوار عشوائية مع إمكانية التبديل
+- **تحديات**: تحديات سريعة لفتح الحديث
+- **زاد القعدة**: خواطر إيمانية وأذكار
+- **شيخ الحارة**: أسئلة جماعية
+- **ثيمات v2**: كافيه (افتراضي)، أخضر أصلي، ليلي أزرق — قابلة للتبديل من صفحة الإعدادات مع حفظ تلقائي
+- **عمل أوفلاين**: المحتوى محفوظ محليًا مع مزامنة ذكية من Neon
+- **لوحة الأدمن**: تسجيل دخول أحادي، نظرة عامة، أسئلة مجمعة، فحص صحة المحتوى، والملاحظات
 
-- **Players**: Add/remove players, persistent across sessions
-- **Games**: 
-  - *أمير الظلام* (Werewolf/Mafia) — deduction game with hidden roles
-  - *كافيه الألعاب* (Casino) — quiz & challenge game, first to 10 points wins
-  - *بكاسة* — coming soon
-- **Topics**: Random conversation topics with shuffle
-- **Challenges**: Quick prompts to spark discussion
-- **Guides**: Detailed rules for each game mode
-- **Admin console**: Single-admin login, content overview, server-paginated questions with edit/soft-delete, and content health checks
-
-## Running Locally
-
+## التشغيل محليًا
 ```bash
 pnpm dev
 ```
+افتح [http://localhost:3000](http://localhost:3000)
 
-Open [http://localhost:3000](http://localhost:3000) in your browser.
-
-The `/admin` pages read from Neon. Add the development branch connection string
-to `.env.local` (gitignored, server-only):
-
+### إعداد قاعدة البيانات والأدمن (اختياري)
+يحتاج فرع التطوير فقط. أضف إلى `.env.local` (مُستبعد من Git):
 ```bash
 DATABASE_URL=postgresql://...
-```
-
-Add the admin credentials and signing secret to the same file:
-
-```bash
 ADMIN_EMAIL=admin@example.com
 ADMIN_PASSWORD_HASH=scrypt:N=16384,r=8,p=1:<salt>:<hash>
 AUTH_SECRET=<openssl rand -base64 48>
 ```
 
-Generate the password hash without echoing the password:
-
+توليد هاش كلمة المرور:
 ```bash
 printf 'New admin password: '
 IFS= read -rs P
@@ -56,24 +52,23 @@ printf '%s' "$P" | pnpm admin:password
 unset P
 ```
 
-Then open `/login`. Question edits are limited to text, category, and the
-set-specific answer/badge fields; deletes are soft deletes. Creating questions,
-publishing workflows, feedback, and developer notes remain hidden. The public
-game pages still read from `contents/*.ts`, so admin changes affect Neon and
-the dashboard until DB-backed content is wired. See `docs/admin-questions.md`,
-`docs/neon-schema-plan.md`, and `docs/admin-auth.md`.
+## سكريبتات مفيدة
+```bash
+pnpm dev            # تطوير
+pnpm build          # بناء إنتاجي
+pnpm start          # تشغيل الإنتاج
+pnpm lint           # فحص ESLint
+pnpm typecheck      # فحص TypeScript
+pnpm content:test        # اختبار مزامنة المحتوى
+pnpm content:verify      # فحص قراءة فقط: drift مقابل baseline (يحتاج DATABASE_URL)
+pnpm content:verify -- --strict # فشل عند أي drift
+pnpm content:verify:test # اختبارات قواعد الفحص (fixtures)
+pnpm admin:password      # توليد هاش كلمة مرور الأدمن
+```
 
-## PWA Install
+## التثبيت كـ PWA
+يمكن تثبيت التطبيق على Android/Chrome من متصفح الهاتف أو سطح المكتب. يعمل بدون إنترنت بفضل Serwist.
 
-The app is a Progressive Web App. Visit the site on Chrome/Android and click "Install" to add it to your home screen. Works offline thanks to Serwist.
-
-## Changelog Summary
-
-| Version | Changes |
-|---------|---------|
-| **1.0.0** | Initial commit — basic setup |
-| **1.1.0** | Zad edition — added core features |
-| **1.2.0** | El-Qa3da V1.1.0 — more pages |
-| **1.3.0** | Finished Casino game + players system + topics + guides |
-| **1.4.0** | Casino al-al3ab + download modal + about & download pages |
-| **1.4.1** | Content ID cleanup, Neon dev import (3,181 records), read-only admin console |
+## التوثيق
+- `docs/content-sync.md` — نظام المزامنة مع Neon
+- `docs/admin-questions.md`, `docs/feedback.md`, `docs/neon-schema-plan.md`, `docs/admin-auth.md`

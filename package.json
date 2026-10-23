@@ -1,16 +1,20 @@
 {
   "name": "el-2a3da",
-  "version": "1.4.1",
+  "version": "2.0.0",
   "type": "module",
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build --webpack",
     "start": "next start",
     "lint": "eslint",
     "format": "prettier --write \"**/*.{ts,tsx}\"",
     "typecheck": "tsc --noEmit",
     "content:ids": "tsx scripts/content-ids.ts",
+    "content:verify": "node --env-file=.env.local --import tsx scripts/verify-content-sync.ts",
+    "content:verify:test": "node --import tsx scripts/test-content-verify.ts",
+    "content:test": "node --import tsx scripts/test-content-sync.ts",
+    "test:casino": "node --import tsx scripts/test-casino-game.ts",
     "admin:password": "tsx scripts/admin-password.ts"
   },
   "dependencies": {

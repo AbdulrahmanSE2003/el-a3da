@@ -1,10 +1,10 @@
-import { CasinoQuestion } from "@/contents/casino"
+import type { ContentQuestion } from "@/lib/content/types"
 import { CheckCircle2, HelpCircle } from "lucide-react"
 
 const QuestionHeader = ({
   currentQuestion,
 }: {
-  currentQuestion: CasinoQuestion | null
+  currentQuestion: ContentQuestion | null
 }) => {
   if (!currentQuestion) {
     return (
@@ -25,15 +25,20 @@ const QuestionHeader = ({
         </h3>
       </div>
 
-      <div className="flex w-full items-center gap-3 border-t-2 border-dashed border-ink/15 pt-3">
-        <CheckCircle2 className="size-5 shrink-0 text-copper" strokeWidth={2} />
-        <span className="text-sm font-bold text-ink-soft">
-          الإجابة الصحيحة:
-        </span>
-        <span className="rounded-sm border-2 border-ink bg-copper/10 px-2 py-0.5 text-base font-black text-copper">
-          {currentQuestion.correct_answer}
-        </span>
-      </div>
+      {currentQuestion.correct_answer && (
+        <div className="flex w-full items-center gap-3 border-t-2 border-dashed border-ink/15 pt-3">
+          <CheckCircle2
+            className="size-5 shrink-0 text-copper"
+            strokeWidth={2}
+          />
+          <span className="text-sm font-bold text-ink-soft">
+            الإجابة الصحيحة:
+          </span>
+          <span className="rounded-sm border-2 border-ink bg-copper/10 px-2 py-0.5 text-base font-black text-copper">
+            {currentQuestion.correct_answer}
+          </span>
+        </div>
+      )}
     </div>
   )
 }

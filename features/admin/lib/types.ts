@@ -10,12 +10,7 @@ import { CircleAlert, Info, TriangleAlert } from "lucide-react"
  * `contents/*`، ومش بتتغيّر من الداشبورد.
  */
 export type ContentSetId =
-  | "casino"
-  | "challenges"
-  | "sheikh"
-  | "topics"
-  | "zad"
-  | "punishments"
+  "casino" | "challenges" | "sheikh" | "topics" | "zad" | "punishments"
 
 /**
  * وصْف ثابت للمجموعة (اسم، stamp، ملف المصدر، الحقول الاختيارية).

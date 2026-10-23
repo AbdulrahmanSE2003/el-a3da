@@ -10,6 +10,7 @@ export const QUESTION_TEXT_MAX_LENGTH = 4000
 export const QUESTION_CATEGORY_MAX_LENGTH = 200
 export const QUESTION_CORRECT_ANSWER_MAX_LENGTH = 1000
 export const QUESTION_BADGE_LABEL_MAX_LENGTH = 200
+export const QUESTION_EXTERNAL_ID_MAX_LENGTH = 100
 
 export interface QuestionDraft {
   text: string
@@ -18,8 +19,15 @@ export interface QuestionDraft {
   badgeLabel: string
 }
 
+/** مسودة الإضافة بتزود  ID السؤال ، مش موجود في التعديل. */
+export interface QuestionCreateDraft extends QuestionDraft {
+  externalId: string
+}
+
 export type QuestionField = keyof QuestionDraft
 export type QuestionFieldErrors = Partial<Record<QuestionField, string>>
+export type QuestionCreateFieldErrors = QuestionFieldErrors &
+  Partial<Record<"externalId", string>>
 
 export interface NormalizedQuestionDraft {
   text: string
@@ -32,10 +40,20 @@ export type QuestionValidationResult =
   | { ok: true; value: NormalizedQuestionDraft }
   | { ok: false; fieldErrors: QuestionFieldErrors }
 
+export type QuestionCreateValidationResult =
+  | { ok: true; value: NormalizedQuestionDraft }
+  | { ok: false; fieldErrors: QuestionCreateFieldErrors }
+
 export interface QuestionMutationResult {
   ok: boolean
   error?: string
   fieldErrors?: QuestionFieldErrors
+}
+
+export interface QuestionCreateMutationResult {
+  ok: boolean
+  error?: string
+  fieldErrors?: QuestionCreateFieldErrors
 }
 
 const normalizeNullable = (value: string): string | null => {
@@ -101,4 +119,25 @@ export function validateQuestionDraft(
       badgeLabel,
     },
   }
+}
+
+/**
+ * نفس قواعد التحقق مع  ID السؤال  المطلوب للإضافة.
+ *  ID السؤال  بيتولد تلقائياً على السيرفر من ترتيب السؤال، فمش بنحتاج
+ * يتحقق منه من طرف العميل دلوقتي.
+ */
+export function validateQuestionCreateDraft(
+  draft: QuestionCreateDraft,
+  setMeta: ContentSetMeta
+): QuestionCreateValidationResult {
+  const base = validateQuestionDraft(draft, setMeta)
+  const fieldErrors: QuestionCreateFieldErrors = base.ok
+    ? {}
+    : { ...base.fieldErrors }
+
+  if (!base.ok || Object.keys(fieldErrors).length > 0) {
+    return { ok: false, fieldErrors }
+  }
+
+  return base
 }

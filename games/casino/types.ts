@@ -1,4 +1,4 @@
-import { CasinoQuestion } from "@/contents/casino"
+import type { ContentQuestion } from "@/lib/content/types"
 
 export type CasinoGameState = "setup" | "game" | "finished"
 
@@ -12,6 +12,6 @@ export interface CasinoGame {
   phase: CasinoGameState
   players: CasinoGamePlayer[]
   winner: CasinoGamePlayer | null
-  currentQuestion: CasinoQuestion | null
+  currentQuestion: ContentQuestion | null
   winningScore: number
 }

@@ -49,7 +49,7 @@ const PolicePhase = ({ game, onChange }: PolicePhaseProps) => {
         </p>
       </div>
 
-      <div className="bg-warm-paper border border-ink/10 p-5">
+      <div className="bg-warm-paper rounded-md border border-ink/10 p-5">
         <div className="flex items-center gap-3">
           <Search className="size-5 text-copper" />
 
@@ -69,7 +69,7 @@ const PolicePhase = ({ game, onChange }: PolicePhaseProps) => {
                 key={player.id}
                 type="button"
                 onClick={() => setSelectedId(player.id)}
-                className={`border px-4 py-3 text-right text-sm font-bold transition-colors ${
+                className={`rounded-md border px-4 py-3 text-right text-sm font-bold transition-colors ${
                   selected
                     ? "border-copper bg-copper/10 text-copper"
                     : "border-ink/10 bg-paper text-ink hover:border-copper/40"

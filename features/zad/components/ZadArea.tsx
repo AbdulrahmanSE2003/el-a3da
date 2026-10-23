@@ -2,15 +2,28 @@
 import { RefreshCw } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Qa3daCard from "@/components/ui/Qa3daCard"
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { createContentDeck } from "@/lib/create-content-deck"
 import { topics } from "@/contents/topics"
-import { zadTopics } from "@/contents/zad"
+import { useContentSet } from "@/lib/content/use-content-set"
 
 const ZadArea = () => {
-  const [deck] = useState(() => createContentDeck(zadTopics))
+  // محتوى الجلسة بتاع "زاد القعدة" بس — بيفضل ثابت طول الجلسة.
+  const { snapshot, ready } = useContentSet("zad")
+
+  const [deck] = useState(() => createContentDeck([...snapshot.questions]))
+  const activatedRef = useRef(snapshot.version)
 
   const [currentTopic, setCurrentTopic] = useState(() => deck.next())
+
+  useEffect(() => {
+    if (!ready) return
+    if (activatedRef.current === snapshot.version) return
+
+    activatedRef.current = snapshot.version
+    deck.reset([...snapshot.questions])
+    setCurrentTopic(deck.next())
+  }, [ready, snapshot, deck])
 
   const handleNext = () => {
     setCurrentTopic(deck.next())
@@ -21,7 +34,7 @@ const ZadArea = () => {
       <div className="mb-6 text-center">
         <h2 className="mb-1 text-2xl font-bold text-ink-glow">
           {" "}
-زاد القعدة 🌿
+          زاد القعدة 🌿
         </h2>
         <p className="text-sm font-medium text-ink-soft/80">
           {" "}

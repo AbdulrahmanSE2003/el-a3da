@@ -131,7 +131,10 @@ function ChartTooltipContent({
   active?: boolean
   payload?: ChartPayloadItem[]
   label?: unknown
-  labelFormatter?: (value: unknown, payload: ChartPayloadItem[]) => React.ReactNode
+  labelFormatter?: (
+    value: unknown,
+    payload: ChartPayloadItem[]
+  ) => React.ReactNode
   labelClassName?: string
   formatter?: (
     value: number | string,
@@ -352,7 +355,10 @@ function getPayloadConfigFromPayload(
 
   let configLabelKey: string = key
 
-  if (key in payload && typeof payload[key as keyof typeof payload] === "string") {
+  if (
+    key in payload &&
+    typeof payload[key as keyof typeof payload] === "string"
+  ) {
     configLabelKey = payload[key as keyof typeof payload] as string
   } else if (
     payloadPayload &&

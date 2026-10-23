@@ -1,7 +1,7 @@
 import "server-only"
 
 import { getSql } from "@/lib/server/db"
-import type { FeedbackDraft } from "../lib/feedback"
+import { getFeedbackPriority, type FeedbackDraft } from "../lib/feedback"
 import type { FeedbackUploadFile } from "./upload-token"
 
 export interface InsertFeedbackInput {
@@ -27,14 +27,16 @@ export async function insertFeedback({
     txn.query(
       `
         insert into feedback (
-          id, type, message, rating, contact, set_id, question_external_id, device_info
+          id, type, status, priority, message, rating, contact, set_id,
+          question_external_id, device_info
         )
-        values ($1::uuid, $2, $3, $4, $5, $6, $7, $8)
+        values ($1::uuid, $2, 'open', $3, $4, $5, $6, $7, $8, $9)
         on conflict (id) do nothing
       `,
       [
         id,
         draft.type,
+        getFeedbackPriority(draft.type),
         draft.message,
         draft.rating,
         draft.contact || null,

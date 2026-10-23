@@ -1,30 +1,46 @@
-import { casinoQuestions } from "@/contents/casino"
-import { createContentDeck } from "@/lib/create-content-deck"
-import { Player } from "@/store/party-store"
-import { CasinoGame, CasinoGamePlayer } from "./types"
+import type { ContentQuestion } from "@/lib/content/types"
+import type { ContentDeck } from "@/lib/create-content-deck"
+import type { Player } from "@/store/party-store"
+import type { CasinoGame, CasinoGamePlayer } from "./types"
 
-const questionsDeck = createContentDeck(casinoQuestions)
+const DEFAULT_WINNING_SCORE = 10
+
+/**
+ * الفورة بتتظبط مرة واحدة عند بداية الجلسة:
+ * - قيمة غير منتهية (NaN/Infinity) → الافتراضي 10.
+ * - أي قيمة منتهية → عدد صحيح لا يقل عن 1.
+ */
+const normalizeWinningScore = (value: number): number => {
+  if (!Number.isFinite(value)) return DEFAULT_WINNING_SCORE
+
+  return Math.max(1, Math.floor(value))
+}
 
 export const createGame = (
   players: Player[],
-  winningScore: number
+  winningScore: number,
+  deck: ContentDeck<ContentQuestion>
 ): CasinoGame => {
   return {
     phase: "game",
     players: players.map((player) => ({
-      ...player,
+      id: player.id,
+      name: player.name,
       score: 0,
     })),
-    winningScore,
-    currentQuestion: questionsDeck.next(),
+    winningScore: normalizeWinningScore(winningScore),
+    currentQuestion: deck.next(),
     winner: null,
   }
 }
 
-export const nextQuestion = (game: CasinoGame): CasinoGame => {
+export const nextQuestion = (
+  game: CasinoGame,
+  deck: ContentDeck<ContentQuestion>
+): CasinoGame => {
   return {
     ...game,
-    currentQuestion: questionsDeck.next(),
+    currentQuestion: deck.next(),
   }
 }
 
@@ -56,18 +72,22 @@ export const changePlayerScore = (
   }
 }
 
-export const RestartGame = (
-  players: CasinoGamePlayer[],
-  game: CasinoGame
+/**
+ * قعدة جديدة بنفس الشلّة وبنفس ترتيبها وبنفس الفورة المظبوطة.
+ * الـ deck نفسه بيكمّل من حيث ما وقف، زي سلوك اللعبة الحالي.
+ */
+export const restartGame = (
+  game: CasinoGame,
+  deck: ContentDeck<ContentQuestion>
 ): CasinoGame => {
   return {
-    currentQuestion: questionsDeck.next(),
+    currentQuestion: deck.next(),
     phase: "game",
     players: game.players.map((player) => ({
       ...player,
       score: 0,
     })),
     winner: null,
-    winningScore: 10,
+    winningScore: game.winningScore,
   }
 }

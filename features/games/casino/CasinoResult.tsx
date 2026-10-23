@@ -1,24 +1,19 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { RestartGame } from "@/games/casino"
-import { CasinoGame } from "@/games/casino/types"
+import type { CasinoGame } from "@/games/casino/types"
 import { Trophy, RotateCcw } from "lucide-react"
 
 const CasinoResult = ({
   game,
-  onChange,
+  onRestart,
 }: {
   game: CasinoGame
-  onChange: (game: CasinoGame) => void
+  onRestart: () => void
 }) => {
   const sortedPlayers = [...game.players].sort((a, b) => b.score - a.score)
 
   const winner = game.winner
-
-  const handleReset = () => {
-    onChange(RestartGame(sortedPlayers, game))
-  }
 
   return (
     <section dir="rtl" className="flex h-full w-full flex-col gap-8">
@@ -78,7 +73,7 @@ const CasinoResult = ({
 
       {/* Action */}
       <div className="mt-auto">
-        <Button onClick={handleReset} className="w-full" variant="secondary">
+        <Button onClick={onRestart} className="w-full" variant="secondary">
           <RotateCcw />
           قعدة جديدة
         </Button>
