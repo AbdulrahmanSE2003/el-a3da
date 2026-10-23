@@ -4,14 +4,16 @@
  * duplicate suppression, mute behavior, and playback failure handling.
  *
  * The project has no test runner, so this follows the existing `tsx` script
- * convention. No browser, speakers, network, or real audio files are needed.
+ * convention. No browser, speakers, network, or real audio playback is needed.
  *
  * Usage:
  *   pnpm test:bomb
  */
 
+import { existsSync } from "node:fs"
+import path from "node:path"
 import {
-  BOMB_AUDIO_CONFIG,
+  BOMB_SOUNDS,
   BOMB_SOUND_EVENTS,
   type BombSoundEvent,
 } from "@/features/games/bomb/audio/bomb-sounds"
@@ -90,33 +92,46 @@ function elementFor(
   elements: Map<string, FakeAudio>,
   event: BombSoundEvent
 ): FakeAudio {
-  const element = elements.get(BOMB_AUDIO_CONFIG.sounds[event].src)
+  const element = elements.get(BOMB_SOUNDS[event].src)
   if (!element) throw new Error(`Missing fake audio for ${event}`)
   return element
 }
 
+function publicAssetExists(src: string) {
+  return existsSync(path.join(process.cwd(), "public", src.replace(/^\//, "")))
+}
+
 async function main() {
   console.log("\n1) Sound definitions and event mapping")
-  equal("all four Bomb events are mapped", [...BOMB_SOUND_EVENTS].sort(), [
+  equal("all three Bomb events are mapped", [...BOMB_SOUND_EVENTS].sort(), [
     "explosion",
-    "low-time-warning",
     "round-start",
     "timer-tick",
   ])
-  equal(
-    "warning threshold is centralized",
-    BOMB_AUDIO_CONFIG.warningThresholdSeconds,
-    10
-  )
+
   for (const event of BOMB_SOUND_EVENTS) {
-    const sound = BOMB_AUDIO_CONFIG.sounds[event]
-    check(`${event}: public WAV path`, sound.src.startsWith("/sounds/bomb/"))
+    const sound = BOMB_SOUNDS[event]
+    check(`${event}: public WAV path`, sound.src.endsWith(".wav"))
     check(
       `${event}: volume is sane`,
       sound.volume > 0 && sound.volume <= 1,
       String(sound.volume)
     )
+    check(`${event}: asset exists`, publicAssetExists(sound.src))
   }
+
+  check(
+    "tick is raised above the start cue",
+    BOMB_SOUNDS["timer-tick"].volume > BOMB_SOUNDS["round-start"].volume
+  )
+  check(
+    "tick is at least as loud as the explosion",
+    BOMB_SOUNDS["timer-tick"].volume >= BOMB_SOUNDS.explosion.volume
+  )
+  check(
+    "warning asset was removed",
+    !publicAssetExists("/sounds/bomb/bomb-warning.wav")
+  )
 
   console.log("\n2) Event tracker: start and duplicate suppression")
   {
@@ -133,17 +148,14 @@ async function main() {
     equal("duplicate decrement emits nothing", tracker.timer(19), [])
   }
 
-  console.log("\n3) Event tracker: warning once per round")
+  console.log("\n3) Event tracker: ticking follows the countdown")
   {
     const tracker = makeTracker()
     tracker.start()
-    tracker.timer(11)
-    equal("threshold crossing emits warning", tracker.timer(10), [
-      "timer-tick",
-      "low-time-warning",
-    ])
-    equal("warning is not repeated", tracker.timer(9), ["timer-tick"])
-    equal("still no warning below threshold", tracker.timer(8), ["timer-tick"])
+    tracker.timer(20)
+    equal("each decrement emits one tick", tracker.timer(19), ["timer-tick"])
+    equal("next decrement emits one tick", tracker.timer(18), ["timer-tick"])
+    equal("increasing value emits no tick", tracker.timer(19), [])
   }
 
   console.log("\n4) Event tracker: explosion once")
@@ -166,10 +178,7 @@ async function main() {
 
     equal("restart start emits once", tracker.start(), "round-start")
     tracker.timer(20)
-    equal("restart warning can fire again", tracker.timer(10), [
-      "timer-tick",
-      "low-time-warning",
-    ])
+    equal("restart ticking works again", tracker.timer(19), ["timer-tick"])
   }
 
   console.log("\n6) Player: no side effects at construction")
@@ -177,7 +186,7 @@ async function main() {
     const { player, elements } = makePlayer()
     equal("construction creates no audio elements", elements.size, 0)
     player.prime()
-    equal("prime creates the four assets", elements.size, 4)
+    equal("prime creates the three assets", elements.size, 3)
   }
 
   console.log("\n7) Player: one element per event, no overlapping ticks")
@@ -191,7 +200,7 @@ async function main() {
     equal("tick plays once", tick.playCalls, 1)
     equal("tick restarts from zero", tick.currentTime, 0)
     player.play("timer-tick")
-    equal("second tick reuses the same element", elements.size, 4)
+    equal("second tick reuses the same element", elements.size, 3)
     equal("second tick replays the same element", tick.playCalls, 2)
   }
 
@@ -221,28 +230,22 @@ async function main() {
     const { player, elements } = makePlayer()
     player.prime()
     player.play("timer-tick")
-    player.play("low-time-warning")
     player.play("explosion")
-    player.stopLooping()
+    player.stopTick()
     equal(
-      "stopLooping pauses tick",
+      "stopTick pauses the tick",
       elementFor(elements, "timer-tick").pauseCalls > 0,
       true
     )
     equal(
-      "stopLooping pauses warning",
-      elementFor(elements, "low-time-warning").pauseCalls > 0,
-      true
-    )
-    equal(
-      "stopLooping leaves explosion alone",
+      "stopTick leaves the explosion alone",
       elementFor(elements, "explosion").pauseCalls,
       0
     )
 
     player.stopAll()
     equal(
-      "stopAll pauses explosion too",
+      "stopAll pauses the explosion too",
       elementFor(elements, "explosion").pauseCalls > 0,
       true
     )

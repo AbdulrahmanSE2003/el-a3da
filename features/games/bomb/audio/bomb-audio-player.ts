@@ -92,7 +92,7 @@ export function createBombAudioPlayer(
       if (!element) return
 
       try {
-        // One element per event prevents overlapping tick/warning instances.
+        // One element per event prevents overlapping tick instances.
         element.currentTime = 0
         const playback = element.play()
         if (playback && typeof playback.catch === "function") {
