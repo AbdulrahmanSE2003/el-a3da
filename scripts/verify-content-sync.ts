@@ -1,20 +1,33 @@
 #!/usr/bin/env tsx
 /**
- * verify-content-sync — read-only verification for the content sync work.
+ * verify-content-sync — read-only content verification against Neon.
  *
- * Checks, against the real Neon dev branch:
- *   1. All six content sets exist with the expected live counts.
- *   2. Content is returned in `position` order with contiguous positions.
- *   3. Soft-deleted rows are excluded.
- *   4. The API response version matches the database version.
- *   5. Database content matches the bundled TypeScript sources exactly
- *      (ids, order, text, category, correct_answer, badgeLabel).
- *   6. Total live questions is 3,181.
+ * Contract:
+ * - The bundled `contents/*.ts` files are the historical import/release
+ *   baseline, not a live mirror of Neon.
+ * - Neon is authoritative. Admin additions, edits, and soft deletes are
+ *   reported as expected drift.
+ * - Genuine integrity problems always fail:
+ *     * missing or empty required content sets
+ *     * invalid live rows
+ *     * duplicate live `external_id` or `position`
+ *     * unexplained position gaps
+ *     * baseline ids absent from both live rows and soft-deleted records
  *
- * Read-only: no migrations, no writes, no production access.
+ * Default mode exits 0 for drift-only results. `--strict` exits 1 on any
+ * drift, which is useful before a release that promises baseline parity.
+ *
+ * This script only reads the database. It does not call the HTTP API, run
+ * migrations, or write any data.
+ *
+ * Exit codes:
+ *   0 — no integrity errors (and no drift in `--strict` mode)
+ *   1 — integrity errors, or drift in `--strict` mode
+ *   2 — operational failure (missing DATABASE_URL, connection/read error)
  *
  * Usage:
- *   node --env-file=.env.local --import tsx scripts/verify-content-sync.ts
+ *   pnpm content:verify
+ *   pnpm content:verify -- --strict
  */
 
 import { neon } from "@neondatabase/serverless"
@@ -26,16 +39,21 @@ import { sheikhQuestions } from "../contents/sheikh-questions"
 import { topics } from "../contents/topics"
 import { zadTopics } from "../contents/zad"
 import { CONTENT_SET_IDS, type ContentSetId } from "../lib/content/types"
+import {
+  verifySet,
+  type BaselineQuestion,
+  type ChangedQuestion,
+  type RawDeletedQuestion,
+  type RawLiveQuestion,
+  type SetVerification,
+} from "./content-verify-lib"
 
-interface ExpectedQuestion {
+interface ContentSetRow {
   id: string
-  text: string
-  category?: string
-  correct_answer?: string
-  badgeLabel?: string
+  version: string | number
 }
 
-const SOURCES: Record<ContentSetId, readonly ExpectedQuestion[]> = {
+const SOURCES: Record<ContentSetId, readonly BaselineQuestion[]> = {
   casino: casinoQuestions,
   topics,
   challenges,
@@ -44,163 +62,244 @@ const SOURCES: Record<ContentSetId, readonly ExpectedQuestion[]> = {
   punishments,
 }
 
-const EXPECTED_COUNTS: Record<ContentSetId, number> = {
-  casino: 1094,
-  topics: 502,
-  challenges: 500,
-  sheikh: 500,
-  zad: 86,
-  punishments: 499,
+const LIVE_QUERY = `
+  select external_id, position, text, category, correct_answer, badge_label
+  from questions
+  where set_id = $1
+    and deleted_at is null
+  order by position asc
+`
+
+const DELETED_QUERY = `
+  select external_id, position
+  from questions
+  where set_id = $1
+    and deleted_at is not null
+  order by position asc
+`
+
+function formatList<T>(values: readonly T[], limit = 20): string {
+  if (values.length === 0) return "—"
+  const shown = values.slice(0, limit).map(String).join(", ")
+  return values.length > limit
+    ? `${shown} … (+${values.length - limit} more)`
+    : shown
 }
 
-const EXPECTED_TOTAL = 3181
+function formatChanged(changed: readonly ChangedQuestion[], limit = 20): string {
+  if (changed.length === 0) return "—"
+  const shown = changed
+    .slice(0, limit)
+    .map((row) => `${row.id} [${row.fields.join(", ")}]`)
+    .join(", ")
+  return changed.length > limit
+    ? `${shown} … (+${changed.length - limit} more)`
+    : shown
+}
 
-let failures = 0
-
-function check(label: string, ok: boolean, detail = "") {
-  if (ok) {
-    console.log(`  ✓ ${label}`)
-  } else {
-    failures++
-    console.log(`  ✗ ${label}${detail ? ` — ${detail}` : ""}`)
-  }
+function driftCount(result: SetVerification): number {
+  return result.extra.length + result.missing.length + result.changed.length
 }
 
 async function main() {
   const url = process.env.DATABASE_URL
   if (!url) {
     console.error(
-      "DATABASE_URL is not set. Run with: node --env-file=.env.local --import tsx ..."
+      "DATABASE_URL is not set. Run with: pnpm content:verify (loads .env.local)"
     )
-    process.exit(1)
+    process.exit(2)
   }
 
-  const sql = neon(url)
+  const args = process.argv.slice(2).filter((arg) => arg !== "--")
+  const unknownArgs = args.filter((arg) => arg !== "--strict")
+  if (unknownArgs.length > 0) {
+    console.error(`Unknown argument(s): ${unknownArgs.join(", ")}`)
+    console.error("Usage: pnpm content:verify [-- --strict]")
+    process.exit(2)
+  }
+  const strict = args.includes("--strict")
 
-  console.log("\n1) Versions + counts")
+  const sql = neon(url)
   const sets = (await sql.query(
-    `select id, version, name from content_sets order by id asc`
-  )) as Array<{ id: string; version: string; name: string }>
+    `select id, version from content_sets order by id asc`
+  )) as ContentSetRow[]
 
   const versionById = new Map<string, string>()
   for (const row of sets) {
-    versionById.set(row.id, String(row.version))
+    versionById.set(String(row.id), String(row.version))
   }
 
-  check(
-    `content_sets has all ${CONTENT_SET_IDS.length} sets`,
-    CONTENT_SET_IDS.every((id) => versionById.has(id)),
-    `found: ${sets.map((s) => s.id).join(", ")}`
-  )
-
-  let total = 0
-  for (const id of CONTENT_SET_IDS) {
-    const rows = (await sql.query(
-      `select count(*)::int as n from questions where set_id = $1 and deleted_at is null`,
-      [id]
-    )) as Array<{ n: number }>
-    const live = rows[0]?.n ?? 0
-    total += live
-    check(
-      `${id}: ${live} live (expected ${EXPECTED_COUNTS[id]})`,
-      live === EXPECTED_COUNTS[id]
+  const globalErrors: string[] = []
+  const missingSetIds = CONTENT_SET_IDS.filter((id) => !versionById.has(id))
+  if (missingSetIds.length > 0) {
+    globalErrors.push(
+      `content_sets is missing required set(s): ${missingSetIds.join(", ")}`
     )
   }
-  check(
-    `total live questions = ${total} (expected ${EXPECTED_TOTAL})`,
-    total === EXPECTED_TOTAL
-  )
-
-  console.log("\n2) Position order + contiguous positions + no deleted rows")
   for (const id of CONTENT_SET_IDS) {
-    const rows = (await sql.query(
-      `select external_id, position, text, category, correct_answer, badge_label
-         from questions where set_id = $1 and deleted_at is null
-         order by position asc`,
-      [id]
-    )) as Array<{
-      external_id: string
-      position: number
-      text: string
-      category: string | null
-      correct_answer: string | null
-      badge_label: string | null
-    }>
-
-    const ordered = rows.every((r, i) => r.position === i)
-    check(`${id}: positions are 0..${rows.length - 1} in order`, ordered)
-
-    const dbSet = new Set(rows.map((r) => r.external_id))
-    const deletedCount = (await sql.query(
-      `select count(*)::int as n from questions where set_id = $1 and deleted_at is not null`,
-      [id]
-    )) as Array<{ n: number }>
-    check(
-      `${id}: no soft-deleted rows leak (deleted=${deletedCount[0]?.n ?? 0})`,
-      dbSet.size === rows.length
-    )
-  }
-
-  console.log("\n3) Database matches bundled sources exactly")
-  for (const id of CONTENT_SET_IDS) {
-    const source = SOURCES[id]
-    const rows = (await sql.query(
-      `select external_id, position, text, category, correct_answer, badge_label
-         from questions where set_id = $1 and deleted_at is null
-         order by position asc`,
-      [id]
-    )) as Array<{
-      external_id: string
-      text: string
-      category: string | null
-      correct_answer: string | null
-      badge_label: string | null
-    }>
-
-    check(
-      `${id}: source count ${source.length} === db count ${rows.length}`,
-      source.length === rows.length
-    )
-
-    let mismatch = -1
-    for (let i = 0; i < Math.min(source.length, rows.length); i++) {
-      const s = source[i]
-      const r = rows[i]
-      const same =
-        s.id === r.external_id &&
-        s.text === r.text &&
-        (s.category ?? null) === (r.category ?? null) &&
-        (s.correct_answer ?? null) === (r.correct_answer ?? null) &&
-        (s.badgeLabel ?? null) === (r.badge_label ?? null)
-      if (!same) {
-        mismatch = i
-        break
-      }
+    const version = versionById.get(id)
+    if (version !== undefined && version.trim() === "") {
+      globalErrors.push(`${id}: content set has an empty version token`)
     }
-    check(
-      `${id}: every row matches (id, text, category, answer, badge)`,
-      mismatch === -1,
-      mismatch >= 0 ? `first mismatch at index ${mismatch}` : ""
-    )
   }
 
-  console.log("\n4) Version tokens are present and opaque")
+  const results: SetVerification[] = []
   for (const id of CONTENT_SET_IDS) {
-    const v = versionById.get(id)
-    check(
-      `${id}: has non-empty version token`,
-      typeof v === "string" && v.length > 0,
-      `got ${v}`
+    if (!versionById.has(id)) continue
+
+    const liveRows = (await sql.query(LIVE_QUERY, [
+      id,
+    ])) as RawLiveQuestion[]
+    const deletedRows = (await sql.query(DELETED_QUERY, [
+      id,
+    ])) as RawDeletedQuestion[]
+
+    results.push(verifySet(id, SOURCES[id], liveRows, deletedRows))
+  }
+
+  const baselineTotal = CONTENT_SET_IDS.reduce(
+    (total, id) => total + SOURCES[id].length,
+    0
+  )
+  const liveTotal = results.reduce((total, result) => total + result.liveCount, 0)
+  const deletedTotal = results.reduce(
+    (total, result) => total + result.deletedCount,
+    0
+  )
+  const totalExtra = results.reduce(
+    (total, result) => total + result.extra.length,
+    0
+  )
+  const totalMissing = results.reduce(
+    (total, result) => total + result.missing.length,
+    0
+  )
+  const totalChanged = results.reduce(
+    (total, result) => total + result.changed.length,
+    0
+  )
+  const totalDrift = results.reduce(
+    (total, result) => total + driftCount(result),
+    0
+  )
+  const integrityErrorCount =
+    globalErrors.length +
+    results.reduce((total, result) => total + result.integrityErrors.length, 0)
+
+  console.log("\nContent verification (read-only)")
+  console.log("Baseline: bundled contents/*.ts (historical import baseline)")
+  console.log("Live:     Neon (authoritative)")
+
+  console.log("\n1) Content sets")
+  for (const id of CONTENT_SET_IDS) {
+    const result = results.find((row) => row.id === id)
+    if (!result) {
+      console.log(`  ✗ ${id}: missing from content_sets`)
+      continue
+    }
+    const version = versionById.get(id) ?? "—"
+    const hasErrors =
+      result.integrityErrors.length > 0 ||
+      (versionById.get(id) !== undefined && versionById.get(id)?.trim() === "")
+    console.log(
+      `  ${hasErrors ? "✗" : "✓"} ${id}: baseline ${result.baselineCount}, live ${result.liveCount}, soft-deleted ${result.deletedCount}, version ${version}`
     )
   }
 
+  console.log("\n2) Integrity")
+  for (const error of globalErrors) {
+    console.log(`  ✗ ${error}`)
+  }
+  for (const result of results) {
+    if (result.integrityErrors.length === 0) {
+      console.log(`  ✓ ${result.id}: integrity checks passed`)
+      continue
+    }
+    for (const error of result.integrityErrors) {
+      console.log(`  ✗ ${error}`)
+    }
+  }
+
+  console.log("\n3) Drift vs bundled baseline")
+  for (const result of results) {
+    const count = driftCount(result)
+    if (count === 0) {
+      console.log(`  ✓ ${result.id}: no drift`)
+      continue
+    }
+
+    console.log(
+      `  ~ ${result.id}: ${count} difference(s) — extra ${result.extra.length}, missing ${result.missing.length}, changed ${result.changed.length}`
+    )
+    if (result.extra.length > 0) {
+      console.log(`      extra: ${formatList(result.extra)}`)
+    }
+    if (result.missing.length > 0) {
+      console.log(`      missing: ${formatList(result.missing)}`)
+    }
+    if (result.softDeleted.length > 0) {
+      console.log(`      soft-deleted: ${formatList(result.softDeleted)}`)
+    }
+    if (result.unexplainedMissing.length > 0) {
+      console.log(
+        `      unexplained missing: ${formatList(result.unexplainedMissing)}`
+      )
+    }
+    if (result.changed.length > 0) {
+      console.log(`      changed: ${formatChanged(result.changed)}`)
+    }
+    if (result.explainedGaps.length > 0) {
+      console.log(`      explained gaps: ${formatList(result.explainedGaps)}`)
+    }
+    if (result.unexplainedGaps.length > 0) {
+      console.log(`      unexplained gaps: ${formatList(result.unexplainedGaps)}`)
+    }
+  }
+
+  console.log("\n4) Totals")
+  console.log(`  baseline:         ${baselineTotal}`)
   console.log(
-    failures === 0 ? "\nALL CHECKS PASSED\n" : `\n${failures} CHECK(S) FAILED\n`
+    `  live:             ${liveTotal} (${liveTotal - baselineTotal >= 0 ? "+" : ""}${liveTotal - baselineTotal})`
   )
-  process.exit(failures === 0 ? 0 : 1)
+  console.log(`  soft-deleted rows: ${deletedTotal}`)
+  console.log(
+    `  drift:            ${totalDrift} (extra ${totalExtra}, missing ${totalMissing}, changed ${totalChanged})`
+  )
+
+  console.log("\nSummary")
+  if (integrityErrorCount > 0) {
+    console.log(`  ✗ integrity errors: ${integrityErrorCount}`)
+    console.log(`  drift:              ${totalDrift}`)
+    console.log("\nFAILED — integrity errors must be fixed.\n")
+    process.exit(1)
+  }
+
+  console.log("  ✓ integrity: pass")
+  if (strict && totalDrift > 0) {
+    console.log(`  ✗ strict:   ${totalDrift} drift difference(s) detected`)
+    console.log("\nFAILED — strict mode rejects content drift.\n")
+    process.exit(1)
+  }
+
+  if (totalDrift > 0) {
+    console.log(
+      `  ℹ drift:    ${totalDrift} difference(s) (expected admin content drift)`
+    )
+    console.log(
+      "\nPASSED — drift is reported but allowed in default mode. Use --strict to fail on drift.\n"
+    )
+  } else {
+    console.log("  ✓ drift:    none")
+    console.log("\nALL CHECKS PASSED\n")
+  }
+
+  process.exit(0)
 }
 
 main().catch((error) => {
-  console.error("verify-content-sync failed:", error)
-  process.exit(1)
+  console.error(
+    "\nverify-content-sync could not complete (operational error, not a content-integrity result):"
+  )
+  console.error(error)
+  process.exit(2)
 })

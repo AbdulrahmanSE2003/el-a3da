@@ -6,6 +6,7 @@
 - **المصدر المعتمد**: Neon (فرع التطوير `br-calm-art-b9yzd3hg` فقط). الإنتاج غير مُستخدم.
 - **ذاكرة التخزين**: IndexedDB (`qa3da-content`) مع نسخة واحدة لكل مجموعة محتوى.
 - **الـFallback**: ملفات `contents/*.ts` المستخدمة عند عدم وجود كاش صالح.
+- **الـBaseline**: ملفات `contents/*.ts` هي baseline الاستيراد/الإصدار (3,181 إجماليًا، منها 1,094 للكازينو عند استيراد 2026-10-21)، وليست مرآة live لقاعدة البيانات. إضافات/تعديلات/حذف الداشبورد بتظهر كـ drift متوقع.
 - **استقرار الجلسة**: كل جلسة تستخدم لقطة ثابتة من المحتوى، وأي تحديث في الخلفية لا يغير الأسئلة أو الترتيب في الجلسة النشطة.
 
 ## مجموعات المحتوى
@@ -27,6 +28,14 @@
 
 ## فحص المحتوى
 ```bash
-pnpm content:test   # اختبار شامل للمزامنة
-pnpm content:verify # التحقق من تطابق DB مع bundled (يتطلب DATABASE_URL)
+pnpm content:test
+pnpm content:verify
+pnpm content:verify -- --strict
+pnpm content:verify:test
 ```
+
+- `pnpm content:test` — اختبار شامل لدورة المزامنة.
+- `pnpm content:verify` — فحص قراءة فقط لقاعدة Neon. يقارن live مع baseline بواسطة `external_id` ويطبع `extra` / `missing` / `changed`. الـ drift المتوقع (إضافات/تعديلات/حذف ناعم) لا يفشل الفحص؛ الفشل للسلامة فقط: مجموعة ناقصة أو فارغة، صف غير صالح، تكرار `external_id` أو `position`، فراغ `position` غير مفسّر، أو baseline id مفقود بلا سجل soft-deleted.
+- `pnpm content:verify -- --strict` — نفس الفحص، لكن يفشل عند أي drift (مفيد قبل إصدار يضمن تطابق baseline).
+- `pnpm content:verify:test` — اختبارات fixtures لقواعد المقارنة والسلامة، بدون قاعدة بيانات.
+- أخطاء الاتصال/القراءة تُبلّغ كفشل تشغيلي (exit 2) منفصل عن فشل سلامة المحتوى.

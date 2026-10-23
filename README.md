@@ -59,9 +59,11 @@ pnpm build          # بناء إنتاجي
 pnpm start          # تشغيل الإنتاج
 pnpm lint           # فحص ESLint
 pnpm typecheck      # فحص TypeScript
-pnpm content:test   # اختبار مزامنة المحتوى
-pnpm content:verify # التحقق من المحتوى مقابل Neon (يحتاج DATABASE_URL)
-pnpm admin:password # توليد هاش كلمة مرور الأدمن
+pnpm content:test        # اختبار مزامنة المحتوى
+pnpm content:verify      # فحص قراءة فقط: drift مقابل baseline (يحتاج DATABASE_URL)
+pnpm content:verify -- --strict # فشل عند أي drift
+pnpm content:verify:test # اختبارات قواعد الفحص (fixtures)
+pnpm admin:password      # توليد هاش كلمة مرور الأدمن
 ```
 
 ## التثبيت كـ PWA
