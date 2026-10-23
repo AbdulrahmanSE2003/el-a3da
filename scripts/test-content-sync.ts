@@ -341,12 +341,13 @@ async function loadModules() {
   const cache = await import("../lib/content/cache")
   const sync = await import("../lib/content/sync")
   const types = await import("../lib/content/types")
-  return { cache, sync, types }
+  const provider = await import("../lib/content/provider")
+  return { cache, sync, types, provider }
 }
 
 async function main() {
   installFetch()
-  const { cache, sync, types } = await loadModules()
+  const { cache, sync, types, provider } = await loadModules()
 
   const versions = {
     casino: "10",
@@ -675,6 +676,49 @@ async function main() {
     "zad old version preserved",
     zadKept?.version === "50",
     zadKept?.version
+  )
+
+  console.log(
+    "\n14) Provider uses the cached casino snapshot and bundled fallback"
+  )
+  await resetDatabase()
+  cache.resetContentCacheConnection()
+
+  const bundledCasino = await provider.loadContentSnapshot("casino")
+  check(
+    "bundled casino snapshot is used when cache is empty",
+    bundledCasino.source === "bundled" && bundledCasino.version === null,
+    `${bundledCasino.source}:${bundledCasino.version}`
+  )
+  check(
+    "bundled casino snapshot is not empty",
+    bundledCasino.questions.length > 0,
+    String(bundledCasino.questions.length)
+  )
+
+  const seededWrite = await cache.writeCachedSet({
+    id: "casino",
+    version: "777",
+    questions: [
+      { id: "casino-0", text: "casino question 0", category: "cat" },
+      { id: "casino-1", text: "casino question 1", category: "cat" },
+    ],
+    savedAt: Date.now(),
+  })
+  check("seeded casino cache record is written", seededWrite)
+
+  const cachedCasino = await provider.loadContentSnapshot("casino")
+  check(
+    "cached casino snapshot is preferred over the bundle",
+    cachedCasino.source === "cache" && cachedCasino.version === "777",
+    `${cachedCasino.source}:${cachedCasino.version}`
+  )
+  check(
+    "cached casino snapshot keeps its questions",
+    cachedCasino.questions.length === 2 &&
+      cachedCasino.questions[0].id === "casino-0" &&
+      cachedCasino.questions[1].id === "casino-1",
+    cachedCasino.questions.map((q) => q.id).join(",")
   )
 
   console.log(

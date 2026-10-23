@@ -162,7 +162,7 @@ export function QuestionCreateDialog({
               )}
             </Label>
             <Select
-              value={categories[0].category}
+              defaultValue={categories[0].category}
               onValueChange={(value) => setField("category", value)}
             >
               <SelectTrigger className={`w-full`}>

@@ -1,5 +1,6 @@
 "use client"
 
+import { cn } from "cn"
 import { Gamepad2, Home, MessageSquare, Settings, Users } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
@@ -50,7 +51,7 @@ const HomeBottomNav = () => {
                 isActive ? "text-copper" : "text-ink-soft hover:text-ink"
               }`}
             >
-              <Icon className="size-5" />
+              <Icon className={cn("size-5", isActive ? "fill-primary" : "")} />
               <span className="text-[10px] font-bold">{item.label}</span>
             </Link>
           )

@@ -5,7 +5,15 @@ export interface ContentItem extends BaseContentItem {
   text: string
 }
 
-export const createContentDeck = <T extends ContentItem>(items: T[]) => {
+export type ContentDeck<T extends ContentItem> = {
+  next: () => T
+  reset: (nextItems?: T[]) => void
+  remaining: () => number
+}
+
+export const createContentDeck = <T extends ContentItem>(
+  items: T[]
+): ContentDeck<T> => {
   let source: T[] = items
   let deck: T[] = []
   let index = 0

@@ -13,6 +13,7 @@
     "content:ids": "tsx scripts/content-ids.ts",
     "content:verify": "node --env-file=.env.local --import tsx scripts/verify-content-sync.ts",
     "content:test": "node --import tsx scripts/test-content-sync.ts",
+    "test:casino": "node --import tsx scripts/test-casino-game.ts",
     "admin:password": "tsx scripts/admin-password.ts"
   },
   "dependencies": {
