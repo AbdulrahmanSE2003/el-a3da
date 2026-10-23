@@ -28,7 +28,7 @@ export function FeedbackTypeSelector({
   return (
     <fieldset>
       <legend className="mb-1.5 font-mono text-[10px] font-bold tracking-widest text-ink-soft">
-        نوع الملاحظة
+        عايز تقولنا إيه؟{" "}
       </legend>
 
       <div className="grid grid-cols-2 gap-2">

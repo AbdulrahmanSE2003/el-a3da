@@ -44,7 +44,7 @@ const Platform = () => {
             النهاردة هنعمل إيه؟
           </h2>
           <p className="mt-1 text-sm font-medium text-ink-soft/70">
-            اختار حاجة تفتح الكلام... أو تقلب القعدة.
+            اختار حاجة تفتح الكلام... أو تولّع القعدة.
           </p>
         </section>
 

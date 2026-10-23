@@ -23,9 +23,9 @@ export const FEEDBACK_TYPE_LABELS: Record<FeedbackType, string> = {
 
 export const FEEDBACK_TYPE_DESCRIPTIONS: Record<FeedbackType, string> = {
   general: "أي حاجة عايز تقولها عن القعدة",
-  bug: "حاجة مش شغالة أو بتظهر بشكل غلط",
-  suggestion: "فكرة جديدة أو تحسين في التجربة",
-  question_issue: "سؤال فيه غلطة أو إجابة مش مظبوطة",
+  bug: "حاجة مش شغالة أو مش شغالة صح",
+  suggestion: "فكرة جامدة تزود الضحك والروقان",
+  question_issue: "سؤال فيه غلطة أو إجابته عايزه تظبيط",
 }
 
 export const FEEDBACK_STATUSES = ["open", "reviewed", "done"] as const

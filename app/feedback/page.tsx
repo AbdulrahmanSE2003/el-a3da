@@ -27,12 +27,12 @@ export default function FeedbackPage() {
           </p>
 
           <h1 className="mt-1 text-4xl font-black tracking-tight text-ink">
-            قولنا إيه اللي في دماغك
+            قولنا إيه في دماغك 💡
           </h1>
 
           <p className="mt-2 text-xs leading-6 font-semibold text-ink-soft/70">
-            مشكلة، اقتراح، أو ملاحظة على سؤال؟ اكتبها هنا، ولو عندك صورة للشاشة
-            ارفعها معاها عشان نساعدك أسرع.
+            قابلك عطل؟ عندك فكرة صايعة؟ أو سؤال مش مظبوط؟ اكتبلنا وسيب الباقي
+            علينا!
           </p>
         </div>
 

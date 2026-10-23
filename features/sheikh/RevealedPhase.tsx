@@ -18,7 +18,7 @@ export function RevealedPhase({
       </p>
 
       <div className="mt-6 rounded-md border-2 border-ink bg-paper-warm p-6 shadow-[5px_5px_0_var(--color-ink)]">
-        <div className="flex aspect-square items-center justify-center border-2 border-copper bg-paper">
+        <div className="flex aspect-square items-center justify-center rounded-md border-2 border-copper bg-paper">
           <div className="text-center">
             <p className="mb-2 text-xs font-bold text-copper">شيخ الحارة</p>
 
@@ -28,8 +28,8 @@ export function RevealedPhase({
           </div>
         </div>
 
-        <p className="mt-5 text-center font-mono text-[10px] font-bold tracking-widest text-ink-soft/50">
-          SHEIKH
+        <p className="mt-5 text-center text-[10px] font-bold tracking-widest text-ink-soft/50">
+          اجهز عشان الشيخ هيعرفك على نفسك او يعرّف شلِّتك عليك.
         </p>
       </div>
 

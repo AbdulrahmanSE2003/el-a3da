@@ -41,8 +41,8 @@ export const QA3DA_ACCENT_THEME_META: Record<
     accentBg: "color-mix(in srgb, var(--accent-theme) 12%, transparent)",
   },
   "night-blue": {
-    label: "سهرة القهوة",
-    description: "كحلي هادئ وأجواء ليلية رايقة في قعدتنا",
+    label: "موهيتو بلوبيري",
+    description: "انتعاش أزرق بارد ولطيف مع أجواء سهرة ليلية رايقة",
     surface: "var(--paper-warm)",
     border: "color-mix(in srgb, var(--accent-theme) 38%, var(--ink))",
     accent: "var(--accent-theme)",

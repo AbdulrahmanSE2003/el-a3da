@@ -22,7 +22,7 @@ export function SettingsContent() {
         <div className="flex flex-col gap-1">
           <h2 className="text-lg font-black">الصوت والأجواء</h2>
           <p className="text-sm font-semibold text-ink-soft">
-            قيد التطوير — قريباً
+            لسه عالرمالة — قريب جداً 🎧{" "}
           </p>
         </div>
         <div className="grid gap-3 sm:grid-cols-2">
@@ -31,7 +31,7 @@ export function SettingsContent() {
               <Volume2 className="size-4 text-ink-soft" />
             </div>
             <div className="flex flex-1 flex-col">
-              <span className="text-sm font-black">مؤثرات صوتية</span>
+              <span className="text-sm font-black">صوتيات القهوة (قريباً)</span>
               <span className="text-xs font-semibold text-ink-soft">
                 قريبًا
               </span>
@@ -42,9 +42,9 @@ export function SettingsContent() {
               <Music className="size-4 text-ink-soft" />
             </div>
             <div className="flex flex-1 flex-col">
-              <span className="text-sm font-black">موسيقى خلفية</span>
+              <span className="text-sm font-black">راديو القهوة</span>
               <span className="text-xs font-semibold text-ink-soft">
-                مستقبلًا
+                قريباً
               </span>
             </div>
           </div>
@@ -54,7 +54,7 @@ export function SettingsContent() {
       {/* About */}
       <section className="flex flex-col gap-3">
         <div className="flex flex-col gap-1">
-          <h2 className="text-lg font-black">عن التطبيق</h2>
+          <h2 className="text-lg font-black">حكاية القعدة ☕</h2>
         </div>
         <AboutDialog version={version} />
       </section>

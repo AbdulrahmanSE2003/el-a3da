@@ -119,7 +119,7 @@ export function FeedbackImageUpload({
   return (
     <div>
       <p className="mb-1.5 font-mono text-[10px] font-bold tracking-widest text-ink-soft">
-        صور الشاشة (اختياري)
+        لقطة شاشة (لو عايز توضح){" "}
       </p>
 
       <input

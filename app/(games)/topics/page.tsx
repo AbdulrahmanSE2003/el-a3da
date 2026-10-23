@@ -13,10 +13,6 @@ export default function TopicsPage() {
       <Header stamp="TOPICS" />
       {/* Topics */}
       <TopicsArea />
-      {/* Footer Note */}
-      <footer className="relative z-10 mt-6 w-full max-w-md border-t border-ink/10 pt-4 text-center opacity-80">
-        <p className="text-xs font-bold text-ink">خد وقتك... مفيش إجابة غلط</p>
-      </footer>
     </main>
   )
 }

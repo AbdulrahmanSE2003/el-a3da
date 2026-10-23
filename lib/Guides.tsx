@@ -181,7 +181,7 @@ export function AmirElzalamGuide() {
           ].map((role) => (
             <div
               key={role.title}
-              className="border-2 border-ink/15 bg-paper p-4 shadow-[2px_2px_0_var(--color-ink)]"
+              className="rounded-md border-2 border-ink/15 bg-paper p-4 shadow-[2px_2px_0_var(--color-ink)]"
             >
               <h4 className="font-black text-ink">{role.title}</h4>
               <p className="mt-1 text-xs leading-relaxed font-semibold text-ink-soft">
@@ -250,7 +250,7 @@ export function AmirElzalamGuide() {
       </section>
 
       {/* مهم */}
-      <section className="flex flex-col gap-3 border-2 border-copper bg-copper/8 p-4 shadow-[2px_2px_0_var(--color-copper)]">
+      <section className="flex flex-col gap-3 rounded-md border-2 border-copper bg-copper/8 p-4 shadow-[2px_2px_0_var(--color-copper)]">
         <h3 className="flex items-center gap-2 text-base font-black text-copper">
           <AlertTriangle className="size-5 shrink-0" strokeWidth={2} />
           مهم جداً
@@ -346,7 +346,7 @@ export function CasinoElAlabGuide() {
           ].map((item) => (
             <div
               key={item.title}
-              className="border-2 border-ink/15 bg-paper p-4 shadow-[2px_2px_0_var(--color-ink)]"
+              className="rounded-md border-2 border-ink/15 bg-paper p-4 shadow-[2px_2px_0_var(--color-ink)]"
             >
               <h4 className="font-black text-ink">{item.title}</h4>
               <p className="mt-1 text-xs leading-relaxed font-semibold text-ink-soft">
@@ -367,7 +367,7 @@ export function CasinoElAlabGuide() {
           {questionTypes.map((item) => (
             <div
               key={item.title}
-              className="border-2 border-ink/15 bg-paper p-4 shadow-[2px_2px_0_var(--color-ink)]"
+              className="rounded-md border-2 border-ink/15 bg-paper p-4 shadow-[2px_2px_0_var(--color-ink)]"
             >
               <h4 className="font-black text-ink">{item.title}</h4>
               <p className="mt-1 text-xs leading-relaxed font-semibold text-ink-soft">
@@ -398,12 +398,12 @@ export function CasinoElAlabGuide() {
       </section>
 
       {/* مين يكسب */}
-      <section className="flex flex-col gap-3">
+      <section className="flex flex-col gap-3 rounded-md">
         <h3 className="flex items-center gap-2 text-base font-black text-copper">
           <Trophy className="size-5 shrink-0" strokeWidth={2} />
           مين يكسب؟
         </h3>
-        <div className="border-2 border-ink/15 bg-paper p-4 shadow-[2px_2px_0_var(--color-ink)]">
+        <div className="rounded-md border-2 border-ink/15 bg-paper p-4 shadow-[2px_2px_0_var(--color-ink)]">
           <h4 className="font-black text-ink">الفائز</h4>
           <p className="mt-1 text-xs leading-relaxed font-semibold text-ink-soft">
             أول لاعب يوصل إلى 10 نقاط يكسب اللعبة.
@@ -412,7 +412,7 @@ export function CasinoElAlabGuide() {
       </section>
 
       {/* مهم جداً */}
-      <section className="flex flex-col gap-3 border-2 border-copper bg-copper/8 p-4 shadow-[2px_2px_0_var(--color-copper)]">
+      <section className="flex flex-col gap-3 rounded-md border-2 border-copper bg-copper/8 p-4 shadow-[2px_2px_0_var(--color-copper)]">
         <h3 className="flex items-center gap-2 text-base font-black text-copper">
           <AlertTriangle className="size-5 shrink-0" strokeWidth={2} />
           مهم جداً

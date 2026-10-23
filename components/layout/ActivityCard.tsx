@@ -32,7 +32,7 @@ export function ActivityCard({
   return (
     <Link
       href={item.href}
-      className={`group card-brutal  ${
+      className={`group card-brutal ${
         isDark
           ? "border-paper-warm/30 bg-zinc-800 text-paper shadow-[3px_3px_0_var(--color-paper-warm)] hover:shadow-[5px_5px_0_var(--color-paper-warm)]"
           : ""
@@ -46,7 +46,7 @@ export function ActivityCard({
 
       <div className="relative flex items-start justify-between">
         <div
-          className={`icon-box ${
+          className={`icon-box rounded-md ${
             isDark ? "border-paper/20 bg-ink-soft text-paper" : ""
           }`}
         >

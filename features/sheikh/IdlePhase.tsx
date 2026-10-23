@@ -17,7 +17,7 @@ export function IdlePhase({ onChooseSheikh }: IdlePhaseProps) {
       </p>
 
       <div className="mt-5 rounded-md border-2 border-ink bg-paper-warm p-6 shadow-[5px_5px_0_var(--color-ink)]">
-        <div className="flex aspect-square items-center justify-center border border-ink/15">
+        <div className="flex aspect-square items-center justify-center rounded-md border border-ink/15">
           <span className="font-mono text-[10rem] font-bold text-ink/20">
             ?
           </span>

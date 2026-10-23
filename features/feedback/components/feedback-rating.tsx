@@ -12,7 +12,7 @@ export function FeedbackRating({ value, onChange }: FeedbackRatingProps) {
   return (
     <fieldset>
       <legend className="mb-1.5 font-mono text-[10px] font-bold tracking-widest text-ink-soft">
-        تقييم التجربة (اختياري)
+        انبسطت مع القعدة؟ (اختياري){" "}
       </legend>
 
       <div className="flex items-center gap-1.5">

@@ -26,7 +26,7 @@ const Players = ({ redirect }: { redirect: string }) => {
       <section className="mt-7 rounded-md border-2 border-ink bg-paper-warm p-4 shadow-[4px_4px_0_var(--color-ink)]">
         <div className="mb-3 flex items-center justify-between">
           <span className="text-sm font-bold tracking-widest text-copper">
-            إضافة لاعب
+            زود لعيب جديد ➕{" "}
           </span>
 
           <Users className="size-4 text-ink-soft/50" />
@@ -39,7 +39,7 @@ const Players = ({ redirect }: { redirect: string }) => {
             onKeyDown={(event) => {
               if (event.key === "Enter") handleSubmit()
             }}
-            placeholder="اكتب الاسم..."
+            placeholder="اكتب اسم اللعيب هنا.."
             className="min-w-0 flex-1 rounded-md border-2 border-ink bg-paper px-3 py-3 text-sm font-bold outline-none placeholder:text-ink-soft/40 focus:border-copper"
             autoComplete="off"
           />
@@ -59,7 +59,7 @@ const Players = ({ redirect }: { redirect: string }) => {
       <section className="mt-7">
         <div className="mb-3 flex items-center justify-between">
           <span className="text-sm font-bold text-ink-soft/50">
-            الناس اللي قاعدة
+            الشلة اللي في الجيم ({players.length} لعيبة) ⚡{" "}
           </span>
         </div>
 

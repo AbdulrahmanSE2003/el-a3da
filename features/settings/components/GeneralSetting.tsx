@@ -45,7 +45,8 @@ function GeneralSettings() {
       </div>
 
       <p className="text-xs leading-6 font-semibold text-ink-soft">
-        تغيير الثيم ملوش دعوة بالوضع الداكن، ومش هيغير خيارات الألوان بتاعتك.
+        تغيير الثيم اللوني ملوش دعوة بالوضع الليلي، براحتك خالص ظبط ألوانك على
+        كيفك! ✨{" "}
       </p>
     </section>
   )

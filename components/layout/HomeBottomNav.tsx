@@ -52,7 +52,14 @@ const HomeBottomNav = () => {
               }`}
             >
               <Icon className={cn("size-5", isActive ? "fill-primary" : "")} />
-              <span className="text-[10px] font-bold">{item.label}</span>
+              <span
+                className={cn(
+                  "text-[10px] font-semibold",
+                  isActive ? "font-black" : ""
+                )}
+              >
+                {item.label}
+              </span>
             </Link>
           )
         })}

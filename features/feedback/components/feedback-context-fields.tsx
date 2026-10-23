@@ -33,7 +33,7 @@ export function FeedbackContextFields({
   return (
     <>
       <div>
-        <Label htmlFor="feedback-contact">وسيلة تواصل (اختياري)</Label>
+        <Label htmlFor="feedback-contact">نوصلك إزاي؟ (اختياري)</Label>
 
         <Input
           className={`rounded-md`}
@@ -73,7 +73,7 @@ export function FeedbackContextFields({
             </SelectTrigger>
 
             <SelectContent position="popper">
-              <SelectItem value="none">غير مرتبط بمجموعة</SelectItem>
+              <SelectItem value="none">مش مرتبطة بـ لعبة معينة</SelectItem>
 
               {FEEDBACK_SET_OPTIONS.map((set) => (
                 <SelectItem key={set.id} value={set.id}>
@@ -85,7 +85,7 @@ export function FeedbackContextFields({
         </div>
 
         <div>
-          <Label htmlFor="feedback-question"> ID السؤال (اختياري)</Label>
+          <Label htmlFor="feedback-question"> رقم السؤال (لو فاكره)</Label>
 
           <Input
             className={`rounded-md`}

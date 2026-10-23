@@ -36,7 +36,7 @@ export function AboutDialog({ version }: AboutDialogProps) {
             </span>
 
             <span className="mt-1 inline-flex items-center gap-1 text-xs font-bold text-copper group-hover:underline">
-              تعرّف على القعدة
+              اعرف حكاية القعدة
               <ArrowLeft className="size-3.5 transition-transform group-hover:-translate-x-1" />
             </span>
           </span>
