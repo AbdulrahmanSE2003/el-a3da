@@ -45,13 +45,14 @@ export async function updateQuestionRecord(
 
   const rows = (await getSql().query(
     `
-      select set_id
-      from questions
-      where id = $1
-        and deleted_at is null
+      select q.set_id, cs.name
+      from questions q
+      join content_sets cs on cs.id = q.set_id
+      where q.id = $1
+        and q.deleted_at is null
     `,
     [id]
-  )) as Array<{ set_id: string }>
+  )) as Array<{ set_id: string; name: string }>
 
   const row = rows[0]
   if (!row) {
@@ -62,7 +63,7 @@ export async function updateQuestionRecord(
     return { ok: false, error: "مجموعة السؤال غير معروفة." }
   }
 
-  const setMeta = getSetMeta(row.set_id)
+  const setMeta = getSetMeta(row.set_id, row.name)
   const validation = validateQuestionDraft(draft, setMeta)
   if (!validation.ok) {
     return {
@@ -140,7 +141,24 @@ export async function createQuestionRecord(
   setId: ContentSetId,
   draft: QuestionCreateDraft
 ): Promise<QuestionCreateMutationResult> {
-  const setMeta = getSetMeta(setId)
+  if (!isContentSetId(setId)) {
+    return { ok: false, error: "مجموعة المحتوى غير صالحة." }
+  }
+
+  const sql = getSql()
+  const setRows = (await sql.query(
+    `select name from content_sets where id = $1`,
+    [setId]
+  )) as Array<{ name: string }>
+
+  if (!setRows[0]) {
+    return {
+      ok: false,
+      error: "مجموعة المحتوى غير موجودة في Neon. أضفها أولًا.",
+    }
+  }
+
+  const setMeta = getSetMeta(setId, setRows[0].name)
   const validation = validateQuestionCreateDraft(draft, setMeta)
   if (!validation.ok) {
     return {
@@ -149,8 +167,6 @@ export async function createQuestionRecord(
       fieldErrors: validation.fieldErrors,
     }
   }
-
-  const sql = getSql()
 
   try {
     const created = (await sql.query(

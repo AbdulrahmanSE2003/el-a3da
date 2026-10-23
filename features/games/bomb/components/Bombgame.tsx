@@ -1,6 +1,6 @@
 "use client"
 
-import { BombCategoryKey, BombGameState } from "@/games/bomb/types"
+import type { BombCategoryKey, BombGameState } from "@/games/bomb/types"
 import { useCallback, useState, type ReactNode } from "react"
 import { Volume2, VolumeX } from "lucide-react"
 import ChooseCategory from "./ChooseCategory"
@@ -9,9 +9,11 @@ import { setCategory } from "@/games/bomb/game"
 import BombPlay from "./BombPlay"
 import Explosion from "./Explosion"
 import { useBombSounds } from "../audio/use-bomb-sounds"
+import { useContentSet } from "@/lib/content/use-content-set"
 
 const BombGame = () => {
   const [gameState, setGameState] = useState<BombGameState | null>(null)
+  const { snapshot, ready } = useContentSet("bomb")
   const {
     muted,
     toggleMuted,
@@ -23,13 +25,15 @@ const BombGame = () => {
 
   const handleSetCategory = useCallback(
     (category: BombCategoryKey) => {
-      const newState = setCategory(category)
+      if (!ready) return
+
+      const newState = setCategory(category, snapshot.questions)
       if (!newState) return
 
       startRound()
       setGameState(newState)
     },
-    [startRound]
+    [ready, snapshot.questions, startRound]
   )
 
   const handleGameFinished = useCallback(() => {
@@ -50,7 +54,9 @@ const BombGame = () => {
   let content: ReactNode
 
   if (!gameState || gameState.phase === "setup") {
-    content = <ChooseCategory onSelectCategory={handleSetCategory} />
+    content = (
+      <ChooseCategory onSelectCategory={handleSetCategory} ready={ready} />
+    )
   } else if (gameState.phase === "playing") {
     content = (
       <BombPlay

@@ -52,12 +52,11 @@ export function QuestionsView({
 
   const { search, setSearch, isPending, navigate } = useQuestionFilters(query)
 
-  const setMeta = getSetMeta(setId)
-
   const setRow = useMemo(
     () => sets.find((set) => set.id === setId),
     [sets, setId]
   )
+  const setMeta = getSetMeta(setId, setRow?.title)
 
   const hasFilters = Boolean(query.trim()) || category !== "all"
 
@@ -76,7 +75,7 @@ export function QuestionsView({
       <PageHeader
         stamp="الأسئلة"
         title="إدارة الأسئلة"
-        description="عرض وإدارة الأسئلة النشطة في Neon. يمكن إضافة سؤال جديد، وتعديل النص والفئة والحقول الخاصة بكل مجموعة، والحذف يتم soft delete مع الاحتفاظ بالسجل. صفحات اللعبة الحالية لسه بتقرأ من ملفات المحتوى الثابتة."
+        description="عرض وإدارة الأسئلة النشطة في Neon. الإضافة والتعديل والحذف الناعم بيحدّثوا إصدار المجموعة، والأجهزة بتزامن المحتوى الجديد في الجلسات اللي تبدأ بعد كده مع fallback محلي لو الشبكة قطعت."
         action={
           <Button size="sm" onClick={() => setCreating(true)}>
             <PlusIcon className="size-4" />
@@ -111,7 +110,7 @@ export function QuestionsView({
       <QuestionsTable
         onDeleteQuestion={openDelete}
         onEditQuestion={openEditor}
-        setId={setId}
+        setMeta={setMeta}
         rows={rows}
         total={total}
         isPending={isPending}

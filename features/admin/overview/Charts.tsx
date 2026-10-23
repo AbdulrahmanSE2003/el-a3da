@@ -9,7 +9,7 @@ import {
 import { EmptyState } from "../components/empty-state"
 import { Panel } from "../components/overview-view"
 import { OverviewData } from "../lib/types"
-import { SET_COLORS } from "../constants"
+import { getSetColor } from "../constants"
 import { ArrowUpRightIcon } from "lucide-react"
 import { useReducedMotion } from "framer-motion"
 import { Cell, Pie, PieChart } from "recharts"
@@ -24,7 +24,7 @@ const Charts = ({ data }: { data: OverviewData }) => {
   const chartConfig: ChartConfig = Object.fromEntries(
     data.sets.map((set) => [
       set.id,
-      { label: set.title, color: SET_COLORS[set.id] },
+      { label: set.title, color: getSetColor(set.id) },
     ])
   )
 
@@ -68,7 +68,7 @@ const Charts = ({ data }: { data: OverviewData }) => {
                   animationEasing="ease-out"
                 >
                   {data.sets.map((set) => (
-                    <Cell key={set.id} fill={SET_COLORS[set.id]} />
+                    <Cell key={set.id} fill={getSetColor(set.id)} />
                   ))}
                 </Pie>
               </PieChart>
@@ -84,7 +84,7 @@ const Charts = ({ data }: { data: OverviewData }) => {
                   <div className="flex min-w-0 items-center gap-2">
                     <span
                       className="size-2.5 shrink-0 rounded-xs border border-ink/20 shadow-xs"
-                      style={{ backgroundColor: SET_COLORS[set.id] }}
+                      style={{ backgroundColor: getSetColor(set.id) }}
                     />
                     <span className="truncate font-semibold text-foreground">
                       {set.title}

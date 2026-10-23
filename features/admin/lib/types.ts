@@ -1,16 +1,18 @@
 import type { LucideIcon } from "lucide-react"
 import { CircleAlert, Info, TriangleAlert } from "lucide-react"
+import type { ContentSetId } from "@/lib/content/types"
+
+export type { ContentSetId }
 
 /* ------------------------------------------------------------------ */
 /* Content sets                                                        */
 /* ------------------------------------------------------------------ */
 
 /**
- * معرّفات مجموعات المحتوى. القيم دي ثابتة في `content_sets` وفي ملفات
- * `contents/*`، ومش بتتغيّر من الداشبورد.
+ * معرّفات مجموعات المحتوى بقت data-driven: أي ID صالح في `content_sets`
+ * بيتعرض في الداشبورد والـ API من غير تعديل في الكود. الـ metadata هنا
+ * للوصف والحقول الخاصة بالمجموعات المعروفة فقط.
  */
-export type ContentSetId =
-  "casino" | "challenges" | "sheikh" | "topics" | "zad" | "punishments"
 
 /**
  * وصْف ثابت للمجموعة (اسم، stamp، ملف المصدر، الحقول الاختيارية).
@@ -27,6 +29,11 @@ export interface ContentSetMeta {
   /** زاد القعدة بس — الفئة اختيارية (نص حر لكل كارت) */
   hasOptionalCategory: boolean
   hasBadgeLabel: boolean
+  /**
+   * قيم الفئة المسموح بها للمجموعات اللي فئتها enum فعليًا (زي القنبلة).
+   * لو undefined، الفئة نص حر.
+   */
+  categoryOptions?: readonly string[]
 }
 
 /** صف مجموعة محتوى بعد دمجه مع إحصائيات `questions`. */
@@ -77,6 +84,10 @@ export interface OverviewData {
   totalDeleted: number
   /** آخر تحديث لعنصر محتوى حي، أو null لو مفيش عناصر */
   lastContentUpdate: string | null
+  /** عدد رسائل اللاعبين المفتوحة (حقيقي من feedback) */
+  openFeedback: number
+  /** عدد ملاحظات المطوّر المسجّلة (الصفحة نفسها غير مفعّلة) */
+  notesCount: number
 }
 
 /* ------------------------------------------------------------------ */

@@ -1,4 +1,4 @@
-import { ActualBombCategory } from "./types"
+import type { ActualBombCategory } from "./types"
 
 export const minSeconds = 45
 export const maxSeconds = 85
@@ -20,3 +20,7 @@ export const bombCategories = {
 export const bombCategoryKeys = Object.keys(
   bombCategories
 ) as ActualBombCategory[]
+
+export function isBombCategory(value: string): value is ActualBombCategory {
+  return (bombCategoryKeys as readonly string[]).includes(value)
+}

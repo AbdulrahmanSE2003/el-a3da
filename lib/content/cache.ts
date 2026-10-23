@@ -2,7 +2,7 @@
  * كاش المحتوى المحلي (IndexedDB).
  *
  * ليه IndexedDB مش localStorage:
- *   - آلاف الأسئلة (~3,181) أكبر بكتير من حدود localStorage وكمان بيقفل
+ *   - آلاف الأسئلة (~3,248) أكبر بكتير من حدود localStorage وكمان بيقفل
  *     الـ main thread أثناء القراءة/الكتابة.
  *   - IndexedDB معاملات حقيقية (transactions) وإحكام ذرّي، وده بالظبط
  *     اللي محتاجينه عشان استبدال مجموعة محتوى من غير ما نكسر النسخة
@@ -16,7 +16,7 @@
  */
 
 import {
-  CONTENT_SET_IDS,
+  isContentSetId,
   parseContentQuestion,
   type ContentQuestion,
   type ContentSetId,
@@ -138,10 +138,7 @@ function parseCachedSet(value: unknown): CachedContentSet | null {
 
   const record = value as Record<string, unknown>
 
-  if (
-    typeof record.id !== "string" ||
-    !(CONTENT_SET_IDS as readonly string[]).includes(record.id)
-  ) {
+  if (typeof record.id !== "string" || !isContentSetId(record.id)) {
     return null
   }
   if (typeof record.version !== "string" || record.version === "") return null
@@ -210,6 +207,7 @@ export async function readCachedVersions(): Promise<
  */
 export async function writeCachedSet(set: CachedContentSet): Promise<boolean> {
   // دفاع إضافي: نرفض أي مجموعة فاضية أو مكرّرة قبل ما توصل للكاش.
+  if (!isContentSetId(set.id)) return false
   if (set.questions.length === 0) return false
   if (new Set(set.questions.map((q) => q.id)).size !== set.questions.length) {
     return false

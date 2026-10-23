@@ -566,7 +566,7 @@ async function main() {
     `got ${versionRequestCount}`
   )
 
-  console.log("\n10) Parser rejects duplicate ids and unknown set ids")
+  console.log("\n10) Parser validates dynamic set ids and payloads")
   check(
     "duplicate ids rejected",
     types.parseContentSetResponse({
@@ -579,11 +579,27 @@ async function main() {
     }) === null
   )
   check(
-    "unknown set id rejected",
+    "dynamic set id accepted",
     types.parseContentSetResponse({
-      id: "nope",
+      id: "bomb",
+      version: "1",
+      questions: [{ id: "a", text: "x", category: "SPORT" }],
+    }) !== null
+  )
+  check(
+    "invalid set id format rejected",
+    types.parseContentSetResponse({
+      id: "NOPE!",
       version: "1",
       questions: [{ id: "a", text: "x" }],
+    }) === null
+  )
+  check(
+    "whitespace-only question text rejected",
+    types.parseContentSetResponse({
+      id: "topics",
+      version: "1",
+      questions: [{ id: "a", text: "   " }],
     }) === null
   )
   check(
@@ -719,6 +735,28 @@ async function main() {
       cachedCasino.questions[0].id === "casino-0" &&
       cachedCasino.questions[1].id === "casino-1",
     cachedCasino.questions.map((q) => q.id).join(",")
+  )
+
+  console.log(
+    "\n15) A new DB-driven set is discovered and cached without code changes"
+  )
+  await resetDatabase()
+  resetRemote(versions, counts)
+  remoteVersions = { ...versions, bomb: "1" }
+  remoteSets.bomb = makeSet("bomb", "1", 2)
+  sync.resetContentSyncState()
+  result = await sync.syncContent({ force: true })
+  const bombResult = result.sets.find((s) => s.id === "bomb")
+  check(
+    "new set was downloaded",
+    bombResult?.status === "updated",
+    bombResult?.status
+  )
+  const cachedBomb = await cache.readCachedSet("bomb")
+  check(
+    "new set was written to the local cache",
+    cachedBomb?.version === "1" && cachedBomb.questions.length === 2,
+    `${cachedBomb?.version}:${cachedBomb?.questions.length}`
   )
 
   console.log(

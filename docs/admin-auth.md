@@ -3,25 +3,24 @@
 **Status: implemented for the single internal administrator.** The dashboard is
 authenticated and supports creating questions, editing question fields,
 soft-deleting questions, and managing player feedback (read + status changes).
-Publishing and developer notes are still disabled. There is no `admin_users`
-table and no player accounts. See `docs/admin-questions.md` for the question
+A manual publish workflow and developer notes are still disabled. There is no
+`admin_users` table and no player accounts. See `docs/admin-questions.md` for the question
 mutation rules and `docs/feedback.md` for the feedback pipeline.
 
 ## Routes
 
-| Route | Purpose |
-| --- | --- |
-| `GET /login` | Login page. Redirects to `/admin` when a valid session already exists. |
-| `POST /api/admin/login` | Verifies credentials on the server and sets the signed session cookie. Accepts JSON or form data. |
+| Route                    | Purpose                                                                                               |
+| ------------------------ | ----------------------------------------------------------------------------------------------------- |
+| `GET /login`             | Login page. Redirects to `/admin` when a valid session already exists.                                |
+| `POST /api/admin/login`  | Verifies credentials on the server and sets the signed session cookie. Accepts JSON or form data.     |
 | `POST /api/admin/logout` | Clears the session cookie and redirects to `/login` for form posts (JSON response for fetch clients). |
-| `/admin/*` | Protected dashboard subtree. Unauthenticated page requests are redirected to `/login?next=...`. |
+| `/admin/*`               | Protected dashboard subtree. Unauthenticated page requests are redirected to `/login?next=...`.       |
 
 The login page and logout endpoint are intentionally public. Any other
 `/api/admin/*` request is rejected by `proxy.ts` with `401` when there is no valid
-session. There are currently no privileged `/api/admin/*` handlers; any future
-handler must also call `requireAdmin()` from
-`features/admin/server/auth.ts` and return `401` when it throws
-`AdminAuthenticationError`.
+session. Privileged handlers — for example the feedback attachment proxy — must
+also call `requireAdmin()` from `features/admin/server/auth.ts` and return `401`
+when it throws `AdminAuthenticationError`.
 
 Question mutations are Server Actions invoked from `/admin/questions`, not public
 API routes. They are still reachable by direct POST, so each action calls
@@ -32,12 +31,12 @@ API routes. They are still reachable by direct POST, so each action calls
 Configure these in `.env.local` (gitignored). `.env.example` contains safe
 placeholders only.
 
-| Variable | Purpose |
-| --- | --- |
-| `DATABASE_URL` | Neon **dev** pooled connection string. Server-only. Never use the production branch locally. |
-| `ADMIN_EMAIL` | The single administrator email. Compared case-insensitively after trimming. |
-| `ADMIN_PASSWORD_HASH` | scrypt hash only. Never store the plaintext password in a tracked file. |
-| `AUTH_SECRET` | At least 32 random bytes, used to sign the session cookie. Rotating it invalidates all sessions. |
+| Variable              | Purpose                                                                                          |
+| --------------------- | ------------------------------------------------------------------------------------------------ |
+| `DATABASE_URL`        | Neon **dev** pooled connection string. Server-only. Never use the production branch locally.     |
+| `ADMIN_EMAIL`         | The single administrator email. Compared case-insensitively after trimming.                      |
+| `ADMIN_PASSWORD_HASH` | scrypt hash only. Never store the plaintext password in a tracked file.                          |
+| `AUTH_SECRET`         | At least 32 random bytes, used to sign the session cookie. Rotating it invalidates all sessions. |
 
 Generate the values:
 
@@ -148,8 +147,8 @@ full feedback design.
 - Use HTTPS in production so the `Secure` cookie is sent.
 - There is no fallback password, default credential, or "dev bypass" flag. Missing
   configuration fails closed.
-- Question writes are limited to updating the allowed fields and soft-deleting a
-  row. Do not add question creation, hard deletes, restore UI, publish workflows,
-  or full CRUD without validation and a reviewed UI.
+- Question writes are limited to creation, updating the allowed fields, and
+  soft-deleting a row. Do not add hard deletes, restore UI, manual publish
+  workflows, or full CRUD without validation and a reviewed UI.
 - Never apply migrations or write data to the `production` Neon branch as part of
   normal development.

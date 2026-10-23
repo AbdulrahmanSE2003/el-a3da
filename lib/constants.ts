@@ -54,6 +54,14 @@ export const activities: ActivityCardItem[] = [
 
 export const updates = [
   {
+    version: "2.1.0",
+    date: "23 أكتوبر 2026",
+    label: "feat",
+    title: "القنبلة ومحتوى Neon الديناميكي",
+    description:
+      "إطلاق لعبة القنبلة بثلاثة مؤثرات صوتية وتحكم في الكتم، وربط محتواها بـ Neon مع fallback أوفلاين. مجموعات المحتوى بقت تتكتشف من قاعدة البيانات، والداشبورد بيعرض أرقام الرسائل والملاحظات الحقيقية.",
+  },
+  {
     version: "2.0.0",
     date: "2026",
     label: "feat",

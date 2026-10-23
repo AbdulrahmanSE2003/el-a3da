@@ -1,7 +1,8 @@
 #!/usr/bin/env tsx
 /**
  * test-bomb-sounds — pure tests for the Bomb sound event mapping,
- * duplicate suppression, mute behavior, and playback failure handling.
+ * duplicate suppression, mute behavior, playback failure handling, and the
+ * Bomb content-set wiring (bundled fallback + injected snapshot selection).
  *
  * The project has no test runner, so this follows the existing `tsx` script
  * convention. No browser, speakers, network, or real audio playback is needed.
@@ -22,6 +23,12 @@ import {
   createBombAudioPlayer,
   type BombAudioElement,
 } from "@/features/games/bomb/audio/bomb-audio-player"
+import { bombQuestions } from "@/contents/bomb"
+import { setCategory } from "@/games/bomb/game"
+import { bombCategoryKeys, isBombCategory } from "@/games/bomb/constants"
+import { toBombQuestions } from "@/games/bomb/utils"
+import { getBundledSnapshot } from "@/lib/content/provider"
+import type { ContentQuestion } from "@/lib/content/types"
 
 let passed = 0
 let failed = 0
@@ -262,6 +269,60 @@ async function main() {
     const { player: missingPlayer } = makePlayer({ failFactory: true })
     missingPlayer.play("round-start")
     check("missing asset does not throw", true)
+  }
+
+  console.log("\n11) Bomb content set and snapshot selection")
+  {
+    const bundled = getBundledSnapshot("bomb")
+    equal(
+      "bundled Bomb snapshot uses all local questions",
+      bundled.questions.length,
+      bombQuestions.length
+    )
+    check("bundled Bomb snapshot is non-empty", bundled.questions.length > 0)
+    check(
+      "bundled Bomb IDs are unique",
+      new Set(bundled.questions.map((question) => question.id)).size ===
+        bundled.questions.length
+    )
+    check(
+      "all bundled Bomb categories are playable",
+      bundled.questions.every(
+        (question) => question.category && isBombCategory(question.category)
+      )
+    )
+
+    const reversed = [...bundled.questions].reverse()
+    const sport = setCategory("SPORT", reversed)
+    check(
+      "SPORT selection uses the injected snapshot",
+      sport?.category === "SPORT"
+    )
+    check(
+      "SPORT selection returns a question from the injected snapshot",
+      Boolean(
+        sport && reversed.some((question) => question.id === sport.question.id)
+      )
+    )
+
+    const random = setCategory("RANDOM", bundled.questions)
+    check(
+      "RANDOM selection lands in a known category with questions",
+      Boolean(
+        random &&
+        bombCategoryKeys.includes(random.category) &&
+        bundled.questions.some(
+          (question) => question.category === random.category
+        )
+      )
+    )
+
+    equal("empty injected snapshot is safe", setCategory("SPORT", []), null)
+
+    const invalid: ContentQuestion[] = [
+      { id: "invalid-1", text: "غير صالح", category: "NOT_A_CATEGORY" },
+    ]
+    equal("unknown categories are filtered", toBombQuestions(invalid).length, 0)
   }
 
   console.log(

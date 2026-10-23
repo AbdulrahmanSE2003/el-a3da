@@ -12,7 +12,8 @@ const NO_STORE = { "Cache-Control": "no-store, no-cache, must-revalidate" }
  * `GET /api/content/sets/[id]`
  *
  * بترجّع محتوى مجموعة واحدة مرتّب بـ `position` مع نسختها. المجموعة
- * بتتطلب بالـ id بتاعها، وأي id غير معروف بيترفض قبل ما نوصل للداتابيز.
+ * بتتطلب بالـ id بتاعها؛ أي id غير صالح الشكل بيترفض قبل الداتابيز،
+ * وأي id صالح لكن غير مسجّل بيرجع 404.
  */
 export async function GET(
   _request: Request,

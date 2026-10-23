@@ -1,6 +1,5 @@
 import type { Metadata } from "next"
 import { QuestionsView } from "@/features/admin/components/questions-view"
-import { isContentSetId } from "@/features/admin/lib/content-sets"
 import {
   getContentSets,
   getQuestionsPage,
@@ -22,22 +21,31 @@ export default async function AdminQuestionsPage({
 }: AdminQuestionsPageProps) {
   const params = await searchParams
   const rawSet = first(params.set)
-  const setId = isContentSetId(rawSet) ? rawSet : "casino"
   const query = (first(params.q) ?? "").trim().slice(0, 100)
   const category =
     (first(params.category) ?? "all").trim().slice(0, 100) || "all"
   const requestedPage = Number.parseInt(first(params.page) ?? "1", 10)
 
-  const [sets, data] = await Promise.all([
-    getContentSets(),
-    getQuestionsPage({
-      setId,
-      query,
-      category,
-      page: Number.isFinite(requestedPage) ? requestedPage : 1,
-      pageSize: 20,
-    }),
-  ])
+  // القائمة بقت من Neon، فبنختار أول مجموعة متاحة بدل افتراض مجموعة ثابتة.
+  // المجموعات المعروفة الناقصة بترجع كصفوف صفرية من getContentSets.
+  const sets = await getContentSets()
+  const setId = sets.find((set) => set.id === rawSet)?.id ?? sets[0]?.id
+
+  if (!setId) {
+    return (
+      <div className="border-2 border-dashed border-ink/20 bg-paper-warm/30 p-6 text-sm text-ink-soft">
+        مفيش مجموعات محتوى مسجّلة في Neon. أضف صفًا في content_sets الأول.
+      </div>
+    )
+  }
+
+  const data = await getQuestionsPage({
+    setId,
+    query,
+    category,
+    page: Number.isFinite(requestedPage) ? requestedPage : 1,
+    pageSize: 20,
+  })
 
   // مفيش Suspense هنا: البيانات بتتقرأ فوق بالفعل، فحدود Suspense كانت
   // هتكون شكلية ومستحيل يعرض الـ fallback. حالة التحميل الحقيقية بتتغطّى

@@ -3,7 +3,7 @@ import "server-only"
 import { connection } from "next/server"
 import { requireAdmin } from "./auth"
 import { getSql } from "./db"
-import { CONTENT_SETS, isContentSetId } from "../lib/content-sets"
+import { CONTENT_SETS, getSetMeta, isContentSetId } from "../lib/content-sets"
 import type {
   CategoryCount,
   ContentSetId,
@@ -45,9 +45,6 @@ const asText = (value: unknown): string => (value == null ? "" : String(value))
 const asNullableText = (value: unknown): string | null =>
   value == null ? null : String(value)
 
-const asSetId = (value: string): ContentSetId =>
-  isContentSetId(value) ? value : "casino"
-
 /* ------------------------------------------------------------------ */
 /* Content sets                                                        */
 /* ------------------------------------------------------------------ */
@@ -73,25 +70,50 @@ export async function getContentSets(): Promise<ContentSetRow[]> {
     group by cs.id, cs.name, cs.version
   `)
 
-  const byId = new Map(rows.map((row) => [row.id, row]))
+  const dbRows = rows
+    .filter((row) => isContentSetId(row.id))
+    .map<ContentSetRow>((row) => {
+      const meta = getSetMeta(row.id, row.name)
+      return {
+        id: row.id,
+        title: meta.title,
+        stamp: meta.stamp,
+        sourceFile: meta.sourceFile,
+        isUsed: meta.isUsed,
+        version: String(row.version),
+        liveCount: asNumber(row.live_count),
+        deletedCount: asNumber(row.deleted_count),
+      }
+    })
 
-  return CONTENT_SETS.map((meta) => {
-    const row = byId.get(meta.id)
-    return {
+  // نعرض المجموعات المعروفة الناقصة كصفوف صفرية بدل ما تختفي من الداشبورد.
+  const present = new Set(dbRows.map((row) => row.id))
+  const missingKnown = CONTENT_SETS.filter((meta) => !present.has(meta.id)).map(
+    (meta): ContentSetRow => ({
       id: meta.id,
-      title: row?.name?.trim() || meta.title,
+      title: meta.title,
       stamp: meta.stamp,
       sourceFile: meta.sourceFile,
       isUsed: meta.isUsed,
-      version: row ? String(row.version) : "—",
-      liveCount: row ? asNumber(row.live_count) : 0,
-      deletedCount: row ? asNumber(row.deleted_count) : 0,
-    }
+      version: "—",
+      liveCount: 0,
+      deletedCount: 0,
+    })
+  )
+
+  const knownOrder = new Map(
+    CONTENT_SETS.map((meta, index) => [meta.id, index])
+  )
+  return [...dbRows, ...missingKnown].sort((a, b) => {
+    const aOrder = knownOrder.get(a.id) ?? Number.MAX_SAFE_INTEGER
+    const bOrder = knownOrder.get(b.id) ?? Number.MAX_SAFE_INTEGER
+    if (aOrder !== bOrder) return aOrder - bOrder
+    return a.id.localeCompare(b.id)
   })
 }
 
 export async function getOverviewData(): Promise<OverviewData> {
-  const [sets, lastUpdateRows] = await Promise.all([
+  const [sets, lastUpdateRows, feedbackRows, notesRows] = await Promise.all([
     getContentSets(),
     query<{ last_updated: string | null }>(`
       select to_char(
@@ -101,6 +123,12 @@ export async function getOverviewData(): Promise<OverviewData> {
       from questions
       where deleted_at is null
     `),
+    query<{ open: string | number }>(
+      `select count(*)::int as open from feedback where status = 'open'`
+    ),
+    query<{ total: string | number }>(
+      `select count(*)::int as total from notes`
+    ),
   ])
 
   const totalLive = sets.reduce((sum, set) => sum + set.liveCount, 0)
@@ -111,6 +139,8 @@ export async function getOverviewData(): Promise<OverviewData> {
     totalLive,
     totalDeleted,
     lastContentUpdate: lastUpdateRows[0]?.last_updated ?? null,
+    openFeedback: asNumber(feedbackRows[0]?.open),
+    notesCount: asNumber(notesRows[0]?.total),
   }
 }
 
@@ -150,7 +180,7 @@ interface QuestionDbRow {
 
 const mapQuestion = (row: QuestionDbRow): QuestionRow => ({
   id: asText(row.id),
-  setId: asSetId(row.set_id),
+  setId: asText(row.set_id),
   externalId: asText(row.external_id),
   position: asNumber(row.position),
   text: asText(row.text),
@@ -331,15 +361,19 @@ export async function getHealthReport(): Promise<HealthReport> {
     `),
   ])
 
-  const healthById = new Map(healthRows.map((row) => [row.id, row]))
+  const healthById = new Map(
+    healthRows
+      .filter((row) => isContentSetId(row.id))
+      .map((row) => [row.id, row])
+  )
   const duplicatesById = new Map(duplicateRows.map((row) => [row.set_id, row]))
 
-  const sets: HealthSetRow[] = CONTENT_SETS.map((meta) => {
-    const row = healthById.get(meta.id)
-    const duplicates = duplicatesById.get(meta.id)
-    const live = row ? asNumber(row.live) : 0
+  const dbSets: HealthSetRow[] = [...healthById.values()].map((row) => {
+    const meta = getSetMeta(row.id, row.name)
+    const duplicates = duplicatesById.get(row.id)
+    const live = asNumber(row.live)
     const maxPosition =
-      row?.max_position == null ? null : asNumber(row.max_position)
+      row.max_position == null ? null : asNumber(row.max_position)
     // لو كل العناصر الحية بترتيب 0..live-1 يبقى مفيش فراغات.
     const positionGaps =
       live === 0 || maxPosition === null
@@ -348,22 +382,54 @@ export async function getHealthReport(): Promise<HealthReport> {
 
     return {
       id: meta.id,
-      title: row?.name?.trim() || meta.title,
+      title: meta.title,
       stamp: meta.stamp,
       sourceFile: meta.sourceFile,
       isUsed: meta.isUsed,
-      version: row ? String(row.version) : "—",
+      version: String(row.version),
       liveCount: live,
-      deletedCount: row ? asNumber(row.deleted) : 0,
-      missingCategory: row ? asNumber(row.missing_category) : 0,
-      missingCorrectAnswer: row ? asNumber(row.missing_correct_answer) : 0,
-      missingBadgeLabel: row ? asNumber(row.missing_badge_label) : 0,
-      emptyText: row ? asNumber(row.empty_text) : 0,
-      duplicatePositions: row ? asNumber(row.duplicate_positions) : 0,
+      deletedCount: asNumber(row.deleted),
+      missingCategory: asNumber(row.missing_category),
+      missingCorrectAnswer: asNumber(row.missing_correct_answer),
+      missingBadgeLabel: asNumber(row.missing_badge_label),
+      emptyText: asNumber(row.empty_text),
+      duplicatePositions: asNumber(row.duplicate_positions),
       positionGaps,
       duplicateTextGroups: duplicates ? asNumber(duplicates.groups) : 0,
       duplicateTextRecords: duplicates ? asNumber(duplicates.records) : 0,
     }
+  })
+
+  const present = new Set(dbSets.map((set) => set.id))
+  const missingKnown: HealthSetRow[] = CONTENT_SETS.filter(
+    (meta) => !present.has(meta.id)
+  ).map((meta) => ({
+    id: meta.id,
+    title: meta.title,
+    stamp: meta.stamp,
+    sourceFile: meta.sourceFile,
+    isUsed: meta.isUsed,
+    version: "—",
+    liveCount: 0,
+    deletedCount: 0,
+    missingCategory: 0,
+    missingCorrectAnswer: 0,
+    missingBadgeLabel: 0,
+    emptyText: 0,
+    duplicatePositions: 0,
+    positionGaps: 0,
+    duplicateTextGroups: 0,
+    duplicateTextRecords: 0,
+  }))
+
+  const knownOrder = new Map(
+    CONTENT_SETS.map((meta, index) => [meta.id, index])
+  )
+  const sets: HealthSetRow[] = [...dbSets, ...missingKnown].sort((a, b) => {
+    const aOrder = knownOrder.get(a.id) ?? Number.MAX_SAFE_INTEGER
+    const bOrder = knownOrder.get(b.id) ?? Number.MAX_SAFE_INTEGER
+    if (aOrder !== bOrder) return aOrder - bOrder
+    return a.id.localeCompare(b.id)
   })
 
   const findings: HealthFinding[] = []
@@ -371,7 +437,22 @@ export async function getHealthReport(): Promise<HealthReport> {
     findings.push({ ...finding, id: `finding-${findings.length + 1}` })
   }
 
+  for (const meta of CONTENT_SETS) {
+    if (!healthById.has(meta.id)) {
+      addFinding({
+        severity: "critical",
+        setId: meta.id,
+        title: `${meta.title}: مجموعة غير موجودة في Neon`,
+        description:
+          "المجموعة معرّفة في التطبيق لكن مفيش صف مقابل ليها في content_sets. أضف الصف أو راجع سبب حذفه.",
+        count: 1,
+      })
+    }
+  }
+
   for (const set of sets) {
+    const meta = getSetMeta(set.id, set.title)
+
     if (set.emptyText > 0) {
       addFinding({
         severity: "critical",
@@ -382,27 +463,27 @@ export async function getHealthReport(): Promise<HealthReport> {
       })
     }
 
-    if (set.id === "casino" && set.missingCorrectAnswer > 0) {
+    if (meta.hasCorrectAnswer && set.missingCorrectAnswer > 0) {
       addFinding({
         severity: "critical",
         setId: set.id,
         title: `${set.title}: إجابات ناقصة`,
-        description: `${set.missingCorrectAnswer} سؤال كازينو من غير correct_answer.`,
+        description: `${set.missingCorrectAnswer} عنصر من غير correct_answer.`,
         count: set.missingCorrectAnswer,
       })
     }
 
-    if (set.id === "zad" && set.missingBadgeLabel > 0) {
+    if (meta.hasBadgeLabel && set.missingBadgeLabel > 0) {
       addFinding({
         severity: "warning",
         setId: set.id,
         title: `${set.title}: شارات ناقصة`,
-        description: `${set.missingBadgeLabel} كارت زاد من غير badge_label.`,
+        description: `${set.missingBadgeLabel} عنصر من غير badge_label.`,
         count: set.missingBadgeLabel,
       })
     }
 
-    if (set.id !== "zad" && set.missingCategory > 0) {
+    if (!meta.hasOptionalCategory && set.missingCategory > 0) {
       addFinding({
         severity: "warning",
         setId: set.id,

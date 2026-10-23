@@ -65,6 +65,7 @@ const normalizeNullable = (value: string): string | null => {
  * `setMeta` بيحدد الحقول المسموحة لكل مجموعة:
  * - casino: correct_answer مطلوب.
  * - zad: category وbadge_label اختياريين.
+ * - bomb: category مطلوب ومحصور في فئات محرك اللعبة.
  * - باقي المجموعات: category مطلوب.
  */
 export function validateQuestionDraft(
@@ -83,6 +84,12 @@ export function validateQuestionDraft(
   const category = normalizeNullable(draft.category)
   if (category && category.length > QUESTION_CATEGORY_MAX_LENGTH) {
     fieldErrors.category = `الفئة أطول من ${QUESTION_CATEGORY_MAX_LENGTH} حرف.`
+  } else if (
+    category &&
+    setMeta.categoryOptions &&
+    !setMeta.categoryOptions.includes(category)
+  ) {
+    fieldErrors.category = `الفئة لازم تكون واحدة من: ${setMeta.categoryOptions.join(", ")}`
   } else if (!category && !setMeta.hasOptionalCategory) {
     fieldErrors.category = "الفئة مطلوبة لهذه المجموعة."
   }
@@ -96,7 +103,7 @@ export function validateQuestionDraft(
   ) {
     fieldErrors.correctAnswer = `الإجابة أطول من ${QUESTION_CORRECT_ANSWER_MAX_LENGTH} حرف.`
   } else if (setMeta.hasCorrectAnswer && !correctAnswer) {
-    fieldErrors.correctAnswer = "الإجابة الصحيحة مطلوبة لأسئلة الكازينو."
+    fieldErrors.correctAnswer = "الإجابة الصحيحة مطلوبة لهذه المجموعة."
   }
 
   const badgeLabel = setMeta.hasBadgeLabel

@@ -4,17 +4,18 @@ import GenericGuide from "@/components/ui/GenericGuide"
 import { Separator } from "@/components/ui/separator"
 import { bombCategories, bombCategoryKeys } from "@/games/bomb/constants"
 import type { BombCategoryKey } from "@/games/bomb/types"
-import { Sparkles } from "lucide-react"
 import { BombGameGuide } from "./BombGameGuide"
 
 interface ChooseCategoryProps {
   onSelectCategory: (category: BombCategoryKey) => void
   selectedCategory?: BombCategoryKey
+  ready: boolean
 }
 
 const ChooseCategory = ({
   onSelectCategory,
   selectedCategory,
+  ready,
 }: ChooseCategoryProps) => {
   const isRandomSelected = selectedCategory === "RANDOM"
 
@@ -45,6 +46,12 @@ const ChooseCategory = ({
         <p className="mt-2 text-sm leading-7 text-ink-soft">
           اختار التصنيف، جاوب بسرعة وسلّم الموبايل قبل ما الوقت يخلص!
         </p>
+
+        {!ready && (
+          <p className="mt-1 text-[11px] font-bold text-copper" role="status">
+            جاري تحميل أحدث محتوى...
+          </p>
+        )}
       </div>
 
       <Separator />
@@ -58,7 +65,8 @@ const ChooseCategory = ({
           type="button"
           onClick={() => onSelectCategory("RANDOM")}
           aria-pressed={isRandomSelected}
-          className={`group relative flex w-full items-center justify-between gap-3 rounded-xl border-2 p-4 text-right transition-all duration-150 active:scale-[0.99] ${
+          disabled={!ready}
+          className={`group relative flex w-full items-center justify-between gap-3 rounded-xl border-2 p-4 text-right transition-all duration-150 active:scale-[0.99] disabled:cursor-wait disabled:opacity-60 ${
             isRandomSelected
               ? "border-primary bg-primary/10 shadow-md shadow-primary"
               : "border-primary/60 bg-primary/10 shadow-md hover:border-primary hover:shadow-primary"
@@ -93,7 +101,8 @@ const ChooseCategory = ({
                 type="button"
                 onClick={() => onSelectCategory(key)}
                 aria-pressed={isSelected}
-                className={`group flex flex-col items-center justify-center gap-2 rounded-md border-2 p-4 text-center transition-all duration-150 last:col-span-2 active:scale-95 ${
+                disabled={!ready}
+                className={`group flex flex-col items-center justify-center gap-2 rounded-md border-2 p-4 text-center transition-all duration-150 last:col-span-2 active:scale-95 disabled:cursor-wait disabled:opacity-60 ${
                   isSelected
                     ? "border-copper bg-copper/10 shadow-[3px_3px_0_var(--color-copper)]"
                     : "border-ink/15 bg-paper shadow-[3px_3px_0_var(--color-ink)] hover:border-copper/60 hover:shadow-[4px_4px_0_var(--color-copper)]"

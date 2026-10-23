@@ -1,6 +1,6 @@
 {
   "name": "el-2a3da",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "type": "module",
   "private": true,
   "scripts": {
@@ -10,13 +10,16 @@
     "lint": "eslint",
     "format": "prettier --write \"**/*.{ts,tsx}\"",
     "typecheck": "tsc --noEmit",
+    "test": "pnpm test:bomb && pnpm test:casino && pnpm test:registry && pnpm content:test && pnpm content:verify:test",
     "content:ids": "tsx scripts/content-ids.ts",
     "content:verify": "node --env-file=.env.local --import tsx scripts/verify-content-sync.ts",
     "content:verify:test": "node --import tsx scripts/test-content-verify.ts",
     "content:test": "node --import tsx scripts/test-content-sync.ts",
     "test:casino": "node --import tsx scripts/test-casino-game.ts",
     "test:bomb": "node --import tsx scripts/test-bomb-sounds.ts",
-    "admin:password": "tsx scripts/admin-password.ts"
+    "admin:password": "tsx scripts/admin-password.ts",
+    "content:bomb": "node --env-file=.env.local --import tsx scripts/reconcile-bomb-content.ts",
+    "test:registry": "node --import tsx scripts/test-content-registry.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1154.0",
@@ -54,5 +57,8 @@
     "tailwindcss": "^4",
     "tsx": "^4.23.13",
     "typescript": "^5"
+  },
+  "engines": {
+    "node": ">=20.9.0"
   }
 }

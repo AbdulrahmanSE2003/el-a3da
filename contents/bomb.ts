@@ -1,4 +1,4 @@
-import { BombQuestion } from "@/games/bomb/types"
+import type { BombQuestion } from "@/games/bomb/types"
 
 export const bombQuestions: BombQuestion[] = [
   {
