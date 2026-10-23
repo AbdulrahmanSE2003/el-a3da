@@ -26,7 +26,7 @@ export default function FeedbackPage() {
             رأيك يفرق
           </p>
 
-          <h1 className="mt-1 text-4xl font-black tracking-tight text-ink">
+          <h1 className="mt-1 text-3xl font-black tracking-tight text-ink">
             قولنا إيه في دماغك 💡
           </h1>
 

@@ -32,6 +32,13 @@ export function GameCard({ game }: GameCardProps) {
         </div>
       )}
 
+      {game.isNew && (
+        <div className="absolute top-0 right-0 z-20 flex items-center gap-1 rounded-bl-lg bg-paper px-3 py-1 text-xs font-black text-ink shadow-sm">
+          <Sparkles className="size-3 fill-current" />
+          <span>لعبة جديدة</span>
+        </div>
+      )}
+
       {/* Large Background Icon */}
       <div className="pointer-events-none absolute -top-5 -left-5 opacity-25 transition-transform duration-300 group-hover:scale-110">
         <Icon className={`size-40 ${t.iconBg}`} strokeWidth={1} />
