@@ -16,12 +16,12 @@ export interface FeedbackStatusActionResult {
 
 const AUTH_ERROR: FeedbackStatusActionResult = {
   ok: false,
-  error: "انتهت الجلسة. سجّل الدخول من جديد.",
+  error: "انتهت الجلسة، وسجّل دخولك من جديد.",
 }
 
 const GENERIC_ERROR: FeedbackStatusActionResult = {
   ok: false,
-  error: "تعذر تحديث الحالة. حاول تاني.",
+  error: "مقدرناش نحدّث الحالة. جرّب تاني.",
 }
 
 function parseInput(

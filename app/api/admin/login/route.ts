@@ -19,7 +19,7 @@ export const runtime = "nodejs"
 
 const INVALID_CREDENTIALS = "البريد الإلكتروني أو كلمة المرور غير صحيحة."
 const TOO_MANY_ATTEMPTS = "محاولات كتير. استنى شوية وبعدين جرّب تاني."
-const UNAVAILABLE = "تسجيل الدخول غير متاح حاليًا. راجع إعداد الخادم."
+const UNAVAILABLE = "تسجيل الدخول مش متاح دلوقتي. جرّب تاني بعد شوية."
 const MAX_BODY_BYTES = 8 * 1024
 
 type LoginPayload = {

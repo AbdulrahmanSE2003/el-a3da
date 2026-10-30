@@ -54,7 +54,7 @@ export function FeedbackView({
       <PageHeader
         stamp="FEEDBACK"
         title="رسائل اللاعبين"
-        description="كل الملاحظات اللي بيبعتها اللاعبون من صفحة الملاحظات، مع الصور المرفقة. تقدر تغيّر حالة الرسالة: مفتوحة، مقروءة، أو تم الحل."
+        description="كل الملاحظات اللي بيبعتها اللاعبين، ومعاها الصور المرفقة. تقدر تحدّد حالة كل رسالة: مفتوحة، مقروءة، أو تم الحل."
         action={
           <Badge className="border-copper/30 bg-copper/10 font-mono text-[10px] text-copper">
             {formatNumber(counts.open)} مفتوحة

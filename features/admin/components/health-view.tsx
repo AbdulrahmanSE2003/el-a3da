@@ -11,7 +11,7 @@ export function HealthView({ report }: { report: HealthReport }) {
       <PageHeader
         stamp="HEALTH CHECK"
         title="صحة المحتوى"
-        description="تقرير تلقائي ومباشر لقاعدة البيانات يحلل جودة المجموعات والأسئلة لضمان الخلو من الأخطاء."
+        description="مراجعة سريعة لجودة الأسئلة والمجموعات، عشان تمسك أي مشكلة قبل ما توصل للاعبين."
         action={
           <Tag className="border-ink/20 bg-ink/5 font-mono text-xs font-bold text-ink-soft">
             وضع القراءة فقط
@@ -30,9 +30,9 @@ export function HealthView({ report }: { report: HealthReport }) {
 
       {/* Technical Footnote */}
       <p className="rounded-xs border-2 border-dashed border-ink/20 bg-paper-warm/30 p-3 text-xs leading-relaxed text-ink-soft">
-        <strong className="font-bold text-foreground">تنويه:</strong> قد تظهر
-        بعض النصوص المكررة نتيجة وجودها في المصدر الأصلي للبيانات. يتم تسجيلها
-        للعلم فقط دون إجراء أي حذف أو تعديل تلقائي.
+        <strong className="font-bold text-foreground">تنويه:</strong> ممكن تلاقي
+        نصوص مكررة لأنها موجودة كده في المصدر الأصلي. بنسجّلها للعلم بس، ومفيش
+        حذف أو تعديل تلقائي.
       </p>
     </div>
   )

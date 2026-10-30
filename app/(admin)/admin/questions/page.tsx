@@ -34,7 +34,7 @@ export default async function AdminQuestionsPage({
   if (!setId) {
     return (
       <div className="border-2 border-dashed border-ink/20 bg-paper-warm/30 p-6 text-sm text-ink-soft">
-        مفيش مجموعات محتوى مسجّلة في Neon. أضف صفًا في content_sets الأول.
+        مفيش مجموعات محتوى لسه. ضيف مجموعة الأول عشان تقدر تدير أسئلتها.
       </div>
     )
   }

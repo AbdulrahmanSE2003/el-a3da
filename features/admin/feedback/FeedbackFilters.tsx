@@ -46,7 +46,7 @@ export function FeedbackFilters({
         <Input
           value={search}
           onChange={(event) => setSearch(event.target.value)}
-          placeholder="ابحث في نص الرسالة، التواصل، أو  ID السؤال ..."
+          placeholder="ابحث في الرسالة أو التواصل أو معرف السؤال..."
           aria-label="بحث في رسائل اللاعبين"
           className="ps-9 pe-9"
         />

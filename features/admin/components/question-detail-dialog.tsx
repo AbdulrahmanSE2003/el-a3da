@@ -50,32 +50,32 @@ export function QuestionDetailDialog({
       subtitle={`${setMeta.stamp} · ${setMeta.sourceFile}`}
     >
       <div className="flex flex-col">
-        <Row label="المعرّف">
+        <Row label="معرف السؤال">
           <span className="font-mono text-xs" dir="ltr">
             {question.externalId}
           </span>
         </Row>
 
-        <Row label="UUID">
+        <Row label="المعرف الداخلي">
           <span className="font-mono text-[11px] text-ink-soft" dir="ltr">
             {question.id}
           </span>
         </Row>
 
-        <Row label="Position">
+        <Row label="الترتيب">
           <span className="font-mono text-xs" dir="ltr">
             {question.position}
           </span>
           <span className="ms-2 text-[10px] text-ink-soft/70">
-            ترتيب من 0 — المرجع في العرض
+            الترتيب بيبدأ من 0
           </span>
         </Row>
 
         <Row label="الفئة">
           {question.category ? (
-            <CategoryBadge category={question.category} />
+            <CategoryBadge category={question.category} setId={setMeta.id} />
           ) : (
-            <span className="text-xs text-ink-soft/70">— غير محددة —</span>
+            <span className="text-xs text-ink-soft/70">— بدون فئة —</span>
           )}
         </Row>
 
@@ -85,7 +85,7 @@ export function QuestionDetailDialog({
               <span>{question.correctAnswer}</span>
             ) : (
               <span className="text-xs font-bold text-danger-brand">
-                ناقصة — محتاجة مراجعة
+                ناقصة — محتاجة مراجعة منك
               </span>
             )}
           </Row>
@@ -94,7 +94,7 @@ export function QuestionDetailDialog({
         {setMeta.hasBadgeLabel && (
           <Row label="الشارة">
             {question.badgeLabel ?? (
-              <span className="text-xs text-ink-soft/70">— فاضية —</span>
+              <span className="text-xs text-ink-soft/70">بدون شارة</span>
             )}
           </Row>
         )}
@@ -102,10 +102,10 @@ export function QuestionDetailDialog({
         <Row label="الحالة">
           {question.deletedAt ? (
             <span className="text-xs font-bold text-danger-brand">
-              محذوف soft delete · {formatDateTime(question.deletedAt)}
+              محذوف — محفوظ في الأرشيف · {formatDateTime(question.deletedAt)}
             </span>
           ) : (
-            <span className="text-xs font-bold text-copper">حي</span>
+            <span className="text-xs font-bold text-copper">نشط</span>
           )}
         </Row>
 
@@ -116,7 +116,7 @@ export function QuestionDetailDialog({
           <p className="mt-2 text-base leading-relaxed font-bold text-ink">
             {question.text || (
               <span className="text-danger-brand">
-                النص فاضي — العنصر مش جاهز للنشر
+                النص فاضي — السؤال مش جاهز للنشر بعد
               </span>
             )}
           </p>

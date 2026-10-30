@@ -22,7 +22,7 @@ const StateAndShortcuts = ({ data }: { data: OverviewData }) => {
           <div className="flex items-center justify-between gap-3 px-5 py-3">
             <dt className="flex items-center gap-2 text-xs font-bold text-foreground">
               <DatabaseIcon className="size-4 text-copper" />
-              الاتصال بقاعدة البيانات (Neon)
+              الاتصال بقاعدة البيانات
             </dt>
             <dd className="inline-flex items-center gap-1.5 font-mono text-[11px] font-bold text-copper">
               <span className="size-1.5 animate-pulse rounded-full bg-copper" />
@@ -33,7 +33,7 @@ const StateAndShortcuts = ({ data }: { data: OverviewData }) => {
           <div className="flex items-center justify-between gap-3 px-5 py-3">
             <dt className="flex items-center gap-2 text-xs font-bold text-foreground">
               <LockIcon className="size-4 text-copper" />
-              مصادقة المسؤولين (Auth)
+              تسجيل دخول المسؤولين
             </dt>
             <dd className="font-mono text-[11px] font-bold text-copper">
               مفعّلة
@@ -70,9 +70,9 @@ const StateAndShortcuts = ({ data }: { data: OverviewData }) => {
               صلاحيات التعديل
             </dt>
             <dd className="mt-1 text-xs leading-relaxed text-ink-soft">
-              إضافة الأسئلة وتعديلها وحذفها soft delete متاح من قسم الأسئلة على
-              بيانات Neon، وإدارة حالة رسائل اللاعبين متاحة من قسم الرسائل.
-              ملاحظات المطوّر لسه غير مفعّلة.
+              إضافة الأسئلة وتعديلها وحذفها متاح من قسم الأسئلة، وإدارة حالة
+              رسائل اللاعبين متاحة من قسم الرسائل. ملاحظات المطوّر لسه غير
+              مفعّلة.
             </dd>
           </div>
         </dl>
@@ -80,7 +80,7 @@ const StateAndShortcuts = ({ data }: { data: OverviewData }) => {
 
       {/* Shortcuts & Info Section */}
       <div className="flex flex-col gap-4">
-        <Panel title="اختصارات السريعة" stamp="SHORTCUTS">
+        <Panel title="اختصارات سريعة" stamp="SHORTCUTS">
           <div className="grid grid-cols-2 gap-px bg-ink/10">
             <Link
               href="/admin/questions"
@@ -133,7 +133,7 @@ const StateAndShortcuts = ({ data }: { data: OverviewData }) => {
 
         <p className="rounded-xs border-2 border-dashed border-ink/20 bg-paper-warm/20 px-3.5 py-2.5 text-xs leading-relaxed text-ink-soft">
           <strong className="font-bold text-foreground">ملاحظة:</strong> الأرقام
-          المعروضة من جداول Neon الفعلية، ومفيش بيانات وهمية. صفحة الملاحظات غير
+          دي مباشرة من قاعدة البيانات، مفيش بيانات وهمية. صفحة الملاحظات غير
           مفعّلة، لكن السجلات موجودة ومحصورة.
         </p>
       </div>

@@ -29,12 +29,12 @@ export function QuestionDeleteDialog({
       try {
         const result = await deleteQuestionAction({ id: question.id })
         if (!result.ok) {
-          setError(result.error ?? "تعذر حذف السؤال. حاول تاني.")
+          setError(result.error ?? "مقدرناش نحذف السؤال. جرّب تاني.")
           return
         }
         onDeleted()
       } catch {
-        setError("تعذر حذف السؤال. حاول تاني.")
+        setError("مقدرناش نحذف السؤال. جرّب تاني.")
       }
     })
   }
@@ -51,15 +51,14 @@ export function QuestionDeleteDialog({
       <div className="flex gap-3 border-2 border-danger-brand/40 bg-danger-brand/10 px-4 py-3 text-danger-brand">
         <AlertTriangleIcon className="mt-0.5 size-5 shrink-0" />
         <div className="text-xs leading-relaxed">
-          <p className="font-bold">هل تريد حذف السؤال من المحتوى النشط؟</p>
+          <p className="font-bold">متأكد إنك عايز تحذف السؤال ده؟</p>
           <p className="mt-1 text-ink-soft">
-            هيتم حذفه حذفًا ناعمًا (soft delete): هيختفي من قائمة الأسئلة النشطة
-            والأرقام في الداشبورد، لكن السجل هيفضل محفوظًا في قاعدة البيانات.
+            هيختفي من قائمة الأسئلة ومن الأرقام في الداشبورد، لكن هيتم الاحتفاظ
+            بنسخة منه في الأرشيف.
           </p>
           <p className="mt-2 border-t border-danger-brand/20 pt-2 text-[11px] text-ink-soft">
-            ملاحظة: الحذف بيزوّد إصدار المجموعة، والأجهزة هتزامن التغيير في
-            الجلسات الجديدة. الجلسات الشغالة دلوقتي بتحافظ على مجموعة الأسئلة
-            اللي بدأت بيها.
+            الحذف هيظهر للاعبين في الجلسات الجديدة. الجلسات اللي شغالة دلوقتي
+            هتكمل بأسئلتها زي ما هي.
           </p>
         </div>
       </div>
@@ -69,7 +68,7 @@ export function QuestionDeleteDialog({
           نص السؤال
         </p>
         <p className="mt-1 line-clamp-4 text-sm leading-relaxed font-bold text-ink">
-          {question.text || "— نص غير متوفر —"}
+          {question.text || "— مفيش نص —"}
         </p>
         <p className="mt-2 font-mono text-[10px] text-ink-soft/70" dir="ltr">
           {question.externalId}
@@ -103,7 +102,7 @@ export function QuestionDeleteDialog({
           disabled={isPending}
         >
           <Trash2Icon />
-          {isPending ? "جاري الحذف..." : "حذف السؤال"}
+          {isPending ? "بيتم الحذف..." : "حذف السؤال"}
         </Button>
       </div>
     </AppDialog>

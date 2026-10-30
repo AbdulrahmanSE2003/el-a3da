@@ -589,5 +589,45 @@
   display: none; /* Chrome, Safari */
 }
 
+/* Global scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary) transparent;
+}
 
+:root {
+  --scrollbar-thumb: var(--muted-foreground);
+  --scrollbar-thumb-hover: var(--muted-foreground);
+}
 
+.dark {
+  --scrollbar-thumb: var(--muted-foreground);
+  --scrollbar-thumb-hover: var(--muted-foreground);
+}
+
+/* Chrome, Edge, Safari */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border: 2px solid transparent;
+  border-radius: 999px;
+  background-clip: padding-box;
+  transition: background-color 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover);
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}

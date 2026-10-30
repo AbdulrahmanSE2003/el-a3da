@@ -40,8 +40,8 @@ export function HealthFindingsList({ findings }: HealthFindingsListProps) {
       {sortedFindings.length === 0 ? (
         <div className="p-6">
           <EmptyState
-            title="جميع الفحوصات سليمة"
-            description="لم يتم اكتشاف أي ملاحظات أو مشاكل في جودة البيانات حالياً."
+            title="كل حاجة تمام"
+            description="مفيش أي ملاحظات على جودة البيانات دلوقتي."
           />
         </div>
       ) : (

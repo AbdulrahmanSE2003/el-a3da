@@ -36,10 +36,10 @@ export function QuestionsTable({
   onEditQuestion,
   onDeleteQuestion,
 }: QuestionsTableProps) {
-  const emptyTitle = hasFilters ? "لا توجد نتائج مطابقة" : "المجموعة فارغة"
+  const emptyTitle = hasFilters ? "مفيش نتائج مطابقة" : "مفيش أسئلة هنا"
   const emptyDescription = hasFilters
-    ? "جرب تغيير معايير التصفية أو كلمة البحث."
-    : "لا توجد عناصر نشطة في هذه المجموعة داخل قاعدة البيانات."
+    ? "جرّب تغيّر الفلتر أو كلمة البحث."
+    : "المجموعة دي لسه فاضية. ابدأ بسؤال جديد أو إضافة مجمعة."
 
   return (
     <div
@@ -59,7 +59,7 @@ export function QuestionsTable({
 
         <p className="text-[11px] font-medium text-ink-soft/80">
           {isPending
-            ? "جاري التحديث..."
+            ? "بيتم التحديث..."
             : `عرض ${formatNumber(rows.length)} من أصل ${formatNumber(total)}`}
         </p>
       </div>
@@ -140,6 +140,7 @@ export function QuestionsTable({
                   {question.category ? (
                     <CategoryBadge
                       category={question.category}
+                      setId={setMeta.id}
                       className="font-bold transition-all"
                     />
                   ) : (
@@ -153,7 +154,7 @@ export function QuestionsTable({
                     <span className="line-clamp-2 text-xs font-medium text-ink-soft">
                       {question.correctAnswer || (
                         <span className="font-bold text-danger-brand">
-                          غير محددة
+                          ناقصة
                         </span>
                       )}
                     </span>

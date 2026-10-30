@@ -44,7 +44,7 @@ export function HealthSetsTable({ sets, totals }: HealthSetsTableProps) {
             <AdminTH className="text-center">فئة مفقودة</AdminTH>
             <AdminTH className="text-center">إجابة مفقودة</AdminTH>
             <AdminTH className="text-center">شارة مفقودة</AdminTH>
-            <AdminTH className="text-center">سلامة التسلسل</AdminTH>
+            <AdminTH className="text-center">سلامة الترتيب</AdminTH>
             <AdminTH className="text-center">تكرار النصوص</AdminTH>
           </tr>
         </AdminTHead>

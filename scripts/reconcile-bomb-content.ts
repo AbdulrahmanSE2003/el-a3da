@@ -201,6 +201,14 @@ async function main() {
       )
     }
 
+    // Same lock protocol as the admin single/bulk allocator: compute and
+    // write positions/external ids only after the set row is locked.
+    queries.push(
+      txn.query(`select id from content_sets where id = $1 for update`, [
+        SET_ID,
+      ])
+    )
+
     queries.push(
       txn.query(
         `

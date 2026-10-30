@@ -55,14 +55,14 @@ export function FeedbackStatusControl({
         })
 
         if (!result.ok) {
-          setError(result.error ?? "تعذر تحديث الحالة.")
+          setError(result.error ?? "مقدرناش نحدّث الحالة. جرّب تاني.")
           return
         }
 
         onChanged?.(next)
         router.refresh()
       } catch {
-        setError("تعذر تحديث الحالة. حاول تاني.")
+        setError("مقدرناش نحدّث الحالة. جرّب تاني.")
       }
     })
   }

@@ -4,36 +4,35 @@ import { revalidatePath } from "next/cache"
 import { AdminAuthenticationError, requireAdmin } from "./auth"
 import {
   createQuestionRecord,
+  getQuestionSetContext,
+  insertQuestionRecords,
   softDeleteQuestionRecord,
   updateQuestionRecord,
 } from "./question-mutations"
-import { isContentSetId } from "../lib/content-sets"
+import { getSetMeta, isContentSetId } from "../lib/content-sets"
+import {
+  validateBulkPayload,
+  type QuestionBulkResult,
+} from "../lib/question-bulk"
 import type { ContentSetId } from "../lib/types"
 import type {
-  QuestionCreateDraft,
-  QuestionCreateMutationResult,
   QuestionDraft,
   QuestionMutationResult,
 } from "../lib/question-form"
 
 const AUTH_ERROR: QuestionMutationResult = {
   ok: false,
-  error: "انتهت الجلسة. سجّل الدخول من جديد.",
+  error: "انتهت الجلسة، وسجّل دخولك من جديد.",
 }
 
 const GENERIC_ERROR: QuestionMutationResult = {
   ok: false,
-  error: "تعذر تنفيذ العملية. حاول تاني.",
+  error: "مقدرناش ننفّذ العملية. جرّب تاني.",
 }
 
-const GENERIC_CREATE_ERROR: QuestionCreateMutationResult = {
+const GENERIC_CREATE_ERROR: QuestionMutationResult = {
   ok: false,
-  error: "تعذر إضافة السؤال. حاول تاني.",
-}
-
-const AUTH_CREATE_ERROR: QuestionCreateMutationResult = {
-  ok: false,
-  error: "انتهت الجلسة. سجّل الدخول من جديد.",
+  error: "مقدرناش نضيف السؤال. جرّب تاني.",
 }
 
 function revalidateAdminContent() {
@@ -52,18 +51,17 @@ async function authorize(): Promise<QuestionMutationResult | null> {
   }
 }
 
-async function authorizeCreate(): Promise<QuestionCreateMutationResult | null> {
-  try {
-    await requireAdmin()
-    return null
-  } catch (error) {
-    if (error instanceof AdminAuthenticationError) return AUTH_CREATE_ERROR
-    throw error
-  }
-}
-
 function asString(value: unknown): string {
   return typeof value === "string" ? value : ""
+}
+
+function parseDraft(value: Record<string, unknown>): QuestionDraft {
+  return {
+    text: asString(value.text),
+    category: asString(value.category),
+    correctAnswer: asString(value.correctAnswer),
+    badgeLabel: asString(value.badgeLabel),
+  }
 }
 
 function parseUpdateInput(
@@ -74,15 +72,7 @@ function parseUpdateInput(
   const value = input as Record<string, unknown>
   if (typeof value.id !== "string") return null
 
-  return {
-    id: value.id,
-    draft: {
-      text: asString(value.text),
-      category: asString(value.category),
-      correctAnswer: asString(value.correctAnswer),
-      badgeLabel: asString(value.badgeLabel),
-    },
-  }
+  return { id: value.id, draft: parseDraft(value) }
 }
 
 function parseDeleteInput(input: unknown): { id: string } | null {
@@ -96,32 +86,35 @@ function parseDeleteInput(input: unknown): { id: string } | null {
 
 function parseCreateInput(
   input: unknown
-): { setId: ContentSetId; draft: QuestionCreateDraft } | null {
+): { setId: ContentSetId; draft: QuestionDraft } | null {
   if (!input || typeof input !== "object") return null
 
   const value = input as Record<string, unknown>
   const setId = value.setId
   if (typeof setId !== "string" || !isContentSetId(setId)) return null
 
-  // externalId بيتولد تلقائياً على السيرفر، وبنسمح بتمريره أو ما نمررشهوش
-  // عشان يتوافق مع الاستدعاء القديم لكن دايمًا بنرجع للقيمة اللي السيرفر بيختارها
-  return {
-    setId,
-    draft: {
-      externalId: asString(value.externalId),
-      text: asString(value.text),
-      category: asString(value.category),
-      correctAnswer: asString(value.correctAnswer),
-      badgeLabel: asString(value.badgeLabel),
-    },
-  }
+  // الـ externalId بيتولد على السيرفر، فمش بنستقبله من العميل خالص.
+  return { setId, draft: parseDraft(value) }
+}
+
+function parseBulkInput(
+  input: unknown
+): { setId: ContentSetId; json: string } | null {
+  if (!input || typeof input !== "object") return null
+
+  const value = input as Record<string, unknown>
+  const setId = value.setId
+  if (typeof setId !== "string" || !isContentSetId(setId)) return null
+  if (typeof value.json !== "string") return null
+
+  return { setId, json: value.json }
 }
 
 /** إضافة سؤال جديد للمجموعة المختارة. */
 export async function createQuestionAction(
   input: unknown
-): Promise<QuestionCreateMutationResult> {
-  const authError = await authorizeCreate()
+): Promise<QuestionMutationResult> {
+  const authError = await authorize()
   if (authError) return authError
 
   const parsed = parseCreateInput(input)
@@ -141,6 +134,71 @@ export async function createQuestionAction(
   } catch (error) {
     console.error("[admin/questions] create failed", error)
     return GENERIC_CREATE_ERROR
+  }
+}
+
+/**
+ * إضافة دفعة أسئلة من JSON. الـaction بيعمل parsing وتحقق كامل تاني على
+ * السيرفر، حتى لو الكلاينت عمل preview. أي خطأ في أي صف بيرفض الدفعة كلها
+ * قبل ما نوصل للإدخال.
+ */
+export async function createQuestionsBulkAction(
+  input: unknown
+): Promise<QuestionBulkResult> {
+  const authError = await authorize()
+  if (authError) return authError
+
+  const parsed = parseBulkInput(input)
+  if (!parsed) return { ok: false, error: "طلب غير صالح." }
+
+  try {
+    const context = await getQuestionSetContext(parsed.setId)
+    if (!context) {
+      return {
+        ok: false,
+        error: "المجموعة مش موجودة. ضيفها الأول.",
+      }
+    }
+
+    const setMeta = getSetMeta(parsed.setId, context.name)
+    const validation = validateBulkPayload(
+      parsed.json,
+      setMeta,
+      context.categories
+    )
+
+    if (!validation.ok) {
+      return {
+        ok: false,
+        error:
+          validation.rootError ?? "الدفعة فيها أخطاء. راجع الصفوف وجرّب تاني.",
+        rowErrors: validation.errors,
+        warnings: validation.warnings,
+      }
+    }
+
+    const inserted = await insertQuestionRecords(parsed.setId, validation.rows)
+    if (!inserted.ok) {
+      return {
+        ok: false,
+        error: inserted.error,
+        warnings: validation.warnings,
+      }
+    }
+
+    revalidateAdminContent()
+    return {
+      ok: true,
+      count: inserted.created.length,
+      externalIds: inserted.created.map((question) => question.externalId),
+      warnings: validation.warnings,
+    }
+  } catch (error) {
+    console.error("[admin/questions] bulk create failed", error)
+    return {
+      ok: false,
+      error: "مقدرناش نضيف الأسئلة. جرّب تاني.",
+    }
   }
 }
 

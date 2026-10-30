@@ -33,11 +33,11 @@ export async function updateFeedbackStatusRecord(
   reviewer: string
 ): Promise<FeedbackStatusMutationResult> {
   if (!UUID_PATTERN.test(id)) {
-    return { ok: false, error: "معرّف الرسالة غير صالح." }
+    return { ok: false, error: "رقم الرسالة غير صحيح." }
   }
 
   if (!isFeedbackStatus(status)) {
-    return { ok: false, error: "الحالة المطلوبة غير معروفة." }
+    return { ok: false, error: "الحالة اللي اخترتها غير معروفة." }
   }
 
   const reviewerEmail = reviewer.trim().slice(0, 200) || null
@@ -70,7 +70,7 @@ export async function updateFeedbackStatusRecord(
     )) as Array<{ status: string }>
 
     if (existing.length === 0) {
-      return { ok: false, error: "الرسالة غير موجودة." }
+      return { ok: false, error: "الرسالة مش موجودة." }
     }
 
     return { ok: true, status }

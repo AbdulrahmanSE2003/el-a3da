@@ -22,8 +22,8 @@ export default function AdminError({
       tone="danger"
       icon={RotateCcwIcon}
       stamp="DASHBOARD ERROR"
-      title="تعذّر تحميل بيانات الداشبورد"
-      description="حصل خطأ أثناء قراءة قاعدة البيانات. راجع اتصال Neon وإعداد DATABASE_URL على السيرفر. تفاصيل الاتصال مش بتتعرض في الواجهة."
+      title="مقدرناش نحمّل بيانات الداشبورد"
+      description="حصلت مشكلة وإحنا بنقرا البيانات. جرّب تحدّث الصفحة، ولو المشكلة فضلت راجع إعدادات الاتصال على السيرفر."
       actions={
         <StateRetryButton onClick={retry} icon={RotateCcwIcon}>
           إعادة المحاولة

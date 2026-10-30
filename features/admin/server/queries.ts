@@ -192,20 +192,6 @@ const mapQuestion = (row: QuestionDbRow): QuestionRow => ({
   deletedAt: asNullableText(row.deleted_at),
 })
 
-export async function getNextQuestionExternalId(
-  setId: ContentSetId
-): Promise<string> {
-  await requireAdmin()
-  await connection()
-  const rows = (await getSql().query(
-    `select coalesce(max(position), -1) + 1 as next_pos from questions where set_id = $1`,
-    [setId]
-  )) as Array<{ next_pos: number | string }>
-
-  const nextPos = Number(rows[0]?.next_pos ?? 0)
-  return String(Math.max(0, nextPos))
-}
-
 export async function getQuestionsPage({
   setId,
   query: search,
@@ -442,9 +428,9 @@ export async function getHealthReport(): Promise<HealthReport> {
       addFinding({
         severity: "critical",
         setId: meta.id,
-        title: `${meta.title}: مجموعة غير موجودة في Neon`,
+        title: `${meta.title}: المجموعة مش موجودة`,
         description:
-          "المجموعة معرّفة في التطبيق لكن مفيش صف مقابل ليها في content_sets. أضف الصف أو راجع سبب حذفه.",
+          "المجموعة معرّفة في التطبيق، لكن مفيش ليها بيانات محفوظة. ضيفها أو راجع سبب حذفها.",
         count: 1,
       })
     }
@@ -458,7 +444,7 @@ export async function getHealthReport(): Promise<HealthReport> {
         severity: "critical",
         setId: set.id,
         title: `${set.title}: نصوص فاضية`,
-        description: `${set.emptyText} عنصر نصه فاضي في قاعدة البيانات.`,
+        description: `${set.emptyText} سؤال من غير نص.`,
         count: set.emptyText,
       })
     }
@@ -468,7 +454,7 @@ export async function getHealthReport(): Promise<HealthReport> {
         severity: "critical",
         setId: set.id,
         title: `${set.title}: إجابات ناقصة`,
-        description: `${set.missingCorrectAnswer} عنصر من غير correct_answer.`,
+        description: `${set.missingCorrectAnswer} سؤال من غير إجابة صحيحة.`,
         count: set.missingCorrectAnswer,
       })
     }
@@ -478,7 +464,7 @@ export async function getHealthReport(): Promise<HealthReport> {
         severity: "warning",
         setId: set.id,
         title: `${set.title}: شارات ناقصة`,
-        description: `${set.missingBadgeLabel} عنصر من غير badge_label.`,
+        description: `${set.missingBadgeLabel} سؤال من غير شارة.`,
         count: set.missingBadgeLabel,
       })
     }
@@ -488,7 +474,7 @@ export async function getHealthReport(): Promise<HealthReport> {
         severity: "warning",
         setId: set.id,
         title: `${set.title}: فئات ناقصة`,
-        description: `${set.missingCategory} عنصر من غير category.`,
+        description: `${set.missingCategory} سؤال من غير فئة.`,
         count: set.missingCategory,
       })
     }
@@ -498,7 +484,7 @@ export async function getHealthReport(): Promise<HealthReport> {
         severity: "critical",
         setId: set.id,
         title: `${set.title}: ترتيب مكرر`,
-        description: `${set.duplicatePositions} عنصر بيشارك نفس position مع عنصر تاني.`,
+        description: `${set.duplicatePositions} سؤال واخد نفس الترتيب بتاع سؤال تاني.`,
         count: set.duplicatePositions,
       })
     }
@@ -508,7 +494,7 @@ export async function getHealthReport(): Promise<HealthReport> {
         severity: "warning",
         setId: set.id,
         title: `${set.title}: فراغات في الترتيب`,
-        description: `${set.positionGaps} موضع ناقص في تسلسل position للعناصر الحية.`,
+        description: `فيه ${set.positionGaps} فجوة في ترتيب الأسئلة النشطة.`,
         count: set.positionGaps,
       })
     }
@@ -518,7 +504,7 @@ export async function getHealthReport(): Promise<HealthReport> {
         severity: "info",
         setId: set.id,
         title: `${set.title}: عناصر محذوفة`,
-        description: `${set.deletedCount} عنصر محذوف soft delete ومحفوظ للتاريخ.`,
+        description: `${set.deletedCount} سؤال محذوف ومحفوظ في الأرشيف.`,
         count: set.deletedCount,
       })
     }
@@ -528,7 +514,7 @@ export async function getHealthReport(): Promise<HealthReport> {
         severity: "info",
         setId: set.id,
         title: `${set.title}: نصوص مكررة`,
-        description: `${set.duplicateTextGroups} مجموعة نص مكرر (${set.duplicateTextRecords} سجل). التكرار جزء من المصدر واتحفظ زي ما هو.`,
+        description: `${set.duplicateTextGroups} مجموعة نصوص متكررة (${set.duplicateTextRecords} سؤال). التكرار موجود كده في المصدر، واتحفظ زي ما هو.`,
         count: set.duplicateTextRecords,
       })
     }
