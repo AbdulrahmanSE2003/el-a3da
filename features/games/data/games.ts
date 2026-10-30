@@ -15,21 +15,12 @@ export interface GameItem {
 
 export const GAMES_LIST: GameItem[] = [
   {
-    id: "amir-el-zalam",
-    title: "أمير الظلام",
-    description: "مين الذكي اللي هيقفش المافيا قبل ما يدوّخوا القعدة؟ 🕵️‍♂️",
-    status: "متاحة",
-    icon: Ghost,
-    href: "/games/amir-el-zalam",
-    theme: "dark",
-    isRecommended: true,
-  },
-  {
     id: "casino",
     title: "كافيه الألعاب",
     description: "تحدي معلومات وعصر دماغ.. مين فيكم هيقفل اللعبة؟ 💡",
     status: "متاحة",
     icon: Dices,
+    isRecommended: true,
     href: "/games/casino",
     theme: "nordic",
   },
@@ -43,6 +34,15 @@ export const GAMES_LIST: GameItem[] = [
     href: "/games/bomb",
     theme: "sunset",
     isNew: true,
+  },
+  {
+    id: "amir-el-zalam",
+    title: "أمير الظلام",
+    description: "مين الذكي اللي هيقفش المافيا قبل ما يدوّخوا القعدة؟ 🕵️‍♂️",
+    status: "متاحة",
+    icon: Ghost,
+    href: "/games/amir-el-zalam",
+    theme: "dark",
   },
   {
     id: "bekasa",
