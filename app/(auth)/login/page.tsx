@@ -49,7 +49,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
             <p className="stamp-text">SECURE ACCESS</p>
             <h1 className="mt-1 text-xl font-black">تسجيل دخول المسؤول</h1>
             <p className="mt-1 text-xs leading-relaxed text-ink-soft">
-              وصول مخصص للمسؤولين. تنتهي صلاحية الجلسة تلقائياً بعد 8 ساعات.
+              الصفحة دي للمسؤولين بس. الجلسة بتنتهي لوحدها بعد 8 ساعات.
             </p>
           </header>
 
@@ -64,7 +64,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
             href="/"
             className="text-xs font-bold text-copper transition-opacity hover:opacity-80"
           >
-            العودة إلى التطبيق الرئيسي
+            ارجع للتطبيق
           </Link>
         </div>
       </div>

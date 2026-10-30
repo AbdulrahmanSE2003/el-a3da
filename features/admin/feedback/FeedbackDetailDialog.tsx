@@ -149,7 +149,7 @@ export function FeedbackDetailDialog({
           )}
         </MetaRow>
 
-        <MetaRow label=" ID السؤال ">
+        <MetaRow label="معرف السؤال">
           {feedback.questionExternalId ? (
             <span className="font-mono" dir="ltr">
               {feedback.questionExternalId}
@@ -241,7 +241,7 @@ export function FeedbackDetailDialog({
         )}
 
         <p className="mt-2 text-[10px] leading-relaxed text-ink-soft/60">
-          الصور محفوظة في bucket خاص، وبتتعرض من خلال رابط موقّع مؤقت للجلسة.
+          الصور محفوظة بشكل آمن، والرابط اللي بتفتح بيه الصورة مؤقت.
         </p>
       </section>
 

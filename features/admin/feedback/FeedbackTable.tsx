@@ -58,7 +58,7 @@ export function FeedbackTable({
 
         <p className="text-[11px] font-medium text-ink-soft/80">
           {isPending
-            ? "جاري التحديث..."
+            ? "بيتم التحديث..."
             : `عرض ${formatNumber(rows.length)} من أصل ${formatNumber(total)}`}
         </p>
       </div>
@@ -67,11 +67,11 @@ export function FeedbackTable({
         <div className="p-6">
           <EmptyState
             icon={hasFilters ? ImageOffIcon : PaperclipIcon}
-            title={hasFilters ? "لا توجد نتائج مطابقة" : "مفيش رسائل لسه"}
+            title={hasFilters ? "مفيش نتائج مطابقة" : "مفيش رسائل لسه"}
             description={
               hasFilters
-                ? "جرب تغيير معايير التصفية أو كلمة البحث."
-                : "أول ما يوصل لك رسالة من اللاعبين هتظهر هنا."
+                ? "جرّب تغيّر الفلتر أو كلمة البحث."
+                : "أول ما توصل رسالة من اللاعبين هتظهر هنا."
             }
           />
         </div>

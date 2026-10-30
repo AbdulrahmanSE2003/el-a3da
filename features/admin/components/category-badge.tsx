@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils"
 import { Tag } from "./table"
+import { getCategoryLabel } from "../lib/question-categories"
 import {
   getCategoryBadgeStyle,
   getCategoryDotStyle,
@@ -7,6 +8,7 @@ import {
 
 interface CategoryBadgeProps {
   category: string
+  setId?: string
   className?: string
 }
 
@@ -14,7 +16,11 @@ interface CategoryBadgeProps {
  * بادج موحّد لأي فئة في الداشبورد: نفس اللون في الجدول، التفاصيل، وأي مكان
  * تاني بيعرض category. اللون نفسه جاي من category-style.ts.
  */
-export function CategoryBadge({ category, className }: CategoryBadgeProps) {
+export function CategoryBadge({
+  category,
+  setId,
+  className,
+}: CategoryBadgeProps) {
   const normalized = category.trim()
   if (!normalized) return null
 
@@ -29,7 +35,7 @@ export function CategoryBadge({ category, className }: CategoryBadgeProps) {
         )}
         aria-hidden
       />
-      {normalized}
+      {setId ? getCategoryLabel(setId, normalized) : normalized}
     </Tag>
   )
 }

@@ -3,20 +3,16 @@
 import { useState, useTransition } from "react"
 import { AppDialog } from "@/components/ui/AppDialog"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
 import { createQuestionAction } from "../server/question-actions"
 import {
-  QUESTION_BADGE_LABEL_MAX_LENGTH,
-  QUESTION_CATEGORY_MAX_LENGTH,
-  QUESTION_CORRECT_ANSWER_MAX_LENGTH,
-  QUESTION_TEXT_MAX_LENGTH,
-  validateQuestionCreateDraft,
-  type QuestionCreateDraft,
-  type QuestionCreateFieldErrors,
+  validateQuestionDraft,
+  type QuestionDraft,
+  type QuestionField,
+  type QuestionFieldErrors,
 } from "../lib/question-form"
 import type { CategoryCount, ContentSetMeta } from "../lib/types"
+import { getCategoryValues } from "../lib/question-categories"
+import { QuestionFormFields } from "./question-form-fields"
 
 interface QuestionCreateDialogProps {
   setMeta: ContentSetMeta
@@ -31,23 +27,22 @@ export function QuestionCreateDialog({
   onClose,
   onCreated,
 }: QuestionCreateDialogProps) {
-  const defaultCategory =
-    setMeta.categoryOptions?.[0] ?? categories[0]?.category ?? ""
-  const categoryOptions =
-    setMeta.categoryOptions ?? categories.map((cat) => cat.category)
+  const categoryOptions = getCategoryValues(
+    setMeta,
+    categories.map((cat) => cat.category)
+  )
 
-  const [draft, setDraft] = useState<QuestionCreateDraft>({
-    externalId: "",
+  const [draft, setDraft] = useState<QuestionDraft>({
     text: "",
-    category: defaultCategory,
+    category: "",
     correctAnswer: "",
     badgeLabel: "",
   })
-  const [fieldErrors, setFieldErrors] = useState<QuestionCreateFieldErrors>({})
+  const [fieldErrors, setFieldErrors] = useState<QuestionFieldErrors>({})
   const [formError, setFormError] = useState<string | null>(null)
   const [isPending, startTransition] = useTransition()
 
-  const setField = (field: keyof QuestionCreateDraft, value: string) => {
+  const setField = (field: QuestionField, value: string) => {
     setDraft((current) => ({ ...current, [field]: value }))
     setFieldErrors((current) => ({ ...current, [field]: undefined }))
     setFormError(null)
@@ -57,7 +52,7 @@ export function QuestionCreateDialog({
     event.preventDefault()
     setFormError(null)
 
-    const validation = validateQuestionCreateDraft(draft, setMeta)
+    const validation = validateQuestionDraft(draft, setMeta)
     if (!validation.ok) {
       setFieldErrors(validation.fieldErrors)
       return
@@ -68,19 +63,18 @@ export function QuestionCreateDialog({
       try {
         const result = await createQuestionAction({
           setId: setMeta.id,
-          externalId: draft.externalId,
           ...validation.value,
         })
 
         if (!result.ok) {
-          setFormError(result.error ?? "تعذر إضافة السؤال. حاول تاني.")
+          setFormError(result.error ?? "مقدرناش نضيف السؤال. جرّب تاني.")
           if (result.fieldErrors) setFieldErrors(result.fieldErrors)
           return
         }
 
         onCreated()
       } catch {
-        setFormError("تعذر إضافة السؤال. حاول تاني.")
+        setFormError("مقدرناش نضيف السؤال. جرّب تاني.")
       }
     })
   }
@@ -94,11 +88,7 @@ export function QuestionCreateDialog({
       title="إضافة سؤال"
       subtitle={setMeta.title}
     >
-      <form
-        onSubmit={handleSubmit}
-        noValidate
-        className="flex flex-col gap-4 pt-6"
-      >
+      <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
         {formError && (
           <p
             role="alert"
@@ -108,150 +98,17 @@ export function QuestionCreateDialog({
           </p>
         )}
 
-        <div>
-          <Label htmlFor="new-question-external-id">السؤال ID</Label>
-          <Input
-            id="new-question-external-id"
-            value="يتم توليده تلقائياً"
-            disabled
-            dir="ltr"
-            readOnly
-          />
-          <p className="mt-1.5 text-[10px] text-ink-soft/70">
-            بيتحدد تلقائياً بناءً على أعلى ترتيب في المجموعة، ومش قابل للتعديل.
-          </p>
-        </div>
-
-        <div>
-          <Label htmlFor="new-question-text">
-            نص السؤال <span className="text-danger-brand">*</span>
-          </Label>
-          <Textarea
-            id="new-question-text"
-            value={draft.text}
-            onChange={(event) => setField("text", event.target.value)}
-            maxLength={QUESTION_TEXT_MAX_LENGTH}
-            rows={5}
-            aria-invalid={fieldErrors.text ? true : undefined}
-            aria-describedby={
-              fieldErrors.text ? "new-question-text-error" : undefined
-            }
-            className="min-h-32"
-          />
-          {fieldErrors.text && (
-            <p
-              id="new-question-text-error"
-              className="mt-1.5 text-[11px] font-bold text-danger-brand"
-            >
-              {fieldErrors.text}
-            </p>
-          )}
-        </div>
-
-        <div className="grid gap-4 sm:grid-cols-2">
-          <div>
-            <Label htmlFor="new-question-category">
-              الفئة{" "}
-              {setMeta.hasOptionalCategory ? (
-                <span className="font-normal normal-case">(اختيارية)</span>
-              ) : (
-                <span className="text-danger-brand">*</span>
-              )}
-            </Label>
-            <Input
-              id="new-question-category"
-              value={draft.category}
-              onChange={(event) => setField("category", event.target.value)}
-              list="new-question-category-options"
-              placeholder={
-                setMeta.categoryOptions
-                  ? "اختر فئة من القائمة"
-                  : "اكتب فئة جديدة أو اختر فئة موجودة"
-              }
-              maxLength={QUESTION_CATEGORY_MAX_LENGTH}
-              aria-invalid={fieldErrors.category ? true : undefined}
-              aria-describedby={
-                fieldErrors.category ? "new-question-category-error" : undefined
-              }
-            />
-            <datalist id="new-question-category-options">
-              {categoryOptions.map((category) => (
-                <option key={category} value={category} />
-              ))}
-            </datalist>
-            {fieldErrors.category && (
-              <p
-                id="new-question-category-error"
-                className="mt-1.5 text-[11px] font-bold text-danger-brand"
-              >
-                {fieldErrors.category}
-              </p>
-            )}
-          </div>
-
-          {setMeta.hasCorrectAnswer && (
-            <div>
-              <Label htmlFor="new-question-answer">
-                الإجابة الصحيحة <span className="text-danger-brand">*</span>
-              </Label>
-              <Input
-                id="new-question-answer"
-                value={draft.correctAnswer}
-                onChange={(event) =>
-                  setField("correctAnswer", event.target.value)
-                }
-                maxLength={QUESTION_CORRECT_ANSWER_MAX_LENGTH}
-                aria-invalid={fieldErrors.correctAnswer ? true : undefined}
-                aria-describedby={
-                  fieldErrors.correctAnswer
-                    ? "new-question-answer-error"
-                    : undefined
-                }
-              />
-              {fieldErrors.correctAnswer && (
-                <p
-                  id="new-question-answer-error"
-                  className="mt-1.5 text-[11px] font-bold text-danger-brand"
-                >
-                  {fieldErrors.correctAnswer}
-                </p>
-              )}
-            </div>
-          )}
-
-          {setMeta.hasBadgeLabel && (
-            <div>
-              <Label htmlFor="new-question-badge">
-                الشارة{" "}
-                <span className="font-normal normal-case">(اختيارية)</span>
-              </Label>
-              <Input
-                id="new-question-badge"
-                value={draft.badgeLabel}
-                onChange={(event) => setField("badgeLabel", event.target.value)}
-                maxLength={QUESTION_BADGE_LABEL_MAX_LENGTH}
-                aria-invalid={fieldErrors.badgeLabel ? true : undefined}
-                aria-describedby={
-                  fieldErrors.badgeLabel
-                    ? "new-question-badge-error"
-                    : undefined
-                }
-              />
-              {fieldErrors.badgeLabel && (
-                <p
-                  id="new-question-badge-error"
-                  className="mt-1.5 text-[11px] font-bold text-danger-brand"
-                >
-                  {fieldErrors.badgeLabel}
-                </p>
-              )}
-            </div>
-          )}
-        </div>
+        <QuestionFormFields
+          idPrefix="new-question"
+          draft={draft}
+          setMeta={setMeta}
+          categoryOptions={categoryOptions}
+          fieldErrors={fieldErrors}
+          onChange={setField}
+        />
 
         <p className="text-[10px] leading-relaxed text-ink-soft/70">
-          الإضافة بتكتب في Neon مباشرة وبتزوّد إصدار المجموعة. الأجهزة هتزامن
-          المحتوى الجديد في الجلسات اللي تبدأ بعد كده؛ الجلسات الشغالة دلوقتي مش
+          السؤال هيظهر للاعبين في الجلسات الجديدة. الجلسات اللي شغالة دلوقتي مش
           هتتأثر.
         </p>
 
@@ -266,7 +123,7 @@ export function QuestionCreateDialog({
             إلغاء
           </Button>
           <Button type="submit" size="sm" disabled={isPending}>
-            {isPending ? "جاري الإضافة..." : "إضافة السؤال"}
+            {isPending ? "بيتم الإضافة..." : "إضافة السؤال"}
           </Button>
         </div>
       </form>

@@ -75,6 +75,8 @@ pnpm content:verify
 pnpm content:verify -- --strict
 pnpm content:verify:test
 pnpm test:registry
+pnpm test:bulk
+pnpm test:bulk:db
 pnpm content:bomb
 ```
 
@@ -91,9 +93,14 @@ pnpm content:bomb
   قاعدة بيانات.
 - `pnpm test:registry` — اختبارات المعرّفات الديناميكية وfallback الـmetadata
   وقيد فئات القنبلة.
+- `pnpm test:bulk` — اختبارات pure لتحقق الإضافة المجمعة، بدون قاعدة بيانات.
+- `pnpm test:bulk:db` — اختبارات allocator والتزامن والـrollback. لا تعمل إلا
+  مع `BULK_DB_TEST=1` و`BULK_TEST_DATABASE_URL` لفرع اختبار مخصص؛ السكربت
+  بيتخطى نفسه من غيرهم، ومابيلمسش `DATABASE_URL` من `.env.local`.
 - `pnpm content:bomb` — خطة قراءة فقط لمطابقة مجموعة Bomb مع المصدر المحلي على
   فرع التطوير. أضف `-- --apply` لتنفيذ الإدخالات الناقصة في transaction واحد.
   السكربت بيرفض أي فرع غير `br-calm-art-b9yzd3hg`، ومش بيعدّل أو يحذف صفوف
-  موجودة، وبيتوقف لو فيه تعارض `position`.
+  موجودة، وبيتوقف لو فيه تعارض `position`. عند `--apply` بيقفل صف
+  `content_sets` بنفس بروتوكول إضافة الأسئلة قبل الإدخال.
 
 - أخطاء الاتصال/القراءة تُبلّغ كفشل تشغيلي (exit 2) منفصل عن فشل سلامة المحتوى.

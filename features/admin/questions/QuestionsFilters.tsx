@@ -9,12 +9,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { CategoryCount } from "../lib/types"
+import { CategoryCount, ContentSetId } from "../lib/types"
+import { getCategoryLabel } from "../lib/question-categories"
 
 interface QuestionsFiltersProps {
   search: string
   setSearch: (value: string) => void
   category: string
+  setId: ContentSetId
   categories: CategoryCount[]
   onCategoryChange: (value: string) => void
 }
@@ -23,6 +25,7 @@ export function QuestionsFilters({
   search,
   setSearch,
   category,
+  setId,
   categories,
   onCategoryChange,
 }: QuestionsFiltersProps) {
@@ -34,7 +37,7 @@ export function QuestionsFilters({
         <Input
           value={search}
           onChange={(event) => setSearch(event.target.value)}
-          placeholder="ابحث في نص السؤال، المعرف، أو الفئة..."
+          placeholder="ابحث بالسؤال أو المعرف أو الفئة..."
           aria-label="بحث في الأسئلة"
           className="ps-9 pe-9"
         />
@@ -57,11 +60,11 @@ export function QuestionsFilters({
         </SelectTrigger>
 
         <SelectContent position="popper">
-          <SelectItem value="all">جميع الفئات</SelectItem>
+          <SelectItem value="all">كل الفئات</SelectItem>
 
           {categories.map((item) => (
             <SelectItem key={item.category} value={item.category}>
-              {item.category}
+              {getCategoryLabel(setId, item.category)}
             </SelectItem>
           ))}
         </SelectContent>

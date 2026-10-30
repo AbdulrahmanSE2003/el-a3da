@@ -1,7 +1,7 @@
 "use client"
 
 import { useMemo, useState } from "react"
-import { PlusIcon } from "lucide-react"
+import { LayersIcon, PlusIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import type {
@@ -20,6 +20,7 @@ import { QuestionDetailDialog } from "./question-detail-dialog"
 import { QuestionEditDialog } from "./question-edit-dialog"
 import { QuestionDeleteDialog } from "./question-delete-dialog"
 import { QuestionCreateDialog } from "./question-create-dialog"
+import { QuestionBulkDialog } from "./question-bulk-dialog"
 import { useQuestionFilters } from "../questions/hooks/use-question-filter"
 
 interface QuestionsViewProps {
@@ -49,6 +50,7 @@ export function QuestionsView({
   const [editing, setEditing] = useState<QuestionRow | null>(null)
   const [deleting, setDeleting] = useState<QuestionRow | null>(null)
   const [creating, setCreating] = useState(false)
+  const [bulkCreating, setBulkCreating] = useState(false)
 
   const { search, setSearch, isPending, navigate } = useQuestionFilters(query)
 
@@ -75,12 +77,22 @@ export function QuestionsView({
       <PageHeader
         stamp="الأسئلة"
         title="إدارة الأسئلة"
-        description="عرض وإدارة الأسئلة النشطة في Neon. الإضافة والتعديل والحذف الناعم بيحدّثوا إصدار المجموعة، والأجهزة بتزامن المحتوى الجديد في الجلسات اللي تبدأ بعد كده مع fallback محلي لو الشبكة قطعت."
+        description="كل أسئلة المجموعة في مكان واحد. أي تعديل بيظهر للاعبين في الجلسات الجديدة، والجلسات اللي شغالة دلوقتي هتكمل بأسئلتها زي ما هي."
         action={
-          <Button size="sm" onClick={() => setCreating(true)}>
-            <PlusIcon className="size-4" />
-            سؤال جديد
-          </Button>
+          <div className="flex flex-wrap gap-2">
+            <Button size="sm" onClick={() => setCreating(true)}>
+              <PlusIcon className="size-4" />
+              سؤال جديد
+            </Button>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => setBulkCreating(true)}
+            >
+              <LayersIcon className="size-4" />
+              إضافة أسئلة مجمعة
+            </Button>
+          </div>
         }
       />
 
@@ -98,6 +110,7 @@ export function QuestionsView({
         search={search}
         setSearch={setSearch}
         category={category}
+        setId={setId}
         categories={categories}
         onCategoryChange={(value) =>
           navigate({
@@ -167,6 +180,15 @@ export function QuestionsView({
           categories={categories}
           onClose={() => setCreating(false)}
           onCreated={() => setCreating(false)}
+        />
+      )}
+
+      {bulkCreating && (
+        <QuestionBulkDialog
+          setMeta={setMeta}
+          categories={categories}
+          onClose={() => setBulkCreating(false)}
+          onCreated={() => setBulkCreating(false)}
         />
       )}
     </div>

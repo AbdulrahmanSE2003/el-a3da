@@ -28,7 +28,7 @@ const StatsGrid = ({ data }: { data: OverviewData }) => {
         label="إجمالي الأسئلة"
         value={formatNumber(data.totalLive + data.totalDeleted)}
         icon={DatabaseIcon}
-        detail="السجلات الكلية بجدول الأسئلة"
+        detail="كل الأسئلة، النشطة والمحذوفة"
       />
       <StatCard
         label="آخر تحديث"
@@ -38,7 +38,7 @@ const StatsGrid = ({ data }: { data: OverviewData }) => {
             : "—"
         }
         icon={CalendarClockIcon}
-        detail="تاريخ أحدث تعديل للعناصر النشطة"
+        detail="آخر تعديل على الأسئلة النشطة"
       />
     </div>
   )

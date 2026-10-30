@@ -47,6 +47,17 @@ export default function Qa3daCard({
           {/* Inner Border */}
           <div className="pointer-events-none absolute inset-3.5 rounded-sm border-2 border-ink-soft/80" />
 
+          <div
+            className={`absolute top-5 left-5 font-mono text-sm text-muted-foreground/25`}
+          >
+            {id}
+          </div>
+          <div
+            className={`absolute right-5 bottom-5 font-mono text-sm text-muted-foreground/25`}
+          >
+            {id}
+          </div>
+
           {/* Top Badge */}
           <div className="badge-container">
             <div className="mb-1 text-[10px] tracking-widest text-danger-brand">
