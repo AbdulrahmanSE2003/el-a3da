@@ -1,4 +1,3 @@
-// app/page.tsx
 import { headers } from "next/headers"
 import Platform from "@/components/layout/Platform"
 import LandingPage from "@/components/layout/LandingPage"

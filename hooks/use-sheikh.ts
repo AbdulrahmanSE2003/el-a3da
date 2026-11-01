@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
-import { usePartyStore } from "@/store/party-store"
+import { Player, usePartyStore } from "@/store/party-store"
 import { createContentDeck } from "@/lib/create-content-deck"
 import { useContentSet } from "@/lib/content/use-content-set"
 
@@ -42,11 +42,14 @@ export function useSheikh() {
 
   const sheikh = players.find((player) => player.id === sheikhId)
 
-  const chooseSheikh = () => {
+  const chooseSheikh = (player?: Player) => {
     if (players.length === 0) return
-    const randomIndex = Math.floor(Math.random() * players.length)
-    setSheikhId(players[randomIndex].id)
-    setPhase("revealed")
+    if (player) setSheikhId(player.id)
+    else {
+      const randomIndex = Math.floor(Math.random() * players.length)
+      setSheikhId(players[randomIndex].id)
+      setPhase("revealed")
+    }
   }
 
   const startQuestions = () => {
