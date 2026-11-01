@@ -48,8 +48,8 @@ export function useSheikh() {
     else {
       const randomIndex = Math.floor(Math.random() * players.length)
       setSheikhId(players[randomIndex].id)
-      setPhase("revealed")
     }
+    setPhase("revealed")
   }
 
   const startQuestions = () => {

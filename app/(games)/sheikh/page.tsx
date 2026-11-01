@@ -35,7 +35,7 @@ export default function SheikhPage() {
         {/* {phase === "idle" && <IdlePhase onChooseSheikh={chooseSheikh} />} */}
         {phase === "idle" && (
           <div className={`flex h-[85svh] items-center justify-center py-3`}>
-            <Spinner onChooseSheikh={chooseSheikh} items={players.map((p) => p.name)} />
+            <Spinner players={players} onChooseSheikh={chooseSheikh} items={players.map((p) => p.name)} />
           </div>
         )}
 

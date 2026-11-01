@@ -10,6 +10,7 @@ const spinPlayer = createSoundPlayer()
 
 type SpinnerProps = {
   width?: number
+  players: Player[]
   height?: number
   items: string[]
   onChooseSheikh: (p?: Player) => void
@@ -29,6 +30,7 @@ const Spinner = ({
   width = 300,
   height = 300,
   items,
+  players,
   onChooseSheikh,
 }: SpinnerProps) => {
   const [rotation, setRotation] = useState(0)
@@ -104,14 +106,11 @@ const Spinner = ({
     setSelectedItem(winner)
     setIsSpinning(false)
 
-    // إيقاف صوت الدوران عند اكتمال اللفة.
     spinPlayer.stop(SPIN_SOUND_SRC)
 
     if (!winner) return
-    // TODO
-    // const player =
-
-    // // onChooseSheikh(winner)
+    const player = players.find((p) => p.name === winner)
+    onChooseSheikh(player)
   }
 
   return (
