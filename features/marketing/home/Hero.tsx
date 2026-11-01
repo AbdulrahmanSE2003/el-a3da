@@ -27,7 +27,7 @@ const Hero = () => {
 
         <div className="mt-9 flex flex-wrap items-center gap-3">
           <Link
-            href="/download"
+            href="/platform"
             className="inline-flex items-center gap-2 rounded-full bg-ink px-7 py-4 text-sm font-bold text-paper transition-transform hover:-translate-y-1"
           >
             ابدأ القعدة
