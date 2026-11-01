@@ -67,13 +67,18 @@ const BombPlay = ({
 
       {/* Question Card */}
       <div className="flex flex-col gap-5 rounded-2xl border-2 border-ink/15 bg-paper p-6 shadow-[4px_4px_0_var(--color-ink)] sm:p-8">
-        <div className="flex items-center justify-between gap-3">
-          <span className="text-xs font-bold text-ink-soft">سؤال القعدة</span>
-
-          <span className="inline-flex items-center gap-2 rounded-full border border-copper/30 bg-copper/10 px-3 py-1.5 text-xs font-black text-copper">
-            <span aria-hidden="true">{category.emoji}</span>
-            {category.name}
+        <div className={`flex flex-col gap-2`}>
+          <span className={`font-mono text-xs text-muted-foreground/15`}>
+            {game.question.id}
           </span>
+          <div className="flex items-center justify-between gap-3">
+            <span className="text-xs font-bold text-ink-soft">سؤال القعدة</span>
+
+            <span className="inline-flex items-center gap-2 rounded-full border border-copper/30 bg-copper/10 px-3 py-1.5 text-xs font-black text-copper">
+              <span aria-hidden="true">{category.emoji}</span>
+              {category.name}
+            </span>
+          </div>
         </div>
 
         <div className="h-px bg-ink/10" />

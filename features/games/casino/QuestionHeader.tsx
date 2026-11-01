@@ -19,7 +19,10 @@ const QuestionHeader = ({
 
   return (
     <div className="flex flex-col items-start gap-4 rounded-sm border-2 border-ink bg-paper p-4 shadow-[4px_4px_0px_0px_var(--color-ink)]">
-      <div className="flex items-center gap-3">
+      <div className="flex flex-col items-start gap-3">
+        <span className={`font-mono text-xs text-muted-foreground/15`}>
+          {currentQuestion.id}
+        </span>
         <h3 className="text-xl leading-relaxed font-black tracking-wider text-ink">
           {currentQuestion.text}
         </h3>

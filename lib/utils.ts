@@ -13,6 +13,7 @@ export const LABEL_ARABIC_MAP: Record<string, string> = {
   style: "المظهر",
   perf: "الأداء",
   test: "اختبارات",
+  game: "لعبة",
 }
 
 export function getArabicLabel(label: ChangelogLabelKey): string {

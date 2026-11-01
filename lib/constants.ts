@@ -6,6 +6,7 @@ import {
   Zap,
 } from "lucide-react"
 import { ActivityCardItem } from "@/components/layout/ActivityCard"
+import { ChangelogUpdate } from "@/features/marketing/changelog/ChangelogEntry"
 
 export const activities: ActivityCardItem[] = [
   {
@@ -52,14 +53,22 @@ export const activities: ActivityCardItem[] = [
   },
 ]
 
-export const updates = [
+export const updates: ChangelogUpdate[] = [
+  {
+    version: "2.2.0",
+    date: "01 نوفمبر 2026",
+    label: "feat",
+    title: "نظام أصوات جديد 🔊",
+    description:
+      "أصوات تفاعلية جديدة: قلب الكروت، الفوز في اللعبة، ودوران العجلة. مع زرار كتم من الإعدادات..",
+  },
   {
     version: "2.1.0",
     date: "23 أكتوبر 2026",
-    label: "feat",
+    label: "game",
     title: "لعبة القنبلة وصلت 💣",
     description:
-      "لعبة جديدة تختار فيها الفئة، تمرر الموبايل، وتسيب المؤقت يجري... لحد ما القنبلة تنفجر! مع مؤقت عشوائي، أصوات حماسية، وزرار كتم لو الجو هادي. وكمان أي تحديثات في الأسئلة بتوصلك تلقائيًا وتشتغل حتى لو النت قطع، من غير ما تقطع لعبكم.",
+      "لعبة جديدة تختار فيها الفئة، تمرر الموبايل، وتسيب المؤقت يجري... لحد ما القنبلة تنفجر! مع مؤقت عشوائي، أصوات حماسية، وزرار كتم لو الجو هادي.",
   },
   {
     version: "2.0.0",
@@ -67,7 +76,7 @@ export const updates = [
     label: "feat",
     title: "القعدة بشكل جديد 🎨",
     description:
-      "اختار شكل القعدة على مزاجك: قهوة سكيتو، ماتشا، موهيتو بلوبيري، عنّاب ساقع، وسموزي برقوق. غيّر الثيم من الإعدادات وشوف التغيير فورًا، مع تحميل أسرع وتجربة أنعم على الموبايل.",
+      "اختار شكل القعدة على مزاجك: قهوة سكيتو، ماتشا، موهيتو بلوبيري، عنّاب ساقع، وسموزي برقوق.",
   },
   {
     version: "1.4.1",
@@ -75,15 +84,15 @@ export const updates = [
     label: "chore",
     title: "تحسينات في الاستقرار",
     description:
-      "إصلاحات صغيرة بتخلي التنقل بين الصفحات أسرع وأثبت، وتجربة الاستخدام أنضف على الموبايل.",
+      "إصلاحات صغيرة بتخلي التنقل بين الصفحات أسرع وأثبت، وتجربة الاستخدام أسرع على الموبايل.",
   },
   {
     version: "1.4.0",
     date: "25 سبتمبر 2025",
-    label: "feat",
+    label: "game",
     title: "كازينو الألعاب",
     description:
-      "أسئلة وتحديات جماعية — الهوست بيسأل واللاعبين يتنافسوا على النقاط.",
+      "أسئلة وتحديات جماعية — الحكم بيسأل واللاعبين يتنافسوا على النقاط.",
   },
   {
     version: "1.3.0",
@@ -91,7 +100,7 @@ export const updates = [
     label: "feat",
     title: "الألعاب ونظام اللاعبين",
     description:
-      "إضافة ألعاب القعدة مع نظام إدارة اللاعبين والنقاط — أمير الظلام، شيخ الحارة، وبكاسة.",
+      "إضافة ألعاب القعدة مع نظام إدارة اللاعبين — أمير الظلام، شيخ الحارة.",
   },
   {
     version: "1.2.0",
@@ -112,12 +121,13 @@ export const updates = [
     date: "10 سبتمبر 2025",
     label: "feat",
     title: "البداية",
-    description: "أول إصدار — مواضيع وتحديات للقعدة من غير تسجيل.",
+    description: "أول إصدار — مواضيع وتحديات للقعدة تضيع الملل.",
   },
 ]
 
 export const labelColor: Record<string, string> = {
-  feat: "text-copper border-copper/30 bg-copper/5",
+  feat: "text-violet-500 border-violet-500/30 bg-violet-500/5",
   fix: "text-danger-brand border-danger-brand/30 bg-danger-brand/5",
-  chore: "text-ink-soft border-ink/20 bg-ink/5",
+  chore: "text-amber-500 border-amber-500/20 bg-amber-500/5",
+  game: "text-teal-500 border-teal-500/30 bg-teal-500/5",
 }

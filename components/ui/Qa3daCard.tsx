@@ -1,7 +1,9 @@
 "use client"
 
+import { useEffect, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { useMounted } from "@/hooks/use-mounted"
+import { createSoundPlayer } from "@/games/lib/audio/sound-player"
 
 export interface Qa3daCardProps {
   id: string
@@ -10,6 +12,9 @@ export interface Qa3daCardProps {
   category?: string
 }
 
+const FLIP_SOUND_SRC = "/sounds/flipcard.wav"
+const flipPlayer = createSoundPlayer()
+
 export default function Qa3daCard({
   id,
   text,
@@ -17,6 +22,21 @@ export default function Qa3daCard({
   category,
 }: Qa3daCardProps) {
   const mounted = useMounted()
+  const previousIdRef = useRef<string | null>(null)
+
+  // تشغيل صوت قلب البطاقة عندما يتغيّر المعرف (بطاقة جديدة)،
+  // وليس عند التركيب الأولي للمكون.
+  useEffect(() => {
+    if (previousIdRef.current === null) {
+      previousIdRef.current = id
+      return
+    }
+
+    if (previousIdRef.current !== id) {
+      previousIdRef.current = id
+      flipPlayer.play(FLIP_SOUND_SRC, 0.6)
+    }
+  }, [id])
 
   return (
     <div

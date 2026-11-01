@@ -1,7 +1,7 @@
 import { labelColor } from "@/lib/constants"
 import { getArabicLabel } from "@/lib/utils"
 
-type ChangelogUpdate = {
+export type ChangelogUpdate = {
   version: string
   date: string
   label: keyof typeof labelColor
@@ -14,6 +14,7 @@ type ChangelogEntryProps = {
 }
 
 export default function ChangelogEntry({ update }: ChangelogEntryProps) {
+
   return (
     <article className="relative grid grid-cols-[80px_1fr] gap-6 sm:grid-cols-[100px_1fr] sm:gap-8">
       {/* Date & Version Column */}

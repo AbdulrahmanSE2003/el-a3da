@@ -618,7 +618,7 @@
 ::-webkit-scrollbar-thumb {
   background: var(--scrollbar-thumb);
   border: 2px solid transparent;
-  border-radius: 999px;
+  border-radius: var(--radius);
   background-clip: padding-box;
   transition: background-color 0.2s ease;
 }
@@ -631,3 +631,4 @@
 ::-webkit-scrollbar-corner {
   background: transparent;
 }
+

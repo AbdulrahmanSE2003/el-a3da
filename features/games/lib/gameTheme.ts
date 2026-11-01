@@ -7,7 +7,7 @@ export const gameThemes = {
     accent: "text-rose-500",
     badge: "bg-rose-600 text-white font-bold border border-rose-500/40",
     iconBox: "bg-zinc-900 border-zinc-700 text-rose-500",
-    iconBg: "text-zinc-800",
+    iconBg: "text-zinc-700",
     actionBtn: "bg-rose-600 text-white border-rose-500 group-hover:bg-rose-500",
   },
   sepia: {
@@ -18,7 +18,7 @@ export const gameThemes = {
     accent: "text-amber-500",
     badge: "bg-amber-900 text-amber-300 border border-amber-700/50",
     iconBox: "bg-amber-900/60 border-amber-800 text-amber-400",
-    iconBg: "text-amber-900/40",
+    iconBg: "text-amber-900",
     actionBtn: "bg-amber-900 text-amber-200 border-amber-700",
   },
   copper: {
@@ -29,7 +29,7 @@ export const gameThemes = {
     accent: "text-copper",
     badge: "bg-stone-800 text-copper border border-copper/30",
     iconBox: "bg-stone-800 border-stone-700 text-copper",
-    iconBg: "text-stone-800/80",
+    iconBg: "text-stone-800",
     actionBtn: "bg-stone-800 text-copper border-copper/40",
   },
   cyberpunk: {
@@ -52,7 +52,7 @@ export const gameThemes = {
     accent: "text-emerald-400",
     badge: "bg-emerald-800 text-emerald-200 border border-emerald-600/50",
     iconBox: "bg-emerald-900/60 border-emerald-700 text-emerald-400",
-    iconBg: "text-emerald-900/40",
+    iconBg: "text-emerald-800",
     actionBtn:
       "bg-emerald-700 text-emerald-100 border-emerald-500 group-hover:bg-emerald-600",
   },
@@ -64,7 +64,7 @@ export const gameThemes = {
     accent: "text-fuchsia-400",
     badge: "bg-fuchsia-800 text-fuchsia-100 border border-fuchsia-500/50",
     iconBox: "bg-purple-900/60 border-purple-700 text-fuchsia-400",
-    iconBg: "text-purple-950",
+    iconBg: "text-purple-900",
     actionBtn:
       "bg-fuchsia-700 text-white border-fuchsia-500 group-hover:bg-fuchsia-600",
   },
@@ -76,7 +76,7 @@ export const gameThemes = {
     accent: "text-sky-400",
     badge: "bg-sky-900 text-sky-200 border border-sky-600/50",
     iconBox: "bg-slate-800 border-slate-600 text-sky-400",
-    iconBg: "text-slate-950",
+    iconBg: "text-slate-700",
     actionBtn:
       "bg-sky-600 text-slate-950 font-bold border-sky-400 group-hover:bg-sky-500",
   },
@@ -88,7 +88,7 @@ export const gameThemes = {
     accent: "text-amber-400",
     badge: "bg-orange-800 text-amber-200 border border-amber-500/40",
     iconBox: "bg-orange-900/80 border-orange-700 text-amber-400",
-    iconBg: "text-orange-950",
+    iconBg: "text-orange-900",
     actionBtn:
       "bg-orange-600 text-white font-bold border-orange-400 group-hover:bg-orange-500",
   },
@@ -100,7 +100,7 @@ export const gameThemes = {
     accent: "text-indigo-400",
     badge: "bg-indigo-900 text-indigo-200 border border-indigo-700/50",
     iconBox: "bg-indigo-900/60 border-indigo-800 text-indigo-400",
-    iconBg: "text-indigo-950",
+    iconBg: "text-indigo-900",
     actionBtn:
       "bg-indigo-600 text-white border-indigo-400 group-hover:bg-indigo-500",
   },
@@ -124,7 +124,7 @@ export const gameThemes = {
     accent: "text-red-500",
     badge: "bg-red-800 text-red-100 border border-red-600/50",
     iconBox: "bg-red-900/60 border-red-700 text-red-400",
-    iconBg: "text-red-950",
+    iconBg: "text-red-900",
     actionBtn: "bg-red-700 text-white border-red-500 group-hover:bg-red-600",
   },
 } as const
