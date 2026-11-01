@@ -3,6 +3,35 @@
 All notable changes to Qa3da are documented here. The project follows
 [Semantic Versioning](https://semver.org/).
 
+## [2.2.0] - Unreleased
+
+### Added
+
+- **Shared sound system** (`games/lib/audio/`) with a persisted sound-effects mute
+  preference (`qa3da-sound-effects-muted`) and one-time migration from the legacy
+  `qa3da-sound-muted` key.
+- **Card flip sound** (`flipcard.wav`) on `Qa3daCard` reveal for Topics, Sheikh El
+  Hara, and Challenges.
+- **Casino victory sound** (`victory.ogg`) played once when a Casino game finishes.
+- **Spinner sound** (`spin.wav`) played when the wheel spin starts and stopped when
+  it finishes or the component unmounts.
+- **Settings sound control** (`SoundSetting`) with a single "المؤثرات الصوتية"
+  toggle, plus a `Switch` UI component.
+- **Sound assets**: `flipcard.wav`, `victory.ogg`, `spin.wav`.
+
+### Changed
+
+- **Removed coffee ambience**: `ahwa_ambience.ogg`, `AmbienceSound` component, its
+  layout mount, the ambience preference/localStorage key, and the ambience setting
+  toggle.
+- **Settings**: replaced the sound placeholder with a functional sound-effects toggle.
+- **Header**: removed the ambiguous single sound quick-toggle button.
+
+### Removed
+
+- Coffee ambience feature (`ahwa_ambience.ogg`, `AmbienceSound`, ambience
+  preference, Settings ambience toggle).
+
 ## [2.1.0] - 2026-10-23
 
 ### Added

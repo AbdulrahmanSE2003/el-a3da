@@ -1,8 +1,12 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { Button } from "./button"
 import { Player } from "@/store/party-store"
+import { createSoundPlayer } from "@/games/lib/audio/sound-player"
+
+const SPIN_SOUND_SRC = "/sounds/spin.wav"
+const spinPlayer = createSoundPlayer()
 
 type SpinnerProps = {
   width?: number
@@ -31,6 +35,13 @@ const Spinner = ({
   const [isSpinning, setIsSpinning] = useState(false)
   const [winner, setWinner] = useState<string | null>(null)
   const [selectedItem, setSelectedItem] = useState<string | null>(null)
+
+  // إيقاف صوت الدوران عند إزالة المكون أثناء الدوران.
+  useEffect(() => {
+    return () => {
+      spinPlayer.stop(SPIN_SOUND_SRC)
+    }
+  }, [])
 
   if (items.length === 0) return null
 
@@ -70,6 +81,9 @@ const Spinner = ({
     setSelectedItem(null)
     setIsSpinning(true)
 
+    // تشغيل صوت دوران العجلة عند بدء اللفة حقيقية (ليس عند التركيب الأولي).
+    spinPlayer.play(SPIN_SOUND_SRC, 0.7)
+
     setRotation((current) => {
       const extraRotation = (targetRotation - (current % 360) + 360) % 360
 
@@ -89,6 +103,10 @@ const Spinner = ({
 
     setSelectedItem(winner)
     setIsSpinning(false)
+
+    // إيقاف صوت الدوران عند اكتمال اللفة.
+    spinPlayer.stop(SPIN_SOUND_SRC)
+
     if (!winner) return
     // TODO
     // const player =

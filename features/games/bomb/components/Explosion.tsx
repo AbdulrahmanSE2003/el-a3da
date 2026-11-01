@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 import { ArrowRight, RotateCcw } from "lucide-react"
+import Link from "next/link"
 
 interface ExplosionProps {
   onRestart?: () => void
@@ -47,9 +48,15 @@ const Explosion = ({ onRestart }: ExplosionProps) => {
       <Button
         variant={"outline"}
         className="flex w-full items-center justify-center gap-2"
+        asChild
       >
-        <ArrowRight className={`size-4`} />
-        شوف لعبة تانية
+        <Link
+          href="/games"
+          className="flex w-full items-center justify-center gap-2"
+        >
+          <ArrowRight className={`size-4`} />
+          شوف لعبة تانية
+        </Link>
       </Button>
     </section>
   )

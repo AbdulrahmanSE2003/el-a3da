@@ -50,6 +50,6 @@ export const GAMES_LIST: GameItem[] = [
     description: "لعبة جديدة بتستوي ونازلة تظبط الكلام قريب! 🎯",
     status: "لسه عالرمالة⏳",
     icon: Glasses,
-    theme: "copper",
+    theme: "emerald",
   },
 ]
