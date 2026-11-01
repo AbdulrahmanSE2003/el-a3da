@@ -14,6 +14,10 @@ const Navbar = () => {
           عن القعدة
         </Link>
 
+        <Link href="/platform" className="transition-opacity hover:opacity-60">
+          المنصة{" "}
+        </Link>
+
         <Link href="/changelog" className="transition-opacity hover:opacity-60">
           التحديثات
         </Link>
@@ -21,15 +25,11 @@ const Navbar = () => {
         <Link href="/download" className="transition-opacity hover:opacity-60">
           التحميل
         </Link>
-
-        <Link href="/settings" className="transition-opacity hover:opacity-60">
-          الإعدادات
-        </Link>
       </nav>
 
       <div className="flex items-center gap-2">
         <Link
-          href="/download"
+          href="/platform"
           className="rounded-full bg-ink px-5 py-3 text-sm font-bold text-paper transition-transform hover:-translate-y-0.5"
         >
           ابدأ قعدة

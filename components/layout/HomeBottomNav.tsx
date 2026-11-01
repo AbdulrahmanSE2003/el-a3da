@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation"
 
 const navItems = [
   {
-    href: "/",
+    href: "/platform",
     label: "الرئيسية",
     icon: Home,
   },
