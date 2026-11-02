@@ -17,9 +17,9 @@ interface ErrorProps {
 
 export default function ErrorPage({ error, reset }: ErrorProps) {
   useEffect(() => {
-    // بنطبع الـ digest بس — ممكن يكون فيه تفاصيل حساسة في الرسالة الكاملة.
-    console.error("App error", error.digest)
-  }, [error.digest])
+    console.error("App error:", error)
+    console.error("Error digest:", error?.digest)
+  }, [error])
 
   return (
     <StatePanel
