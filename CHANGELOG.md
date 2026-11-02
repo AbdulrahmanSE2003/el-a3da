@@ -3,6 +3,14 @@
 All notable changes to Qa3da are documented here. The project follows
 [Semantic Versioning](https://semver.org/).
 
+## [2.3.0] - 2026-11-02
+
+### Added
+
+- **شخصية أبو عمر** — شخصية جديدة دخلت القعدة! أبو عمر يجلب المرح والضحك مع
+  نكاته ومشاركاته في التحديات والأسئلة. يختار categoría ويショー شخصيته في كل
+  جولة، مع نظام أصوات جديد للمؤثرات.
+
 ## [2.2.0] - Unreleased
 
 ### Added

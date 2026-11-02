@@ -51,9 +51,7 @@ const CasinoSetup = ({
       </div>
 
       {/* Players */}
-      <div
-        className={`flex flex-col items-start gap-2 border-b border-b-ink/20 pb-5`}
-      >
+      <div className={`flex flex-col items-start gap-2`}>
         <p className={`text-lg font-bold`}>اللاعبون</p>
 
         <div className={`flex flex-wrap items-center gap-3`}>
@@ -81,7 +79,7 @@ const CasinoSetup = ({
       </div>
 
       {/* Button */}
-      <div className={`flex min-h-32 w-full items-end self-center`}>
+      <div className={`flex w-full items-end self-center`}>
         <Button
           onClick={() => onStart(winningScore)}
           disabled={!ready}
