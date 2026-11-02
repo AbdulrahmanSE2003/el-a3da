@@ -22,16 +22,20 @@ export function QuestionsPhase({
         <div className="flex items-end justify-between">
           <div>
             <p className="text-sm font-bold text-ink-soft/50">شيخ الحارة</p>
-            <h1 className="mt-1 text-3xl font-black">{sheikh.name}</h1>
+            <h1 className="mt-1 text-3xl font-semibold">
+              {" "}
+              هيسأل :{" "}
+              <span className={`font-black text-primary`}>{sheikh.name}</span>
+            </h1>
           </div>
         </div>
 
         <div className="mt-4 rounded-md border-2 border-ink bg-paper-warm p-6 shadow-[5px_5px_0_var(--color-ink)]">
-          <div className="flex items-center justify-between border-b border-ink/10 pb-4">
+          {/* <div className="flex items-center justify-between border-b border-ink/10 pb-4">
             <span className="text-sm font-bold text-copper">سؤال</span>
-          </div>
+          </div> */}
 
-          <p className="mt-8 text-xl leading-relaxed font-black">
+          <p className="mt text-xl leading-relaxed font-black">
             {currentQuestion.text}
           </p>
         </div>
