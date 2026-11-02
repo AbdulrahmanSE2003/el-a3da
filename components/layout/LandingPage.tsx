@@ -1,11 +1,25 @@
 "use client"
 
-import { ArrowLeft, Coffee, Dice5, MessageCircle, Sparkles } from "lucide-react"
+import { ArrowLeft, Dice5, MessageCircle, Sparkles } from "lucide-react"
 import Link from "next/link"
 import Navbar from "./Navbar"
 import Hero from "@/features/marketing/home/Hero"
+import { useRouter } from "next/navigation"
+import { useEffect } from "react"
 
 const LandingPage = () => {
+  const router = useRouter()
+  useEffect(() => {
+    const isStandalone =
+      window.matchMedia("(display-mode: standalone)").matches ||
+      ("standalone" in navigator &&
+        (navigator as Navigator & { standalone?: boolean }).standalone === true)
+
+    if (isStandalone) {
+      router.replace("/platform")
+    }
+  }, [router])
+
   return (
     <main className="min-h-screen bg-paper text-ink">
       {/* NAV */}
