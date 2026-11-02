@@ -95,7 +95,7 @@ export default function AbuOmar({ duration = 7000 }: AbuOmarProps) {
   useEffect(() => {
     if (state.type !== "waiting") return
 
-    const delay = Math.floor(Math.random() * 7000) + 5000
+    const delay = Math.floor(Math.random() * 10000) + 7000
 
     const timeout = window.setTimeout(() => {
       setState({ type: "walking" })
