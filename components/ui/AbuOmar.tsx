@@ -129,7 +129,7 @@ export default function AbuOmar({ duration = 7000 }: AbuOmarProps) {
     <motion.div
       initial={{ x: "-150%" }}
       animate={{
-        x: isExiting || isWaiting ? "-150%" : "100%",
+        x: isExiting || isWaiting ? "-150%" : "35%",
       }}
       transition={{
         duration: 6,
