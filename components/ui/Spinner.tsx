@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 import { Button } from "./button"
 import { Player } from "@/store/party-store"
 import { createSoundPlayer } from "@/games/lib/audio/sound-player"
